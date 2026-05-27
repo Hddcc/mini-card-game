@@ -10,7 +10,7 @@ CREATE TABLE users (
   UNIQUE KEY uk_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE player_profile (
+CREATE TABLE player_profiles (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id BIGINT UNSIGNED NOT NULL,
   nickname VARCHAR(64) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE player_profile (
   KEY idx_power (power)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE player_asset (
+CREATE TABLE player_assets (
   player_id BIGINT UNSIGNED NOT NULL,
   gold BIGINT UNSIGNED NOT NULL DEFAULT 0,
   diamond BIGINT UNSIGNED NOT NULL DEFAULT 0,
