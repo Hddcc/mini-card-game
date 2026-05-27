@@ -33,7 +33,7 @@ type RegisterInput struct {
 	Nickname string
 }
 
-func (s *AuthService) Register(input *RegisterInput) (uint64, uint64, error) {
+func (s *AuthService) Register(input RegisterInput) (uint64, uint64, error) {
 	if _, err := s.userRepo.FindByUsername(input.Username); err == nil {
 		return 0, 0, errors.New("username already exists")
 	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -104,7 +104,7 @@ type LoginOutput struct {
 	Level     uint32
 }
 
-func (s *AuthService) Login(input *LoginInput) (*LoginOutput, error) {
+func (s *AuthService) Login(input LoginInput) (*LoginOutput, error) {
 	user, err := s.userRepo.FindByUsername(input.Username)
 	if err != nil {
 		return nil, errors.New("username or password invalid")
