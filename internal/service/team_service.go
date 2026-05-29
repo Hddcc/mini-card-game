@@ -125,64 +125,64 @@ func (s *TeamService) Save(playerID uint64, slots []TeamSlot) error {
 }
 
 type TeamView struct {
-    Slot         uint8  `json:"slot"`
-    PlayerHeroID uint64 `json:"player_hero_id"`
-    HeroConfigID uint64 `json:"hero_config_id"`
-    Name         string `json:"name"`
-    Quality      uint8  `json:"quality"`
-    Level        uint32 `json:"level"`
-    Star         uint32 `json:"star"`
+	Slot         uint8  `json:"slot"`
+	PlayerHeroID uint64 `json:"player_hero_id"`
+	HeroConfigID uint64 `json:"hero_config_id"`
+	Name         string `json:"name"`
+	Quality      uint8  `json:"quality"`
+	Level        uint32 `json:"level"`
+	Star         uint32 `json:"star"`
 }
 
 func (s *TeamService) Get(playerID uint64) ([]TeamView, error) {
-    teams, err := s.teamRepo.ListByPlayer(playerID)
-    if err != nil {
-        return nil, err
-    }
+	teams, err := s.teamRepo.ListByPlayer(playerID)
+	if err != nil {
+		return nil, err
+	}
 
-    heroes, err := s.heroRepo.ListPlayerHeroes(playerID)
-    if err != nil {
-        return nil, err
-    }
-    heroMap := make(map[uint64]model.PlayerHero)
-    configIDs := make([]uint64, 0, len(heroes))
-    configIDSet := make(map[uint64]struct{})
-    for _, hero := range heroes {
-        heroMap[hero.ID] = hero
-        if _, ok := configIDSet[hero.HeroConfigID]; !ok {
-            configIDSet[hero.HeroConfigID] = struct{}{}
-            configIDs = append(configIDs, hero.HeroConfigID)
-        }
-    }
+	heroes, err := s.heroRepo.ListPlayerHeroes(playerID)
+	if err != nil {
+		return nil, err
+	}
+	heroMap := make(map[uint64]model.PlayerHero)
+	configIDs := make([]uint64, 0, len(heroes))
+	configIDSet := make(map[uint64]struct{})
+	for _, hero := range heroes {
+		heroMap[hero.ID] = hero
+		if _, ok := configIDSet[hero.HeroConfigID]; !ok {
+			configIDSet[hero.HeroConfigID] = struct{}{}
+			configIDs = append(configIDs, hero.HeroConfigID)
+		}
+	}
 
-    configs, err := s.heroRepo.ListConfigsByIDs(configIDs)
-    if err != nil {
-        return nil, err
-    }
-    cfgMap := make(map[uint64]model.HeroConfig)
-    for _, cfg := range configs {
-        cfgMap[cfg.ID] = cfg
-    }
+	configs, err := s.heroRepo.ListConfigsByIDs(configIDs)
+	if err != nil {
+		return nil, err
+	}
+	cfgMap := make(map[uint64]model.HeroConfig)
+	for _, cfg := range configs {
+		cfgMap[cfg.ID] = cfg
+	}
 
-    views := make([]TeamView, 0, len(teams))
-    for _, team := range teams {
-        hero, ok := heroMap[team.PlayerHeroID]
-        if !ok {
-            return nil, errors.New("team contains invalid hero")
-        }
-        cfg, ok := cfgMap[hero.HeroConfigID]
-        if !ok {
-            return nil, errors.New("hero config missing")
-        }
-        views = append(views, TeamView{
-            Slot:         team.Slot,
-            PlayerHeroID: team.PlayerHeroID,
-            HeroConfigID: hero.HeroConfigID,
-            Name:         cfg.Name,
-            Quality:      cfg.Quality,
-            Level:        hero.Level,
-            Star:         hero.Star,
-        })
-    }
-    return views, nil
+	views := make([]TeamView, 0, len(teams))
+	for _, team := range teams {
+		hero, ok := heroMap[team.PlayerHeroID]
+		if !ok {
+			return nil, errors.New("team contains invalid hero")
+		}
+		cfg, ok := cfgMap[hero.HeroConfigID]
+		if !ok {
+			return nil, errors.New("hero config missing")
+		}
+		views = append(views, TeamView{
+			Slot:         team.Slot,
+			PlayerHeroID: team.PlayerHeroID,
+			HeroConfigID: hero.HeroConfigID,
+			Name:         cfg.Name,
+			Quality:      cfg.Quality,
+			Level:        hero.Level,
+			Star:         hero.Star,
+		})
+	}
+	return views, nil
 }

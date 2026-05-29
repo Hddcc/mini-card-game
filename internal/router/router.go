@@ -36,17 +36,20 @@ func New(deps Dependencies) *gin.Engine {
 	assetRepo := repository.NewAssetRepository(deps.DB)
 	heroRepo := repository.NewHeroRepository(deps.DB)
 	gachaRepo := repository.NewGachaRepository(deps.DB)
+	taskRepo := repository.NewTaskRepository(deps.DB)
 	teamRepo := repository.NewTeamRepository(deps.DB)
 	stageRepo := repository.NewStageRepository(deps.DB)
 
 	rewardService := service.NewRewardService(assetRepo, heroRepo)
+	taskService := service.NewTaskService(deps.DB, taskRepo, rewardService)
 	heroService := service.NewHeroService(heroRepo)
-	gachaService := service.NewGachaService(deps.DB, assetRepo, gachaRepo, rewardService)
+	gachaService := service.NewGachaService(deps.DB, assetRepo, gachaRepo, rewardService, taskService)
 	teamService := service.NewTeamService(teamRepo, heroRepo, playerRepo)
-	stageService := service.NewStageService(deps.DB, stageRepo, teamRepo, heroRepo, assetRepo, playerRepo)
+	stageService := service.NewStageService(deps.DB, stageRepo, teamRepo, heroRepo, assetRepo, playerRepo, taskService)
 
 	heroHandler := handler.NewHeroHandler(heroService)
 	gachaHandler := handler.NewGachaHandler(gachaService)
+	taskHandler := handler.NewTaskHandler(taskService)
 	teamHandler := handler.NewTeamHandler(teamService)
 	stageHandler := handler.NewStageHandler(stageService)
 
@@ -60,6 +63,8 @@ func New(deps Dependencies) *gin.Engine {
 	loginRequired.POST("/team/save", teamHandler.Save)
 	loginRequired.GET("/team", teamHandler.Get)
 	loginRequired.POST("/stage/fight", stageHandler.Fight)
+	loginRequired.GET("/tasks/daily", taskHandler.ListDaily)
+	loginRequired.POST("/tasks/claim", taskHandler.Claim)
 
 	auth := api.Group("/auth")
 	auth.POST("/register", authHandler.Register)
