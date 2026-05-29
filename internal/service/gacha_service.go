@@ -17,14 +17,16 @@ type GachaService struct {
 	assetRepo     *repository.AssetRepository
 	gachaRepo     *repository.GachaRepository
 	rewardService *RewardService
+	taskService   *TaskService
 }
 
-func NewGachaService(db *gorm.DB, assetRepo *repository.AssetRepository, gachaRepo *repository.GachaRepository, rewardService *RewardService) *GachaService {
+func NewGachaService(db *gorm.DB, assetRepo *repository.AssetRepository, gachaRepo *repository.GachaRepository, rewardService *RewardService, taskService *TaskService) *GachaService {
 	return &GachaService{
 		db:            db,
 		assetRepo:     assetRepo,
 		gachaRepo:     gachaRepo,
 		rewardService: rewardService,
+		taskService:   taskService,
 	}
 }
 
@@ -144,6 +146,11 @@ func (s *GachaService) Draw(playerID uint64, poolID uint64, times int) (*DrawOut
 		}
 		if err := s.gachaRepo.CreateRecords(tx, records); err != nil {
 			return err
+		}
+		if s.taskService != nil {
+			if err := s.taskService.AddProgress(tx, playerID, "gacha_draw", uint32(times)); err != nil {
+				return err
+			}
 		}
 
 		output.Results = results

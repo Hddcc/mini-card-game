@@ -50,7 +50,7 @@ func (r *PlayerRepository) UpdateProfilePower(tx *gorm.DB, playerID uint64, powe
 	return tx.Model(&model.PlayerProfile{}).Where("id = ?", playerID).Update("power", power).Error
 }
 func (r *PlayerRepository) AddProfileExp(tx *gorm.DB, playerID uint64, exp uint32) error {
-    return tx.Model(&model.PlayerProfile{}).
-        Where("id = ?", playerID).
-        Update("exp", gorm.Expr("exp + ?", exp)).Error
+	return tx.Model(&model.PlayerProfile{}).
+		Where("id = ?", playerID).
+		Update("exp", gorm.Expr("exp + ?", exp)).Error
 }
