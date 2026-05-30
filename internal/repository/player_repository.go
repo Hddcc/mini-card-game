@@ -46,6 +46,10 @@ func (r *PlayerRepository) FindAsset(playerID uint64) (*model.PlayerAsset, error
 	return &asset, nil
 }
 
+func (r *PlayerRepository) SaveAsset(asset *model.PlayerAsset) error {
+	return r.db.Save(asset).Error
+}
+
 func (r *PlayerRepository) UpdateProfilePower(tx *gorm.DB, playerID uint64, power uint64) error {
 	return tx.Model(&model.PlayerProfile{}).Where("id = ?", playerID).Update("power", power).Error
 }

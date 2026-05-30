@@ -5,10 +5,10 @@ import "time"
 type PlayerProfile struct {
 	ID        uint64    `gorm:"primaryKey;column:id"`
 	UserID    uint64    `gorm:"column:user_id"`
-	Nickname  string    `gorm:"column:nickname"`
+	Nickname  string    `gorm:"column:nickname;size:64"`
 	Level     uint32    `gorm:"column:level"`
 	Exp       uint32    `gorm:"column:exp"`
-	Avatar    string    `gorm:"column:avatar"`
+	Avatar    string    `gorm:"column:avatar;size:128"`
 	Power     uint64    `gorm:"column:power"`
 	CreatedAt time.Time `gorm:"column:created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at"`
@@ -19,12 +19,13 @@ func (PlayerProfile) TableName() string {
 }
 
 type PlayerAsset struct {
-	PlayerID  uint64    `gorm:"primaryKey;column:player_id"`
-	Gold      uint64    `gorm:"column:gold"`
-	Diamond   uint64    `gorm:"column:diamond"`
-	Stamina   uint32    `gorm:"column:stamina"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at"`
+	PlayerID         uint64     `gorm:"primaryKey;column:player_id"`
+	Gold             uint64     `gorm:"column:gold"`
+	Diamond          uint64     `gorm:"column:diamond"`
+	Stamina          uint32     `gorm:"column:stamina"`
+	StaminaUpdatedAt *time.Time `gorm:"column:stamina_updated_at"`
+	CreatedAt        time.Time  `gorm:"column:created_at"`
+	UpdatedAt        time.Time  `gorm:"column:updated_at"`
 }
 
 func (PlayerAsset) TableName() string {

@@ -4,8 +4,8 @@ import "time"
 
 type DailyTaskConfig struct {
 	ID            uint64    `gorm:"primaryKey;column:id"`
-	Name          string    `gorm:"column:name"`
-	EventType     string    `gorm:"column:event_type"`
+	Name          string    `gorm:"column:name;size:64"`
+	EventType     string    `gorm:"column:event_type;size:32"`
 	TargetCount   uint32    `gorm:"column:target_count"`
 	RewardGold    uint64    `gorm:"column:reward_gold"`
 	RewardDiamond uint64    `gorm:"column:reward_diamond"`

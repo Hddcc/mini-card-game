@@ -1,0 +1,485 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mini 西游 - 英雄阵容</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800&amp;family=Hanken+Grotesk:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .jade-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .jade-shimmer::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        .meander-border {
+            border-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h10v2h-8v8H0V0zm40 0v10h-2V2h-8V0h10zM0 40v-10h2v8h8v2H0zm40 0H30v-2h8v-8h2v10z' fill='%23999077'/%3E%3C/svg%3E") 10 stretch;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "quality-r": "#1E90FF",
+                        "surface-container": "#20201f",
+                        "secondary": "#ffb4a9",
+                        "inverse-on-surface": "#313030",
+                        "on-secondary-container": "#ff9f92",
+                        "on-error": "#690005",
+                        "on-surface": "#e5e2e1",
+                        "surface-bright": "#393939",
+                        "on-tertiary-fixed-variant": "#005232",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-dim": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed-variant": "#930004",
+                        "on-secondary-fixed": "#410001",
+                        "surface-variant": "#353535",
+                        "on-secondary": "#690002",
+                        "primary-fixed": "#ffe16d",
+                        "outline": "#999077",
+                        "surface": "#131313",
+                        "on-primary-fixed-variant": "#544600",
+                        "quality-n": "#A9A9A9",
+                        "on-primary-fixed": "#221b00",
+                        "outline-variant": "#4d4732",
+                        "on-tertiary-container": "#006d44",
+                        "on-tertiary": "#003921",
+                        "error-container": "#93000a",
+                        "quality-ur": "#FF4500",
+                        "on-tertiary-fixed": "#002111",
+                        "quality-sr": "#DA70D6",
+                        "primary-fixed-dim": "#e9c400",
+                        "surface-container-low": "#1c1b1b",
+                        "ink-wash": "#2D2D2D",
+                        "surface-container-highest": "#353535",
+                        "parchment": "#F5E6BE",
+                        "secondary-fixed": "#ffdad5",
+                        "tertiary-container": "#6ff2ae",
+                        "primary-container": "#ffd700",
+                        "secondary-container": "#970205",
+                        "on-surface-variant": "#d0c6ab",
+                        "secondary-fixed-dim": "#ffb4a9",
+                        "tertiary": "#dbffe6",
+                        "surface-tint": "#e9c400",
+                        "tertiary-fixed-dim": "#59de9b",
+                        "surface-container-high": "#2a2a2a",
+                        "inverse-primary": "#705d00",
+                        "primary": "#fff6df",
+                        "error": "#ffb4ab",
+                        "on-primary-container": "#705e00",
+                        "background": "#131313",
+                        "quality-ssr": "#FFD700",
+                        "on-primary": "#3a3000",
+                        "tertiary-fixed": "#78fbb6",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "stack-md": "12px",
+                        "margin-desktop": "40px",
+                        "stack-xs": "4px",
+                        "unit": "4px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "stats-num": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-hero": ["Epilogue"],
+                        "headline-lg-mobile": ["Epilogue"],
+                        "title-md": ["Epilogue"],
+                        "headline-lg": ["Epilogue"]
+                    },
+                    "fontSize": {
+                        "stats-num": ["18px", {"lineHeight": "1", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-hero": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar (Shared) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile py-stack-md bg-ink-wash border-b-2 border-outline-variant shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+<div class="flex items-center gap-stack-md">
+<h1 class="font-display-hero text-headline-lg-mobile text-primary">Mini 西游</h1>
+</div>
+<div class="flex items-center gap-stack-lg">
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings: 'FILL' 1;">diamond</span>
+<span class="font-stats-num text-stats-num text-primary-fixed">1,250</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-stats-num text-stats-num text-primary-fixed">45.2K</span>
+</div>
+<button class="material-symbols-outlined p-2 rounded-full hover:bg-surface-variant transition-colors text-primary-fixed">bolt</button>
+</div>
+</header>
+<!-- SideNavBar (Shared) - Desktop Only View Logic -->
+<nav class="hidden md:flex fixed left-0 top-0 h-full z-40 flex-col pt-24 bg-surface-container-lowest border-r-2 border-outline-variant w-64">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-primary-fixed overflow-hidden">
+<img alt="Player Portrait" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKb0-qek8mcN6fiqdlEeZQh01p7Zk1sXD9Y59e_87Nr_hWhbKcXb3UiVE7YZ8DWVxAtCSST1P6ebg2Go91sJTBIgu_jXFDGDhTDmW_eht8gdnvEEE5q_W6trMOUmrXI6R4izbHRN2EeC_f-sOzYmuUBc5RlAl9MfpbkkZNyTR6E1xS6in50r-Xk5fU-a2Rc-3CRhABy_YDi9hEmi3NCTXSLdnU5e2FYcgQEPBmTFBgjFVBykj5d0UvpO5btvThzfsMegMCK7_GEbw"/>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-primary-fixed">取经人</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">等级 99</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<a class="text-on-surface-variant px-6 py-4 flex items-center gap-4 hover:bg-surface-container-high hover:text-on-surface transition-all" href="/static/mini_5/code.html"><span class="material-symbols-outlined">fort</span><span class="font-label-sm text-label-sm uppercase">首页</span></a>
+<a class="text-primary-fixed border-l-4 border-primary-fixed bg-surface-variant px-6 py-4 flex items-center gap-4 translate-x-1 transition-all" href="/static/mini_3/code.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swords</span><span class="font-label-sm text-label-sm uppercase font-bold">英雄</span></a>
+<a class="text-on-surface-variant px-6 py-4 flex items-center gap-4 hover:bg-surface-container-high hover:text-on-surface transition-all" href="/static/mini_2/code.html"><span class="material-symbols-outlined">scrollable_header</span><span class="font-label-sm text-label-sm uppercase">关卡</span></a>
+<a class="text-on-surface-variant px-6 py-4 flex items-center gap-4 hover:bg-surface-container-high hover:text-on-surface transition-all" href="/static/mini_4/code.html"><span class="material-symbols-outlined">auto_awesome</span><span class="font-label-sm text-label-sm uppercase">召唤</span></a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-24 md:pl-64 min-h-screen">
+<div class="px-margin-mobile md:px-margin-desktop py-stack-lg space-y-stack-lg">
+<!-- Header Section -->
+<div class="flex justify-between items-end border-b border-outline-variant pb-stack-md">
+<div>
+<h2 class="font-display-hero text-headline-lg-mobile md:text-headline-lg text-primary-fixed">阵容</h2>
+<p class="text-on-surface-variant font-body-md italic">派出你的英雄，继续西行。</p>
+</div>
+<button class="bg-secondary-container text-primary-fixed px-8 py-3 rounded-none border border-primary-fixed shadow-[0_0_10px_rgba(255,215,0,0.2)] active:scale-95 transition-transform font-title-md text-title-md flex items-center gap-2 jade-shimmer" id="saveTeamBtn">
+<span class="material-symbols-outlined">save</span>
+                    保存阵容
+                </button>
+</div>
+<!-- Team Slots Grid (Top Section) -->
+<div class="grid grid-cols-1 md:grid-cols-5 gap-stack-md" id="teamSlotsContainer">
+<!-- Slot 1 -->
+<div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="1">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="slot-empty flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-outline-variant text-4xl">add_circle</span>
+<span class="font-label-sm text-label-sm text-outline-variant">位置 01</span>
+</div>
+<div class="slot-filled hidden absolute inset-0">
+<img class="hero-img w-full h-full object-cover" data-alt="A detailed portrait of a mythical Chinese warrior in ornate golden armor, standing against a swirling ink-wash background of storm clouds and lightning. The lighting is cinematic and high-contrast, emphasizing the metallic sheen of the jade-encrusted breastplate. The art style is a blend of traditional Chinese landscape painting and modern high-fidelity character design, featuring vibrant vermilion and imperial gold accents." src=""/>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+<span class="hero-name font-title-md text-title-md text-white block">英雄名称</span>
+<span class="hero-quality font-label-sm text-label-sm text-quality-ur">UR</span>
+</div>
+<button class="absolute top-2 right-2 bg-black/50 p-1 rounded-full text-white hover:text-error transition-colors clear-slot">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+<!-- Slot 2 -->
+<div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="2">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="slot-empty flex flex-col items-center gap-2 text-outline-variant">
+<span class="material-symbols-outlined text-4xl">add_circle</span>
+<span class="font-label-sm text-label-sm">位置 02</span>
+</div>
+<div class="slot-filled hidden absolute inset-0">
+<img class="hero-img w-full h-full object-cover" data-alt="A mystical Taoist immortal floating amidst cherry blossoms and ancient paper charms, wearing layered silk robes of deep teal and silver. The atmosphere is ethereal, with soft, diffused sunlight filtering through a mountain mist. The visual style captures the elegance of ancient silk scrolls with crisp, modern digital textures. The palette is dominated by jade greens and celestial whites." src=""/>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+<span class="hero-name font-title-md text-title-md text-white block">英雄名称</span>
+<span class="hero-quality font-label-sm text-label-sm text-quality-ssr">SSR</span>
+</div>
+<button class="absolute top-2 right-2 bg-black/50 p-1 rounded-full text-white hover:text-error transition-colors clear-slot">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+<!-- Slot 3 -->
+<div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="3">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="slot-empty flex flex-col items-center gap-2 text-outline-variant">
+<span class="material-symbols-outlined text-4xl">add_circle</span>
+<span class="font-label-sm text-label-sm">位置 03</span>
+</div>
+<div class="slot-filled hidden absolute inset-0">
+<img class="hero-img w-full h-full object-cover" data-alt="A powerful celestial guardian wielding a massive stone hammer, standing atop a mountain peak under a blood-red moon. His skin is etched with glowing runes of power, and his armor is made of black obsidian with vermilion highlights. The mood is intense and epic, reflecting a dark fantasy oriental aesthetic. The lighting is low-key with strong red rim lighting on the character's silhouette." src=""/>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+<span class="hero-name font-title-md text-title-md text-white block">英雄名称</span>
+<span class="hero-quality font-label-sm text-label-sm text-quality-sr">SR</span>
+</div>
+<button class="absolute top-2 right-2 bg-black/50 p-1 rounded-full text-white hover:text-error transition-colors clear-slot">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+<!-- Slot 4 -->
+<div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="4">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="slot-empty flex flex-col items-center gap-2 text-outline-variant">
+<span class="material-symbols-outlined text-4xl">add_circle</span>
+<span class="font-label-sm text-label-sm">位置 04</span>
+</div>
+<div class="slot-filled hidden absolute inset-0">
+<img class="hero-img w-full h-full object-cover" data-alt="A graceful fox-spirit with multiple flowing tails, dressed in exquisite hanfu of deep indigo and gold. She is surrounded by blue mystical flames in a bamboo forest at night. The style is highly detailed digital art with a focus on textile patterns and glowing effects. The color palette uses deep midnight blues, vibrant cyan, and sharp gold accents." src=""/>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+<span class="hero-name font-title-md text-title-md text-white block">英雄名称</span>
+<span class="hero-quality font-label-sm text-label-sm text-quality-r">R</span>
+</div>
+<button class="absolute top-2 right-2 bg-black/50 p-1 rounded-full text-white hover:text-error transition-colors clear-slot">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+<!-- Slot 5 -->
+<div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="5">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="slot-empty flex flex-col items-center gap-2 text-outline-variant">
+<span class="material-symbols-outlined text-4xl">add_circle</span>
+<span class="font-label-sm text-label-sm">位置 05</span>
+</div>
+<div class="slot-filled hidden absolute inset-0">
+<img class="hero-img w-full h-full object-cover" data-alt="An ancient scholar-warrior holding a glowing calligraphy brush that paints ink dragons into the air. He is set against a parchment-textured background with actual Chinese characters floating around him. The lighting is warm and candle-lit, creating a cozy yet powerful atmosphere. The colors are rich browns, warm golds, and deep black ink strokes." src=""/>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+<span class="hero-name font-title-md text-title-md text-white block">英雄名称</span>
+<span class="hero-quality font-label-sm text-label-sm text-quality-n">N</span>
+</div>
+<button class="absolute top-2 right-2 bg-black/50 p-1 rounded-full text-white hover:text-error transition-colors clear-slot">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Filters and Hero List (Bottom Section) -->
+<div class="space-y-stack-md">
+<div class="flex flex-wrap items-center justify-between gap-stack-md bg-surface-container-low p-4 border border-outline-variant">
+<div class="flex items-center gap-stack-md">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">按品质筛选：</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-quality-ur text-quality-ur font-label-sm text-label-sm hover:bg-quality-ur/10">UR</button>
+<button class="px-3 py-1 border border-quality-ssr text-quality-ssr font-label-sm text-label-sm hover:bg-quality-ssr/10">SSR</button>
+<button class="px-3 py-1 border border-quality-sr text-quality-sr font-label-sm text-label-sm hover:bg-quality-sr/10">SR</button>
+<button class="px-3 py-1 border border-outline text-on-surface-variant font-label-sm text-label-sm">全部</button>
+</div>
+</div>
+<div class="relative w-full md:w-64">
+<input class="w-full bg-ink-wash border-0 border-b border-outline-variant focus:border-primary-fixed focus:ring-0 text-on-surface placeholder:text-on-surface-variant/50 font-body-md py-2" placeholder="搜索英雄..." type="text"/>
+<span class="material-symbols-outlined absolute right-0 top-2 text-on-surface-variant">search</span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-stack-md" id="heroInventory">
+<!-- Hero Cards will be rendered here -->
+</div>
+</div>
+</div>
+</main>
+<!-- Success Toast (Hidden) -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-surface-container-highest border-2 border-primary-fixed px-10 py-4 flex items-center gap-4 translate-y-20 transition-all opacity-0 pointer-events-none z-[100]" id="toast">
+<span class="material-symbols-outlined text-primary-fixed">check_circle</span>
+<span class="font-title-md text-title-md text-primary-fixed uppercase tracking-wider">阵容已保存</span>
+</div>
+<script>
+        const qualityNames = { 5: 'SSR', 4: 'SR', 3: 'R', 2: 'N', 1: 'N' };
+        const qualityClasses = { SSR: 'quality-ssr', SR: 'quality-sr', R: 'quality-r', N: 'quality-n' };
+        const heroImages = {
+            1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBacfl2KZJjEeKjbIXzp4XKS01iarwm87pVxf92bYPbhB03ppB7JGO5mDN629EbZdoKWzJs01KZZPOJWRHTWfldMHC3PgDZiVTFLbxL3xE6hlJGQ-0lXqRjKgEBJYBZtsAwGMk73bgDEgIuZ8lu6LE9IJhAaMUlHTzQyqHdOndKljJYCKg0ZFr-fYh4MQ8Wte4V3R870G7H0uII1t2sn-fjxdIn6s7c7iVMKrisf_z02ljOQ8OsiLY2j_DNVkuWCNHNbUP5gSmaaQU',
+            2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKb0-qek8mcN6fiqdlEeZQh01p7Zk1sXD9Y59e_87Nr_hWhbKcXb3UiVE7YZ8DWVxAtCSST1P6ebg2Go91sJTBIgu_jXFDGDhTDmW_eht8gdnvEEE5q_W6trMOUmrXI6R4izbHRN2EeC_f-sOzYmuUBc5RlAl9MfpbkkZNyTR6E1xS6in50r-Xk5fU-a2Rc-3CRhABy_YDi9hEmi3NCTXSLdnU5e2FYcgQEPBmTFBgjFVBykj5d0UvpO5btvThzfsMegMCK7_GEbw',
+            3: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1sO831rf0XcvBhM2ksFpDcw7RLiy1NxHuNTgbg-ub6m_qV2QoRdWJowXXh-SVZaxkLE6DaoPM89mR9JmSiiDWI1lg40l9xnrRlDGSpuIuJzVF3j6Phm8S-xVrTjpXe-dq2tpGzjR04JAc0DW7E7ORC8WVJu9gBvk1DvIP1_V_Boy-Jdb5YTZdsGqs-4MWkfMd4Iq3oCgxZo9n6r79PrvUWiC4AiVs-yieugg49MqcTplQUNLsP--X2k33OdnWwsamOHD3qys48M',
+            4: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsoIS-wmBeOGAvGjEgYY9CkL28lSk4hiiYlb-bXrtyGYhOZLxv2GEzIwzNrBIiZY4fyr1FeGbDQ2PDNHhzwDCwiunb2RlA0kpd93BTIWsl77k8DeErsLipspZI09o7m0C4Yeq4wqGAQPoAveFOjgJRbUhtye3_t7qqXreo2eemhnjP-LnEIr5jNJOggEtzgvRYVulRQ1Ke1MQ2LPcgNTq7LR3f9IF-USlJ-N7BYM66nYdxY16HpV-grE8M4xx9rjrOk92sao0BR00',
+            5: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCL69GlYj5IZtJRYLu5XpEUDWyAWMAbycg0A2zHQnwXxcIe7mdzr9s7bm4C2di9yytISwbY5QDvvDtLkxLKkYbeQy54LevFnbguHMdv60aYoshf7aCoDPcKPfP3_B8JyzUln0XrSHveUkdg0m_e--oKx3MZRJk50JltTSOB9Skodt_LelnU2owqQEsUCqcTxfs64Yv9zUX-I5eX2DDiNBgihipyeNPwYJhAot4s-GxB9SGxjb0ZnQiNmw3vLbLgLxHlsLVlj3RCxZg'
+        };
+        let heroes = [];
+        let activeTeam = [null, null, null, null, null];
+        let selectedSlot = null;
+
+        const heroInventory = document.getElementById('heroInventory');
+        const slots = document.querySelectorAll('.team-slot');
+        const saveBtn = document.getElementById('saveTeamBtn');
+
+        async function apiFetch(path, opts = {}) {
+            const token = localStorage.getItem('token');
+            if (!token) return window.location.href = '/';
+            const headers = opts.headers || {};
+            headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+            headers['Authorization'] = 'Bearer ' + token;
+            const res = await fetch(path, Object.assign({}, opts, { headers }));
+            if (res.status === 401) {
+                localStorage.removeItem('token');
+                return window.location.href = '/';
+            }
+            return res.json();
+        }
+
+        function normalizeHero(h) {
+            const quality = qualityNames[h.quality] || 'N';
+            return {
+                id: h.player_hero_id,
+                configId: h.hero_config_id,
+                name: h.name || '未知英雄',
+                quality,
+                img: heroImages[h.hero_config_id] || heroImages[1],
+                level: h.level || 1,
+                star: h.star || 1
+            };
+        }
+
+        async function init() {
+            try {
+                const [heroData, teamData, profileData, assetData] = await Promise.all([
+                    apiFetch('/api/v1/heroes'),
+                    apiFetch('/api/v1/team'),
+                    apiFetch('/api/v1/player/profile'),
+                    apiFetch('/api/v1/player/assets')
+                ]);
+                if (heroData && heroData.code === 0 && heroData.data && Array.isArray(heroData.data.heroes)) {
+                    heroes = heroData.data.heroes.map(normalizeHero);
+                }
+                if (teamData && teamData.code === 0 && Array.isArray(teamData.data)) {
+                    teamData.data.forEach(s => {
+                        if (s.slot && s.player_hero_id) activeTeam[s.slot - 1] = s.player_hero_id;
+                    });
+                }
+                if (profileData && profileData.code === 0 && profileData.data) {
+                    const nameEl = document.querySelector('h2.font-title-md');
+                    const levelEl = document.querySelector('p.font-label-sm.text-label-sm.text-on-surface-variant');
+                    if (nameEl) nameEl.textContent = profileData.data.Nickname || profileData.data.nickname || '取经人';
+                    if (levelEl) levelEl.textContent = `等级 ${profileData.data.Level || profileData.data.level || 1}`;
+                }
+                if (window.loadAssetBar) window.loadAssetBar();
+            } catch (err) {
+                showToast('加载数据失败，请刷新重试');
+            }
+            renderInventory();
+            activeTeam.forEach((heroId, idx) => {
+                const hero = heroes.find(h => h.id === heroId);
+                updateSlotUI(idx, hero || null);
+            });
+            if (slots[0]) slots[0].click();
+        }
+
+        function renderInventory() {
+            heroInventory.innerHTML = '';
+            if (heroes.length === 0) {
+                heroInventory.innerHTML = '<div class="col-span-full text-on-surface-variant">暂无英雄，请先前往召唤获得英雄。</div>';
+                return;
+            }
+            heroes.forEach(hero => {
+                const isAssigned = activeTeam.includes(hero.id);
+                const qualityClass = qualityClasses[hero.quality] || 'quality-n';
+                const card = document.createElement('div');
+                card.className = `hero-card group relative h-48 cursor-pointer border-2 transition-all ${isAssigned ? 'opacity-30 border-outline-variant grayscale' : 'border-outline hover:border-primary-fixed hover:-translate-y-1'}`;
+                card.onclick = () => !isAssigned && handleHeroSelect(hero);
+                card.innerHTML = `
+                    <div class="absolute inset-0"><img src="${hero.img}" class="w-full h-full object-cover" alt="${hero.name}"></div>
+                    <div class="absolute top-2 left-2 px-2 py-0.5 bg-black/70 border border-${qualityClass} rounded-sm">
+                        <span class="font-label-sm text-label-sm text-${qualityClass}">${hero.quality}</span>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black to-transparent">
+                        <p class="font-title-md text-sm text-white truncate">${hero.name}</p>
+                        <p class="font-label-sm text-[10px] text-on-surface-variant uppercase">等级 ${hero.level} · ${hero.star}星</p>
+                    </div>`;
+                heroInventory.appendChild(card);
+            });
+        }
+
+        slots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                const slotIndex = parseInt(slot.dataset.slot, 10) - 1;
+                slots.forEach(s => s.classList.remove('border-primary-fixed', 'shadow-[0_0_15px_rgba(255,215,0,0.4)]'));
+                slot.classList.add('border-primary-fixed', 'shadow-[0_0_15px_rgba(255,215,0,0.4)]');
+                selectedSlot = slotIndex;
+            });
+            slot.querySelector('.clear-slot').onclick = (e) => {
+                e.stopPropagation();
+                const slotIndex = parseInt(slot.dataset.slot, 10) - 1;
+                activeTeam[slotIndex] = null;
+                updateSlotUI(slotIndex);
+                renderInventory();
+            };
+        });
+
+        function handleHeroSelect(hero) {
+            if (selectedSlot === null) selectedSlot = activeTeam.findIndex(id => id === null);
+            if (selectedSlot === -1) selectedSlot = 0;
+            activeTeam[selectedSlot] = hero.id;
+            updateSlotUI(selectedSlot, hero);
+            renderInventory();
+            const nextEmpty = activeTeam.findIndex(id => id === null);
+            if (nextEmpty !== -1) slots[nextEmpty].click();
+        }
+
+        function updateSlotUI(index, hero = null) {
+            const slot = slots[index];
+            const emptyEl = slot.querySelector('.slot-empty');
+            const filledEl = slot.querySelector('.slot-filled');
+            if (hero) {
+                emptyEl.classList.add('hidden');
+                filledEl.classList.remove('hidden');
+                filledEl.querySelector('.hero-img').src = hero.img;
+                filledEl.querySelector('.hero-name').innerText = hero.name;
+                const qualityEl = filledEl.querySelector('.hero-quality');
+                qualityEl.innerText = hero.quality;
+                qualityEl.className = `hero-quality font-label-sm text-label-sm text-${qualityClasses[hero.quality] || 'quality-n'}`;
+            } else {
+                emptyEl.classList.remove('hidden');
+                filledEl.classList.add('hidden');
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            if (!t) return alert(msg);
+            const txt = t.querySelector('span.font-title-md');
+            if (txt) txt.innerText = msg;
+            t.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => t.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none'), 2500);
+        }
+
+        saveBtn.addEventListener('click', async () => {
+            const slotsPayload = activeTeam.map((heroId, idx) => ({ slot: idx + 1, player_hero_id: heroId || 0 })).filter(s => s.player_hero_id !== 0);
+            if (slotsPayload.length === 0) return showToast('请至少上阵 1 名英雄');
+            saveBtn.classList.add('scale-95');
+            try {
+                const data = await apiFetch('/api/v1/team/save', { method: 'POST', body: JSON.stringify({ slots: slotsPayload }) });
+                showToast(data && data.code === 0 ? '保存成功' : '保存失败：' + (data && data.message ? data.message : '未知错误'));
+            } catch (err) {
+                showToast('网络错误，请稍后重试');
+            } finally {
+                saveBtn.classList.remove('scale-95');
+            }
+        });
+
+        init();
+    </script>
+<script src="/static/assets/status-bar.js"></script>
+<script src="/static/assets/app-shell.js"></script>
+</body></html>

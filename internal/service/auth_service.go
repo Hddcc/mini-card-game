@@ -16,6 +16,7 @@ type AuthService struct {
 	db         *gorm.DB
 	userRepo   *repository.UserRepository
 	playerRepo *repository.PlayerRepository
+	heroRepo   *repository.HeroRepository
 }
 
 func NewAuthService(cfg *config.Config, db *gorm.DB, userRepo *repository.UserRepository, playerRepo *repository.PlayerRepository) *AuthService {
@@ -24,6 +25,7 @@ func NewAuthService(cfg *config.Config, db *gorm.DB, userRepo *repository.UserRe
 		db:         db,
 		userRepo:   userRepo,
 		playerRepo: playerRepo,
+		heroRepo:   repository.NewHeroRepository(db),
 	}
 }
 
@@ -35,7 +37,7 @@ type RegisterInput struct {
 
 func (s *AuthService) Register(input RegisterInput) (uint64, uint64, error) {
 	if _, err := s.userRepo.FindByUsername(input.Username); err == nil {
-		return 0, 0, errors.New("username already exists")
+		return 0, 0, errors.New("用户名已被占用")
 	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return 0, 0, err
 	}
@@ -80,6 +82,17 @@ func (s *AuthService) Register(input RegisterInput) (uint64, uint64, error) {
 			return err
 		}
 
+		if err := s.heroRepo.CreatePlayerHero(tx, &model.PlayerHero{
+			PlayerID:     profile.ID,
+			HeroConfigID: 1,
+			Level:        1,
+			Star:         1,
+			Shard:        0,
+			Locked:       0,
+		}); err != nil {
+			return err
+		}
+
 		userID = user.ID
 		playerID = profile.ID
 		return nil
@@ -107,11 +120,11 @@ type LoginOutput struct {
 func (s *AuthService) Login(input LoginInput) (*LoginOutput, error) {
 	user, err := s.userRepo.FindByUsername(input.Username)
 	if err != nil {
-		return nil, errors.New("username or password invalid")
+		return nil, errors.New("用户名或密码错误")
 	}
 
 	if !password.Check(user.PasswordHash, input.Password) {
-		return nil, errors.New("username or password invalid")
+		return nil, errors.New("用户名或密码错误")
 	}
 
 	profile, err := s.playerRepo.FindProfileByUserID(user.ID)

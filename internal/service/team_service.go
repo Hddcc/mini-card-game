@@ -127,6 +127,7 @@ func (s *TeamService) Save(playerID uint64, slots []TeamSlot) error {
 type TeamView struct {
 	Slot         uint8  `json:"slot"`
 	PlayerHeroID uint64 `json:"player_hero_id"`
+	ID           uint64 `json:"id"`
 	HeroConfigID uint64 `json:"hero_config_id"`
 	Name         string `json:"name"`
 	Quality      uint8  `json:"quality"`
@@ -177,6 +178,7 @@ func (s *TeamService) Get(playerID uint64) ([]TeamView, error) {
 		views = append(views, TeamView{
 			Slot:         team.Slot,
 			PlayerHeroID: team.PlayerHeroID,
+			ID:           team.PlayerHeroID,
 			HeroConfigID: hero.HeroConfigID,
 			Name:         cfg.Name,
 			Quality:      cfg.Quality,

@@ -43,6 +43,39 @@ type DrawOutput struct {
 	Results     []DrawResult `json:"results"`
 	Diamond     uint64       `json:"diamond"`
 	PityCounter uint32       `json:"pity_counter"`
+	PityLimit   uint32       `json:"pity_limit"`
+	TotalDraw   uint32       `json:"total_draw"`
+}
+
+type GachaStateView struct {
+	PoolID      uint64 `json:"pool_id"`
+	PityCounter uint32 `json:"pity_counter"`
+	PityLimit   uint32 `json:"pity_limit"`
+	TotalDraw   uint32 `json:"total_draw"`
+}
+
+func (s *GachaService) State(playerID uint64, poolID uint64) (*GachaStateView, error) {
+	pool, err := s.gachaRepo.FindPool(poolID)
+	if err != nil {
+		return nil, err
+	}
+
+	view := &GachaStateView{
+		PoolID:    poolID,
+		PityLimit: pool.PityLimit,
+	}
+
+	state, err := s.gachaRepo.FindState(playerID, poolID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return view, nil
+		}
+		return nil, err
+	}
+
+	view.PityCounter = state.PityCounter
+	view.TotalDraw = state.TotalDraw
+	return view, nil
 }
 
 func (s *GachaService) Draw(playerID uint64, poolID uint64, times int) (*DrawOutput, error) {
@@ -156,6 +189,8 @@ func (s *GachaService) Draw(playerID uint64, poolID uint64, times int) (*DrawOut
 		output.Results = results
 		output.Diamond = asset.Diamond
 		output.PityCounter = state.PityCounter
+		output.PityLimit = pool.PityLimit
+		output.TotalDraw = state.TotalDraw
 		return nil
 	})
 	if err != nil {

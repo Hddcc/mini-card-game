@@ -4,7 +4,7 @@ import "time"
 
 type StageConfig struct {
 	ID             uint64    `gorm:"primaryKey;column:id"`
-	Name           string    `gorm:"column:name"`
+	Name           string    `gorm:"column:name;size:64"`
 	Chapter        uint32    `gorm:"column:chapter"`
 	PrevStageID    uint64    `gorm:"column:prev_stage_id"`
 	StaminaCost    uint32    `gorm:"column:stamina_cost"`
