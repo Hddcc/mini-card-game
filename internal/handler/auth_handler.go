@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 
 	"mini-card-game/internal/pkg/app"
 	apperrors "mini-card-game/internal/pkg/errors"
@@ -24,10 +25,35 @@ type registerRequest struct {
 	Nickname string `json:"nickname" binding:"required,min=1,max=64"`
 }
 
+func validationErrorMessage(err error) string {
+	if errs, ok := err.(validator.ValidationErrors); ok {
+		for _, e := range errs {
+			switch e.Field() {
+			case "Username":
+				if e.Tag() == "required" {
+					return "请输入账号"
+				}
+				return "账号长度应为 3 到 64 个字符"
+			case "Password":
+				if e.Tag() == "required" {
+					return "请输入密码"
+				}
+				return "密码长度应为 6 到 64 个字符"
+			case "Nickname":
+				if e.Tag() == "required" {
+					return "请输入昵称"
+				}
+				return "昵称长度应为 1 到 64 个字符"
+			}
+		}
+	}
+	return "参数格式不正确，请检查账号、密码和昵称"
+}
+
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req registerRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		app.Fail(c, http.StatusBadRequest, apperrors.CodeInvalidParam, "invalid param")
+		app.Fail(c, http.StatusBadRequest, apperrors.CodeInvalidParam, validationErrorMessage(err))
 		return
 	}
 
@@ -55,7 +81,7 @@ type loginRequest struct {
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req loginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		app.Fail(c, http.StatusBadRequest, apperrors.CodeInvalidParam, "invalid param")
+		app.Fail(c, http.StatusBadRequest, apperrors.CodeInvalidParam, validationErrorMessage(err))
 		return
 	}
 

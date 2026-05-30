@@ -1,13 +1,13 @@
 package main
 
 import (
+	"go.uber.org/zap"
 	"log"
 	"mini-card-game/internal/cache"
 	"mini-card-game/internal/config"
 	"mini-card-game/internal/model"
 	"mini-card-game/internal/pkg/logger"
 	"mini-card-game/internal/router"
-	"go.uber.org/zap"
 )
 
 func main() {
@@ -25,6 +25,9 @@ func main() {
 	db, err := model.NewDB(cfg.MySQLDSN)
 	if err != nil {
 		zapLogger.Fatal("init database failed", zap.Error(err))
+	}
+	if err := model.EnsureSchema(db); err != nil {
+		zapLogger.Fatal("ensure database schema failed", zap.Error(err))
 	}
 
 	redisClient, err := cache.NewRedis(cfg.RedisAddr, cfg.RedisPassword, cfg.RedisDB)

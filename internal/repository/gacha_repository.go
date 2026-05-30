@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"gorm.io/gorm/logger"
 )
 
 type GachaRepository struct {
@@ -31,9 +32,21 @@ func (r *GachaRepository) ListPoolItems(poolID uint64) ([]model.GachaPoolItem, e
 	return items, err
 }
 
+func (r *GachaRepository) FindState(playerID uint64, poolID uint64) (*model.PlayerGachaState, error) {
+	var state model.PlayerGachaState
+	err := r.db.Session(&gorm.Session{Logger: r.db.Logger.LogMode(logger.Silent)}).
+		Where("player_id = ? AND pool_id = ?", playerID, poolID).
+		First(&state).Error
+	if err != nil {
+		return nil, err
+	}
+	return &state, nil
+}
+
 func (r *GachaRepository) LockOrCreateState(tx *gorm.DB, playerID uint64, poolID uint64) (*model.PlayerGachaState, error) {
 	var state model.PlayerGachaState
-	err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
+	err := tx.Session(&gorm.Session{Logger: tx.Logger.LogMode(logger.Silent)}).
+		Clauses(clause.Locking{Strength: "UPDATE"}).
 		Where("player_id = ? AND pool_id = ?", playerID, poolID).
 		First(&state).Error
 	if err == nil {

@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mini 西游 - 天命召唤</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800&amp;family=Hanken+Grotesk:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@100..900&amp;family=Hanken+Grotesk:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        @keyframes divine-shimmer {
+            0% { transform: translateX(-100%) skewX(-20deg); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateX(200%) skewX(-20deg); opacity: 0; }
+        }
+        .shimmer-sweep {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-sweep::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.4), transparent);
+            animation: divine-shimmer 3s infinite;
+        }
+        .jade-gloss {
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
+        }
+        .meander-corner {
+            width: 16px; height: 16px;
+            border: 2px solid #999077;
+            position: absolute;
+        }
+        .meander-tl { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+        .meander-tr { top: -2px; right: -2px; border-left: 0; border-bottom: 0; }
+        .meander-bl { bottom: -2px; left: -2px; border-right: 0; border-top: 0; }
+        .meander-br { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+        
+        .ink-texture {
+            background-image: radial-gradient(circle at 50% 50%, rgba(45, 45, 45, 0.8) 0%, rgba(19, 19, 19, 1) 100%);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "quality-r": "#1E90FF",
+                        "surface-container": "#20201f",
+                        "secondary": "#ffb4a9",
+                        "inverse-on-surface": "#313030",
+                        "on-secondary-container": "#ff9f92",
+                        "on-error": "#690005",
+                        "on-surface": "#e5e2e1",
+                        "surface-bright": "#393939",
+                        "on-tertiary-fixed-variant": "#005232",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-dim": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed-variant": "#930004",
+                        "on-secondary-fixed": "#410001",
+                        "surface-variant": "#353535",
+                        "on-secondary": "#690002",
+                        "primary-fixed": "#ffe16d",
+                        "outline": "#999077",
+                        "surface": "#131313",
+                        "on-primary-fixed-variant": "#544600",
+                        "quality-n": "#A9A9A9",
+                        "on-primary-fixed": "#221b00",
+                        "outline-variant": "#4d4732",
+                        "on-tertiary-container": "#006d44",
+                        "on-tertiary": "#003921",
+                        "error-container": "#93000a",
+                        "quality-ur": "#FF4500",
+                        "on-tertiary-fixed": "#002111",
+                        "quality-sr": "#DA70D6",
+                        "primary-fixed-dim": "#e9c400",
+                        "surface-container-low": "#1c1b1b",
+                        "ink-wash": "#2D2D2D",
+                        "surface-container-highest": "#353535",
+                        "parchment": "#F5E6BE",
+                        "secondary-fixed": "#ffdad5",
+                        "tertiary-container": "#6ff2ae",
+                        "primary-container": "#ffd700",
+                        "secondary-container": "#970205",
+                        "on-surface-variant": "#d0c6ab",
+                        "secondary-fixed-dim": "#ffb4a9",
+                        "tertiary": "#dbffe6",
+                        "surface-tint": "#e9c400",
+                        "tertiary-fixed-dim": "#59de9b",
+                        "surface-container-high": "#2a2a2a",
+                        "inverse-primary": "#705d00",
+                        "primary": "#fff6df",
+                        "error": "#ffb4ab",
+                        "on-primary-container": "#705e00",
+                        "background": "#131313",
+                        "quality-ssr": "#FFD700",
+                        "on-primary": "#3a3000",
+                        "tertiary-fixed": "#78fbb6",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "stack-md": "12px",
+                        "margin-desktop": "40px",
+                        "stack-xs": "4px",
+                        "unit": "4px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "stats-num": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-hero": ["Epilogue"],
+                        "headline-lg-mobile": ["Epilogue"],
+                        "title-md": ["Epilogue"],
+                        "headline-lg": ["Epilogue"]
+                    },
+                    "fontSize": {
+                        "stats-num": ["18px", {"lineHeight": "1", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-hero": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile py-stack-md bg-ink-wash border-b-2 border-outline-variant shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+<div class="flex items-center gap-stack-md">
+<span class="font-display-hero text-headline-lg-mobile text-primary-fixed">Mini 西游</span>
+</div>
+<div class="flex items-center gap-gutter">
+<div class="flex items-center gap-stack-xs bg-surface-container-high px-3 py-1 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-primary-fixed text-sm" data-icon="bolt">bolt</span>
+<span class="font-stats-num text-stats-num text-primary">1,240</span>
+</div>
+<div class="flex items-center gap-stack-xs bg-surface-container-high px-3 py-1 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-primary-fixed text-sm" data-icon="diamond">diamond</span>
+<span class="font-stats-num text-stats-num text-primary">580</span>
+</div>
+</div>
+</nav>
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col pt-24 bg-surface-container-lowest border-r-2 border-outline-variant w-20 md:w-64 transition-all duration-300">
+<div class="hidden md:flex flex-col px-6 mb-8">
+<span class="font-display-hero text-title-md text-primary-fixed">取经人</span>
+<span class="font-label-sm text-on-surface-variant">等级 99</span>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-4 hover:bg-surface-container-high hover:text-on-surface group" href="/static/mini_5/code.html">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="fort">fort</span>
+<span class="hidden md:inline font-title-md text-label-sm">首页</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-4 hover:bg-surface-container-high hover:text-on-surface group" href="/static/mini_3/code.html">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="swords">swords</span>
+<span class="hidden md:inline font-title-md text-label-sm">英雄</span>
+</a>
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-4 hover:bg-surface-container-high hover:text-on-surface group" href="/static/mini_2/code.html">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="scroll">scrollable_header</span>
+<span class="hidden md:inline font-title-md text-label-sm">关卡</span>
+</a>
+<a class="text-primary-fixed border-l-4 border-primary-fixed bg-surface-variant px-4 py-3 flex items-center gap-4 active:translate-x-1 transition-all duration-200" href="/static/mini_4/code.html"><span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span><span class="hidden md:inline font-title-md text-label-sm">召唤</span></a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-20 md:ml-64 pt-20 h-screen relative overflow-hidden ink-texture">
+<!-- Mythical Backdrop -->
+<div class="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
+<img alt="Mythical Backdrop" class="w-full h-full object-cover" data-alt="A mystical ancient Chinese celestial background with swirling ink-wash clouds, golden particle light floating through the air, and distant silhouettes of floating pagoda islands. The lighting is ethereal and divine, featuring deep blacks and vibrant imperial gold accents in a cinematic wide-angle shot. The atmosphere is charged with spiritual energy and ancient power." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs0TZE-W99NXqClowG20eoH6Enr59z6-fCTYO0ieIyPLPsHQ5vA7V0wY9vbQb-kWyk_stxDeYKZYvFize74hQwXyqYBk1QWarAyaqeK_FSCi6w1HzCSwCWUro2l5bOtH2uC7k3Y03RIgqY2OeY15T41TLrScS3oSk0yf-Ou6sCG4TwrQQhP1gcaPSir85PTqNmVpWA4EVeOkZ-uqptcuX0oebNOjy2rJmFJN31hbpoQlv60sUAtBiIbFbvnwQou3-AhxGwXa-gZxA"/>
+</div>
+<!-- 召唤ing Pool Display -->
+<div class="relative z-10 h-full flex flex-col items-center justify-between p-gutter md:p-margin-desktop">
+<!-- Pool Header & Info -->
+<div class="w-full max-w-4xl flex flex-col md:flex-row justify-between items-start md:items-end gap-stack-lg">
+<div class="space-y-stack-xs">
+<div class="flex items-center gap-stack-md">
+<span class="bg-quality-ur text-on-surface px-3 py-1 text-label-sm font-label-sm shimmer-sweep rounded">限定</span>
+</div>
+<h1 class="font-display-hero text-headline-lg md:text-display-hero text-primary">天命龙影</h1>
+<p class="text-on-surface-variant max-w-lg font-body-md">天命灵息已被唤醒，消耗灵玉召来传说英雄，加入你的取经之路。</p>
+</div>
+<div class="bg-surface-container-high/80 backdrop-blur-md border border-outline-variant p-stack-lg min-w-[240px] relative">
+<div class="meander-corner meander-tl"></div>
+<div class="meander-corner meander-tr"></div>
+<div class="meander-corner meander-bl"></div>
+<div class="meander-corner meander-br"></div>
+<div class="flex flex-col gap-stack-md">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-on-surface-variant">保底计数</span>
+<span class="font-stats-num text-stats-num text-primary-fixed" id="pityCounter">0 / 90</span>
+</div>
+<div class="h-3 bg-surface-dim rounded-full overflow-hidden border border-outline-variant relative">
+<div class="absolute inset-y-0 left-0 bg-quality-ssr jade-gloss w-0 shadow-[0_0_10px_rgba(255,215,0,0.5)] transition-all duration-300" id="pityProgress"></div>
+</div>
+<span class="text-[10px] font-label-sm text-center text-on-surface-variant italic">90 次召唤必得高品质英雄</span>
+</div>
+</div>
+</div>
+<!-- Central Hero Preview (Visual Focus) -->
+<div class="flex-1 flex items-center justify-center relative w-full overflow-visible">
+<div class="relative group">
+<div class="absolute -inset-10 bg-primary-fixed/20 blur-3xl rounded-full transition-all duration-700 group-hover:scale-125"></div>
+<div class="relative w-64 md:w-96 aspect-[3/4] rounded-xl overflow-hidden border-2 border-primary-fixed shadow-2xl transform hover:scale-105 transition-transform">
+<img alt="主打英雄" class="w-full h-full object-cover" data-alt="孙悟空主打英雄立绘，身披赤金战甲，手持金箍棒，背后有玉龙灵影盘旋。" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBacfl2KZJjEeKjbIXzp4XKS01iarwm87pVxf92bYPbhB03ppB7JGO5mDN629EbZdoKWzJs01KZZPOJWRHTWfldMHC3PgDZiVTFLbxL3xE6hlJGQ-0lXqRjKgEBJYBZtsAwGMk73bgDEgIuZ8lu6LE9IJhAaMUlHTzQyqHdOndKljJYCKg0ZFr-fYh4MQ8Wte4V3R870G7H0uII1t2sn-fjxdIn6s7c7iVMKrisf_z02ljOQ8OsiLY2j_DNVkuWCNHNbUP5gSmaaQU"/>
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black p-stack-lg">
+<span class="text-quality-ssr font-display-hero text-headline-lg-mobile italic">孙悟空</span>
+<div class="flex gap-1 mt-1">
+<span class="material-symbols-outlined text-quality-ssr text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-quality-ssr text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-quality-ssr text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-quality-ssr text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-quality-ssr text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 召唤 Actions -->
+<div class="w-full max-w-3xl flex flex-col md:flex-row gap-gutter pb-stack-lg">
+<!-- Single 召唤 -->
+<button class="flex-1 group relative bg-ink-wash border-2 border-outline hover:border-primary-fixed p-6 transition-all active:scale-95 overflow-hidden" onclick="showResults(1)">
+<div class="flex flex-col items-center gap-2 relative z-10">
+<span class="font-title-md text-on-surface">召唤一次</span>
+<div class="flex items-center gap-2 text-primary-fixed">
+<span class="material-symbols-outlined text-sm" data-icon="diamond">diamond</span>
+<span class="font-stats-num text-stats-num">160</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-primary-fixed/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</button>
+<!-- Multi 召唤 -->
+<button class="flex-1 group relative bg-surface-container-highest border-2 border-primary-fixed p-6 transition-all active:scale-95 overflow-hidden shadow-[0_0_20px_rgba(255,215,0,0.2)]" onclick="showResults(10)">
+<div class="flex flex-col items-center gap-2 relative z-10">
+<span class="font-title-md text-primary-fixed shimmer-sweep">召唤十次</span>
+<div class="flex items-center gap-2 text-primary-fixed">
+<span class="material-symbols-outlined text-sm" data-icon="diamond">diamond</span>
+<span class="font-stats-num text-stats-num">1600</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-primary-fixed/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute -right-4 -top-4 bg-quality-ur text-[10px] font-label-sm px-4 py-1 rotate-45">额外 +1</div>
+</button>
+</div>
+</div>
+</main>
+<!-- Result Modal (Hidden by default) -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-gutter" id="result-modal">
+<div class="absolute inset-0 bg-black/95 backdrop-blur-xl"></div>
+<div class="relative w-full max-w-5xl z-10 flex flex-col items-center">
+<h2 class="font-display-hero text-headline-lg md:text-display-hero text-primary-fixed mb-stack-lg opacity-0 transform translate-y-10 transition-all duration-700" id="modal-title">天命显现</h2>
+<!-- Result Grid -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-stack-lg w-full mb-12" id="result-grid">
+<!-- Cards will be injected here -->
+</div>
+<button class="stone-button px-12 py-3 bg-surface-container-highest border-2 border-primary-fixed text-primary-fixed font-title-md hover:bg-primary-fixed hover:text-black transition-all transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,215,0,0.3)]" onclick="closeResults()">
+                确认
+            </button>
+</div>
+</div>
+<script>
+        const qualityNames = { 5: 'SSR', 4: 'SR', 3: 'R', 2: 'N', 1: 'N' };
+        const qualityColors = { SSR: '#FFD700', SR: '#DA70D6', R: '#1E90FF', N: '#A9A9A9' };
+        const heroNames = { 1: '孙悟空', 2: '猪八戒', 3: '沙悟净', 4: '小白龙', 5: '唐三藏' };
+        const heroImages = {
+            1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBacfl2KZJjEeKjbIXzp4XKS01iarwm87pVxf92bYPbhB03ppB7JGO5mDN629EbZdoKWzJs01KZZPOJWRHTWfldMHC3PgDZiVTFLbxL3xE6hlJGQ-0lXqRjKgEBJYBZtsAwGMk73bgDEgIuZ8lu6LE9IJhAaMUlHTzQyqHdOndKljJYCKg0ZFr-fYh4MQ8Wte4V3R870G7H0uII1t2sn-fjxdIn6s7c7iVMKrisf_z02ljOQ8OsiLY2j_DNVkuWCNHNbUP5gSmaaQU',
+            2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKb0-qek8mcN6fiqdlEeZQh01p7Zk1sXD9Y59e_87Nr_hWhbKcXb3UiVE7YZ8DWVxAtCSST1P6ebg2Go91sJTBIgu_jXFDGDhTDmW_eht8gdnvEEE5q_W6trMOUmrXI6R4izbHRN2EeC_f-sOzYmuUBc5RlAl9MfpbkkZNyTR6E1xS6in50r-Xk5fU-a2Rc-3CRhABy_YDi9hEmi3NCTXSLdnU5e2FYcgQEPBmTFBgjFVBykj5d0UvpO5btvThzfsMegMCK7_GEbw',
+            3: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1sO831rf0XcvBhM2ksFpDcw7RLiy1NxHuNTgbg-ub6m_qV2QoRdWJowXXh-SVZaxkLE6DaoPM89mR9JmSiiDWI1lg40l9xnrRlDGSpuIuJzVF3j6Phm8S-xVrTjpXe-dq2tpGzjR04JAc0DW7E7ORC8WVJu9gBvk1DvIP1_V_Boy-Jdb5YTZdsGqs-4MWkfMd4Iq3oCgxZo9n6r79PrvUWiC4AiVs-yieugg49MqcTplQUNLsP--X2k33OdnWwsamOHD3qys48M',
+            4: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsoIS-wmBeOGAvGjEgYY9CkL28lSk4hiiYlb-bXrtyGYhOZLxv2GEzIwzNrBIiZY4fyr1FeGbDQ2PDNHhzwDCwiunb2RlA0kpd93BTIWsl77k8DeErsLipspZI09o7m0C4Yeq4wqGAQPoAveFOjgJRbUhtye3_t7qqXreo2eemhnjP-LnEIr5jNJOggEtzgvRYVulRQ1Ke1MQ2LPcgNTq7LR3f9IF-USlJ-N7BYM66nYdxY16HpV-grE8M4xx9rjrOk92sao0BR00',
+            5: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCL69GlYj5IZtJRYLu5XpEUDWyAWMAbycg0A2zHQnwXxcIe7mdzr9s7bm4C2di9yytISwbY5QDvvDtLkxLKkYbeQy54LevFnbguHMdv60aYoshf7aCoDPcKPfP3_B8JyzUln0XrSHveUkdg0m_e--oKx3MZRJk50JltTSOB9Skodt_LelnU2owqQEsUCqcTxfs64Yv9zUX-I5eX2DDiNBgihipyeNPwYJhAot4s-GxB9SGxjb0ZnQiNmw3vLbLgLxHlsLVlj3RCxZg'
+        };
+
+        async function apiFetch(path, opts = {}) {
+            const token = localStorage.getItem('token');
+            if (!token) return window.location.href = '/';
+            const headers = opts.headers || {};
+            headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+            headers['Authorization'] = 'Bearer ' + token;
+            const res = await fetch(path, Object.assign({}, opts, { headers }));
+            if (res.status === 401) {
+                localStorage.removeItem('token');
+                return window.location.href = '/';
+            }
+            return res.json();
+        }
+
+        async function loadAssets() {
+            if (window.loadAssetBar) return window.loadAssetBar();
+        }
+
+        function updatePity(counter, limit = 90) {
+            const safeLimit = Math.max(1, Number(limit) || 90);
+            const safeCounter = Math.max(0, Number(counter) || 0);
+            const counterEl = document.getElementById('pityCounter');
+            const progressEl = document.getElementById('pityProgress');
+            if (counterEl) counterEl.textContent = `${safeCounter} / ${safeLimit}`;
+            if (progressEl) progressEl.style.width = `${Math.min(100, Math.round(safeCounter / safeLimit * 100))}%`;
+        }
+
+        async function loadPityState() {
+            try {
+                const data = await apiFetch('/api/v1/gacha/state?pool_id=1');
+                if (data && data.code === 0 && data.data) {
+                    updatePity(data.data.pity_counter, data.data.pity_limit);
+                }
+            } catch (err) {
+                updatePity(0, 90);
+            }
+        }
+
+        async function showResults(count) {
+            const modal = document.getElementById('result-modal');
+            const grid = document.getElementById('result-grid');
+            const title = document.getElementById('modal-title');
+            grid.innerHTML = '<div class="col-span-full text-center text-primary-fixed">召唤中...</div>';
+            modal.classList.remove('hidden');
+            title.classList.remove('opacity-0', 'translate-y-10');
+
+            try {
+                const data = await apiFetch('/api/v1/gacha/draw', {
+                    method: 'POST',
+                    body: JSON.stringify({ pool_id: 1, times: count })
+                });
+                if (!data || data.code !== 0) {
+                    grid.innerHTML = `<div class="col-span-full text-center text-error">召唤失败：${data && data.message ? data.message : '未知错误'}</div>`;
+                    return;
+                }
+                renderResults(data.data.results || []);
+                if (window.loadAssetBar) window.loadAssetBar();
+                updatePity(data.data.pity_counter, data.data.pity_limit);
+            } catch (err) {
+                grid.innerHTML = '<div class="col-span-full text-center text-error">网络错误，请稍后重试</div>';
+            }
+        }
+
+        function renderResults(results) {
+            const grid = document.getElementById('result-grid');
+            grid.innerHTML = '';
+            results.forEach((item, i) => {
+                const rarity = qualityNames[item.quality] || 'N';
+                const color = qualityColors[rarity];
+                const isHero = item.item_type === 'hero';
+                const name = isHero ? (heroNames[item.item_id] || `英雄 ${item.item_id}`) : `金币 x${item.item_count}`;
+                const card = document.createElement('div');
+                card.className = `opacity-0 transform scale-50 transition-all duration-500 flex flex-col items-center`;
+                card.innerHTML = `
+                    <div class="relative w-full aspect-square border-2 rounded-xl overflow-hidden shadow-2xl" style="border-color: ${color}">
+                        ${isHero ? `<img src="${heroImages[item.item_id] || heroImages[1]}" class="w-full h-full object-cover" alt="${name}">` : `<div class="w-full h-full flex items-center justify-center bg-surface-container"><span class="material-symbols-outlined text-4xl" style="color: ${color}; font-variation-settings: 'FILL' 1;">account_balance_wallet</span></div>`}
+                        <div class="absolute top-0 right-0 bg-black/60 px-2 py-0.5 text-[10px] font-label-sm" style="color: ${color}">${rarity}</div>
+                    </div>
+                    <span class="mt-2 font-label-sm text-center line-clamp-1">${name}${item.is_pity ? ' · 保底' : ''}</span>`;
+                grid.appendChild(card);
+                setTimeout(() => {
+                    card.classList.remove('opacity-0', 'scale-50');
+                    card.classList.add('opacity-100', 'scale-100');
+                }, 10 + (i * 100));
+            });
+        }
+
+        function closeResults() {
+            document.getElementById('result-modal').classList.add('hidden');
+            loadAssets();
+        }
+
+        loadAssets();
+        loadPityState();
+    </script>
+<script src="/static/assets/status-bar.js"></script>
+<script src="/static/assets/app-shell.js"></script>
+</body></html>

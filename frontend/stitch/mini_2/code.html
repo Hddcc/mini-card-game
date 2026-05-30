@@ -1,0 +1,517 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mini 西游 - 西行关卡</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800&amp;family=Hanken+Grotesk:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "quality-r": "#1E90FF",
+                        "surface-container": "#20201f",
+                        "secondary": "#ffb4a9",
+                        "inverse-on-surface": "#313030",
+                        "on-secondary-container": "#ff9f92",
+                        "on-error": "#690005",
+                        "on-surface": "#e5e2e1",
+                        "surface-bright": "#393939",
+                        "on-tertiary-fixed-variant": "#005232",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-dim": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-fixed-variant": "#930004",
+                        "on-secondary-fixed": "#410001",
+                        "surface-variant": "#353535",
+                        "on-secondary": "#690002",
+                        "primary-fixed": "#ffe16d",
+                        "outline": "#999077",
+                        "surface": "#131313",
+                        "on-primary-fixed-variant": "#544600",
+                        "quality-n": "#A9A9A9",
+                        "on-primary-fixed": "#221b00",
+                        "outline-variant": "#4d4732",
+                        "on-tertiary-container": "#006d44",
+                        "on-tertiary": "#003921",
+                        "error-container": "#93000a",
+                        "quality-ur": "#FF4500",
+                        "on-tertiary-fixed": "#002111",
+                        "quality-sr": "#DA70D6",
+                        "primary-fixed-dim": "#e9c400",
+                        "surface-container-low": "#1c1b1b",
+                        "ink-wash": "#2D2D2D",
+                        "surface-container-highest": "#353535",
+                        "parchment": "#F5E6BE",
+                        "secondary-fixed": "#ffdad5",
+                        "tertiary-container": "#6ff2ae",
+                        "primary-container": "#ffd700",
+                        "secondary-container": "#970205",
+                        "on-surface-variant": "#d0c6ab",
+                        "secondary-fixed-dim": "#ffb4a9",
+                        "tertiary": "#dbffe6",
+                        "surface-tint": "#e9c400",
+                        "tertiary-fixed-dim": "#59de9b",
+                        "surface-container-high": "#2a2a2a",
+                        "inverse-primary": "#705d00",
+                        "primary": "#fff6df",
+                        "error": "#ffb4ab",
+                        "on-primary-container": "#705e00",
+                        "background": "#131313",
+                        "quality-ssr": "#FFD700",
+                        "on-primary": "#3a3000",
+                        "tertiary-fixed": "#78fbb6",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "stack-md": "12px",
+                        "margin-desktop": "40px",
+                        "stack-xs": "4px",
+                        "unit": "4px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "stats-num": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-hero": ["Epilogue"],
+                        "headline-lg-mobile": ["Epilogue"],
+                        "title-md": ["Epilogue"],
+                        "headline-lg": ["Epilogue"]
+                    },
+                    "fontSize": {
+                        "stats-num": ["18px", {"lineHeight": "1", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-hero": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .meander-corner::before {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-top: 2px solid #ffd700;
+            border-left: 2px solid #ffd700;
+            top: -2px;
+            left: -2px;
+        }
+        .meander-corner::after {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-bottom: 2px solid #ffd700;
+            border-right: 2px solid #ffd700;
+            bottom: -2px;
+            right: -2px;
+        }
+        .jade-glow {
+            box-shadow: inset 0 0 10px rgba(0, 168, 107, 0.4), 0 0 5px rgba(0, 168, 107, 0.2);
+        }
+        .shimmer-text {
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .ink-overlay {
+            background-image: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden">
+<!-- Top Navigation App Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile py-stack-md bg-ink-wash border-b-2 border-outline-variant shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+<div class="flex items-center gap-stack-md">
+<span class="font-display-hero text-headline-lg-mobile text-primary-fixed">Mini 西游</span>
+</div>
+<div class="flex items-center gap-gutter">
+<div class="flex flex-col items-end">
+<span class="font-stats-num text-stats-num text-primary-fixed">1,240 <span class="material-symbols-outlined text-[16px]" data-icon="account_balance_wallet">account_balance_wallet</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">金币</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-stats-num text-stats-num text-quality-ssr">88 <span class="material-symbols-outlined text-[16px]" data-icon="diamond">diamond</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">灵玉</span>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary-fixed overflow-hidden">
+<img alt="Player Portrait" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsoIS-wmBeOGAvGjEgYY9CkL28lSk4hiiYlb-bXrtyGYhOZLxv2GEzIwzNrBIiZY4fyr1FeGbDQ2PDNHhzwDCwiunb2RlA0kpd93BTIWsl77k8DeErsLipspZI09o7m0C4Yeq4wqGAQPoAveFOjgJRbUhtye3_t7qqXreo2eemhnjP-LnEIr5jNJOggEtzgvRYVulRQ1Ke1MQ2LPcgNTq7LR3f9IF-USlJ-N7BYM66nYdxY16HpV-grE8M4xx9rjrOk92sao0BR00"/>
+</div>
+</div>
+</header>
+<!-- Side Navigation -->
+<nav class="fixed left-0 top-0 h-full z-40 flex flex-col pt-20 w-64 bg-surface-container-lowest border-r-2 border-outline-variant hidden md:flex">
+<div class="px-6 py-8">
+<h2 class="font-display-hero text-title-md text-primary-fixed">取经人</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">等级 99</p>
+</div>
+<div class="flex flex-col flex-grow">
+<a class="text-on-surface-variant px-4 py-3 hover:bg-surface-container-high hover:text-on-surface flex items-center gap-3" href="/static/mini_5/code.html"><span class="material-symbols-outlined" data-icon="fort">fort</span><span class="font-label-sm text-label-sm">首页</span></a>
+<a class="text-on-surface-variant px-4 py-3 hover:bg-surface-container-high hover:text-on-surface flex items-center gap-3" href="/static/mini_3/code.html"><span class="material-symbols-outlined" data-icon="swords">swords</span><span class="font-label-sm text-label-sm">英雄</span></a>
+<a class="text-primary-fixed border-l-4 border-primary-fixed bg-surface-variant px-4 py-3 flex items-center gap-3 active:translate-x-1 transition-all duration-200" href="/static/mini_2/code.html"><span class="material-symbols-outlined" data-icon="scroll">scrollable_header</span><span class="font-label-sm text-label-sm">关卡</span></a>
+<a class="text-on-surface-variant px-4 py-3 hover:bg-surface-container-high hover:text-on-surface flex items-center gap-3" href="/static/mini_4/code.html"><span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span><span class="font-label-sm text-label-sm">召唤</span></a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-20 md:pl-64 min-h-screen relative">
+<!-- Hero Visual Section -->
+<section class="relative h-64 md:h-80 w-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A cinematic digital landscape of ancient misty mountains in China with floating stone pagodas and cherry blossom petals swirling in the air. The lighting is golden and ethereal, suggesting a divine dawn. The art style is a blend of traditional ink wash painting and modern high-fidelity digital rendering with deep blacks and vibrant gold accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsN9Kphp_PvSt4yw2Ifi70h4jH884dSReP3e2rccoTamTcJ0tJiQy1kNiUtSS_PNvSZgj6tFcRVUrB2PJKn8R82mVFK4TC-2gU5yrugRchvm6c1LtfHdf3rccL85zcGEXNfxj3E_sQfq27cX0J4eEgWw1B_7In5YPiOOtip_9obEXe2GgTYKIHX9BnrItAG8L7tykpcEGiwj32rQIBUMMnLAJH1TJtUa7yNnDjFmsBAPXGBDz0ZgrfU-4vp6hv94uzt7yE2Rki87M"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute bottom-stack-lg left-margin-mobile md:left-margin-desktop">
+<span class="px-3 py-1 bg-quality-ssr/20 border border-quality-ssr text-quality-ssr rounded-full font-label-sm text-label-sm uppercase mb-2 inline-block">第一章</span>
+<h1 class="font-display-hero text-headline-lg-mobile md:text-headline-lg text-primary-fixed drop-shadow-lg">五行山</h1>
+<p class="font-body-md text-on-surface-variant max-w-lg mt-2">西行之路穿过古老封印，击败山中守卫继续前进。</p>
+</div>
+</section>
+<!-- Stats Bar -->
+<section class="px-margin-mobile md:px-margin-desktop mt-stack-lg">
+<div class="bg-ink-wash border border-outline-variant p-stack-md flex justify-between items-center relative overflow-hidden">
+<div class="flex items-center gap-gutter">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">体力</span>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-32 h-3 bg-surface-container-low rounded-full overflow-hidden border border-outline-variant relative">
+<div class="h-full bg-gradient-to-r from-[#00A86B] to-[#4ADE80] jade-glow transition-all duration-500" id="stageStaminaFill" style="width: 0%;"></div>
+</div>
+<span class="font-stats-num text-label-sm text-primary-fixed" id="stageStaminaText">0/120</span>
+</div>
+</div>
+<div class="h-10 w-px bg-outline-variant"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">队伍战力</span>
+<span class="font-stats-num text-stats-num text-quality-ur">45,200</span>
+</div>
+</div>
+<div class="hidden sm:flex gap-stack-md">
+<button class="bg-surface-variant hover:bg-surface-container-high px-4 py-2 text-primary font-label-sm text-label-sm border border-outline-variant transition-colors">
+                        自动战斗
+                    </button>
+</div>
+</div>
+</section>
+<!-- Stage Grid (Asymmetric Bento Style) -->
+<section class="px-margin-mobile md:px-margin-desktop mt-stack-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-lg pb-24">
+<!-- Stage Card: 4-1 (Unlocked/Cleared) -->
+<div class="group relative bg-ink-wash border-2 border-outline-variant p-stack-md meander-corner transition-all hover:scale-[1.02] active:scale-95 cursor-pointer">
+<div class="absolute top-2 right-2 flex gap-1">
+<span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span>
+</div>
+<div class="mb-stack-md">
+<p class="font-label-sm text-label-sm text-primary-fixed">关卡 1-1</p>
+<h3 class="font-display-hero text-title-md text-on-surface">花果山试炼</h3>
+</div>
+<div class="space-y-2 mb-stack-lg">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">推荐战力</span>
+<span class="text-on-surface">38,000</span>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">体力 Cost</span>
+<span class="text-primary-fixed">12</span>
+</div>
+</div>
+<button class="w-full bg-surface-variant border border-outline text-on-surface py-3 font-label-sm text-label-sm hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors" onclick="simulateFight('4-1')">
+                    再次挑战
+                </button>
+</div>
+<!-- Stage Card: 4-2 (Unlocked/Current) -->
+<div class="group relative bg-ink-wash border-2 border-primary-fixed p-stack-md meander-corner transition-all hover:scale-[1.02] active:scale-95 cursor-pointer shadow-[0_0_10px_rgba(255,215,0,0.2)]">
+<div class="absolute top-2 right-2">
+<span class="px-2 py-0.5 bg-quality-ur text-white font-label-sm text-[10px] rounded animate-pulse">可挑战</span>
+</div>
+<div class="mb-stack-md">
+<p class="font-label-sm text-label-sm text-primary-fixed">关卡 1-2</p>
+<h3 class="font-display-hero text-title-md text-on-surface">水帘洞守卫</h3>
+</div>
+<div class="space-y-2 mb-stack-lg">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">推荐战力</span>
+<span class="text-quality-sr">44,500</span>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">体力 Cost</span>
+<span class="text-primary-fixed">15</span>
+</div>
+</div>
+<button class="w-full bg-primary-fixed text-on-primary-fixed py-3 font-label-sm text-label-sm hover:brightness-110 active:scale-[0.98] transition-all relative overflow-hidden group-hover:shadow-[0_0_15px_rgba(255,215,0,0.4)]" onclick="simulateFight('4-2')">
+<span class="relative z-10 font-bold">挑战</span>
+<div class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500"></div>
+</button>
+</div>
+<!-- Stage Card: 4-3 (Locked) -->
+<div class="relative bg-surface-container-low border-2 border-outline-variant/30 p-stack-md meander-corner opacity-60">
+<div class="absolute inset-0 flex items-center justify-center z-10">
+<div class="bg-black/60 p-4 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="lock">lock</span>
+</div>
+</div>
+<div class="mb-stack-md">
+<p class="font-label-sm text-label-sm text-on-surface-variant">关卡 1-3</p>
+<h3 class="font-display-hero text-title-md text-on-surface-variant">东海龙宫</h3>
+</div>
+<div class="space-y-2 mb-stack-lg">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">推荐战力</span>
+<span class="text-on-surface-variant">52,000</span>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">体力 Cost</span>
+<span class="text-on-surface-variant">15</span>
+</div>
+</div>
+<button class="w-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant py-3 font-label-sm text-label-sm cursor-not-allowed" disabled="">
+                    未解锁
+                </button>
+</div>
+<!-- Extra Stage Info (Decorative/Functional Bento Box) -->
+<div class="lg:col-span-2 bg-gradient-to-br from-ink-wash to-surface-container-lowest border-2 border-outline-variant p-stack-lg flex flex-col md:flex-row gap-gutter">
+<div class="flex-1">
+<h4 class="font-display-hero text-title-md text-primary-fixed mb-2">通关奖励</h4>
+<p class="font-body-md text-on-surface-variant text-sm mb-4">Master all stages in this chapter to unlock the 灵玉 Serpent avatar frame.</p>
+<div class="flex gap-stack-md">
+<div class="w-16 h-16 bg-surface-container-high border border-outline-variant flex items-center justify-center relative">
+<img alt="Reward 1" class="w-10 h-10 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL69GlYj5IZtJRYLu5XpEUDWyAWMAbycg0A2zHQnwXxcIe7mdzr9s7bm4C2di9yytISwbY5QDvvDtLkxLKkYbeQy54LevFnbguHMdv60aYoshf7aCoDPcKPfP3_B8JyzUln0XrSHveUkdg0m_e--oKx3MZRJk50JltTSOB9Skodt_LelnU2owqQEsUCqcTxfs64Yv9zUX-I5eX2DDiNBgihipyeNPwYJhAot4s-GxB9SGxjb0ZnQiNmw3vLbLgLxHlsLVlj3RCxZg"/>
+<span class="absolute bottom-0 right-1 font-label-sm text-[10px] text-primary-fixed">x50</span>
+</div>
+<div class="w-16 h-16 bg-surface-container-high border border-outline-variant flex items-center justify-center relative">
+<img alt="Reward 2" class="w-10 h-10 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo_G1zAajOr3G0yFWSd-GIhXoOW64xIErMOWNl0_pJq9EQgd0SVQIbBu_WHkyGUH31-sEeokpMXeftbhEk_khwM0WFueYKOHVVxX4yGgdhpV6_u0sMPYB2JCKOX49V0OXdKVqrL_T173bJs6tfz2X98BfDJV8TR2PmGRavo2XASueICFzxjoL7YhcvpKAGrTSUWqsXYWGH1TqjtK4io7cyElgJtEcLUL3TXaLYGvEGd3YmNUJdr8oSpFt3QMfJhYcbXYjC9UfimEw"/>
+<span class="absolute bottom-0 right-1 font-label-sm text-[10px] text-primary-fixed">x1</span>
+</div>
+</div>
+</div>
+<div class="md:w-px bg-outline-variant h-auto"></div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex items-center gap-stack-md mb-2">
+<span class="material-symbols-outlined text-quality-ssr" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest">全局加成</span>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm italic">"Divine Favor: +10% Fire Damage during 第一章 battles."</p>
+</div>
+</div>
+<!-- Stage Card: 4-4 (Locked) -->
+<div class="relative bg-surface-container-low border-2 border-outline-variant/30 p-stack-md meander-corner opacity-60">
+<div class="absolute inset-0 flex items-center justify-center z-10">
+<div class="bg-black/60 p-4 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="lock">lock</span>
+</div>
+</div>
+<div class="mb-stack-md">
+<p class="font-label-sm text-label-sm text-on-surface-variant">关卡 1-4</p>
+<h3 class="font-display-hero text-title-md text-on-surface-variant">天门试炼</h3>
+</div>
+<div class="space-y-2 mb-stack-lg">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">推荐战力</span>
+<span class="text-on-surface-variant">??,???</span>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">体力 Cost</span>
+<span class="text-on-surface-variant">18</span>
+</div>
+</div>
+<button class="w-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant py-3 font-label-sm text-label-sm cursor-not-allowed" disabled="">
+                    未解锁
+                </button>
+</div>
+</section>
+</main>
+<!-- Battle Result Modal (Hidden by Default) -->
+<div class="fixed inset-0 z-[60] flex items-center justify-center p-margin-mobile bg-black/90 backdrop-blur-sm hidden" id="battleResultModal">
+<div class="bg-ink-wash w-full max-w-md border-2 border-primary-fixed meander-corner relative overflow-hidden">
+<div class="absolute inset-0 bg-primary-fixed/10 pointer-events-none hidden" id="modalWinGlow"></div>
+<div class="p-stack-lg flex flex-col items-center text-center relative z-10">
+<div class="w-20 h-20 rounded-full flex items-center justify-center mb-stack-md border-4" id="statusIcon">
+<!-- Dynamic Icon -->
+</div>
+<h2 class="font-display-hero text-headline-lg-mobile text-primary-fixed mb-1" id="statusTitle">胜利</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-lg" id="statusSub">关卡结算</p>
+<div class="w-full space-y-stack-md bg-surface-container-high/50 p-stack-md rounded mb-stack-lg border border-outline-variant">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant">奖励</span>
+<div class="flex gap-4">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary-fixed text-lg" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-stats-num text-stats-num text-sm text-on-surface" id="rewardGold">+0</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-quality-sr text-lg" data-icon="diamond">diamond</span>
+<span class="font-stats-num text-stats-num text-sm text-on-surface">+5</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant">获得经验</span>
+<span class="font-stats-num text-stats-num text-sm text-quality-ssr" id="rewardExp">+0</span>
+</div>
+<div class="h-px bg-outline-variant w-full"></div>
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant">剩余体力</span>
+<span class="font-stats-num text-stats-num text-sm text-primary-fixed" id="remainingStamina">0/120</span>
+</div>
+</div>
+<div class="flex w-full gap-stack-md">
+<button class="flex-1 border border-outline-variant py-3 font-label-sm text-label-sm hover:bg-surface-variant transition-colors" onclick="closeModal()">
+                        确认
+                    </button>
+<button class="flex-1 bg-primary-fixed text-on-primary-fixed py-3 font-label-sm text-label-sm font-bold shadow-[0_0_10px_rgba(255,215,0,0.3)]" id="nextStageBtn">
+                        下一关
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Mobile Bottom Navigation Shell -->
+<div class="fixed bottom-0 w-full z-50 bg-ink-wash flex justify-around items-center px-margin-mobile py-2 border-t border-outline-variant md:hidden">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant py-1">
+<span class="material-symbols-outlined" data-icon="fort">fort</span>
+<span class="font-label-sm text-[10px]">首页</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant py-1">
+<span class="material-symbols-outlined" data-icon="swords">swords</span>
+<span class="font-label-sm text-[10px]">英雄</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary-fixed py-1 scale-110">
+<span class="material-symbols-outlined" data-icon="scroll" data-weight="fill">scrollable_header</span>
+<span class="font-label-sm text-[10px] font-bold">关卡</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant py-1">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-sm text-[10px]">召唤</span>
+</button>
+</div>
+<script>
+        // helper: wrapper for authenticated API calls
+        async function apiFetch(path, opts = {}) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/';
+                return;
+            }
+            const headers = opts.headers || {};
+            headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+            headers['Authorization'] = 'Bearer ' + token;
+            const res = await fetch(path, Object.assign({}, opts, { headers }));
+            if (res.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = '/';
+                return;
+            }
+            return res.json();
+        }
+
+        async function simulateFight(stageId) {
+            const modal = document.getElementById('battleResultModal');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusSub = document.getElementById('statusSub');
+            const winGlow = document.getElementById('modalWinGlow');
+            const nextBtn = document.getElementById('nextStageBtn');
+
+            // translate stageId like '4-1' to numeric id if needed
+            let sid = stageId;
+            if (typeof stageId === 'string' && stageId.includes('-')) {
+                // pick the second part as numeric identifier when possible
+                sid = Number(stageId.split('-')[1]) || stageId;
+            }
+
+            try {
+                const data = await apiFetch('/api/v1/stage/fight', {
+                    method: 'POST',
+                    body: JSON.stringify({ stage_id: sid })
+                });
+                if (!data || data.code !== 0) {
+                    showToast('挑战失败：' + (data && data.message ? data.message : '未知错误'));
+                    return;
+                }
+                const result = data.data || {};
+                const isWin = !!result.win;
+                if (statusSub) statusSub.innerText = isWin ? '挑战成功' : '挑战未通过';
+
+                if (isWin) {
+                    statusTitle.innerText = "胜利";
+                    statusTitle.className = "font-display-hero text-headline-lg-mobile text-primary-fixed mb-1 shimmer-text";
+                    statusIcon.innerHTML = '<span class="material-symbols-outlined text-4xl text-primary-fixed" data-icon="military_tech">military_tech</span>';
+                    statusIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mb-stack-md border-4 border-primary-fixed jade-glow";
+                    winGlow.classList.remove('hidden');
+                    nextBtn.classList.remove('hidden');
+                } else {
+                    statusTitle.innerText = "失败";
+                    statusTitle.className = "font-display-hero text-headline-lg-mobile text-error mb-1";
+                    statusIcon.innerHTML = '<span class="material-symbols-outlined text-4xl text-error" data-icon="skull">skull</span>';
+                    statusIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mb-stack-md border-4 border-error";
+                    winGlow.classList.add('hidden');
+                    nextBtn.classList.add('hidden');
+                }
+
+                const rewardGold = document.getElementById('rewardGold');
+                const rewardExp = document.getElementById('rewardExp');
+                const remainingStamina = document.getElementById('remainingStamina');
+                if (rewardGold) rewardGold.innerText = `+${result.reward_gold || 0}`;
+                if (rewardExp) rewardExp.innerText = `+${result.reward_exp || 0}`;
+                if (remainingStamina) remainingStamina.innerText = `${result.stamina || 0}/${result.max_stamina || 120}`;
+                if (window.loadAssetBar) window.loadAssetBar();
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } catch (err) {
+                showToast('网络错误，请稍后重试');
+            }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('battleToast');
+            if (!t) return alert(msg);
+            t.innerText = msg;
+            t.classList.remove('opacity-0');
+            t.classList.add('opacity-100');
+            setTimeout(() => { t.classList.add('opacity-0'); }, 2500);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('battleResultModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Handle ESC key for modal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+<script src="/static/assets/status-bar.js"></script>
+<script src="/static/assets/app-shell.js"></script>
+</body></html>

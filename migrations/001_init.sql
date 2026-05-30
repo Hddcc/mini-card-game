@@ -30,6 +30,7 @@ CREATE TABLE player_assets (
   gold BIGINT UNSIGNED NOT NULL DEFAULT 0,
   diamond BIGINT UNSIGNED NOT NULL DEFAULT 0,
   stamina INT UNSIGNED NOT NULL DEFAULT 0,
+  stamina_updated_at DATETIME NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (player_id)
@@ -64,3 +65,11 @@ CREATE TABLE player_hero (
   UNIQUE KEY uk_player_hero (player_id, hero_config_id),
   KEY idx_player_id (player_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO hero_config (id, name, quality, role, base_hp, base_atk, base_def, power_factor)
+VALUES
+  (1, '孙悟空', 5, '战士', 1200, 260, 110, 120),
+  (2, '猪八戒', 4, '坦克', 1500, 180, 160, 110),
+  (3, '沙悟净', 3, '守护', 1100, 170, 130, 100),
+  (4, '小白龙', 4, '刺客', 980, 240, 90, 115),
+  (5, '唐三藏', 3, '辅助', 900, 130, 100, 95);

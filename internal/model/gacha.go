@@ -3,17 +3,17 @@ package model
 import "time"
 
 type GachaPool struct {
-	ID         uint64     `gorm:"primaryKey;column:id"`
-	Name       string     `gorm:"column:name"`
-	CostItem   string     `gorm:"column:cost_item"`
-	CostOne    uint32     `gorm:"column:cost_one"`
-	CostTen    uint32     `gorm:"column:cost_ten"`
-	PityLimit  uint32     `gorm:"column:pity_limit"`
-	Status     uint8      `gorm:"column:status"`
-	StartAt    *time.Time `gorm:"column:start_at"`
-	EndAt      *time.Time `gorm:"column:end_at"`
-	CreatedAt  time.Time  `gorm:"column:created_at"`
-	UpdatedAt  time.Time  `gorm:"column:updated_at"`
+	ID        uint64     `gorm:"primaryKey;column:id"`
+	Name      string     `gorm:"column:name;size:64"`
+	CostItem  string     `gorm:"column:cost_item;size:32"`
+	CostOne   uint32     `gorm:"column:cost_one"`
+	CostTen   uint32     `gorm:"column:cost_ten"`
+	PityLimit uint32     `gorm:"column:pity_limit"`
+	Status    uint8      `gorm:"column:status"`
+	StartAt   *time.Time `gorm:"column:start_at"`
+	EndAt     *time.Time `gorm:"column:end_at"`
+	CreatedAt time.Time  `gorm:"column:created_at"`
+	UpdatedAt time.Time  `gorm:"column:updated_at"`
 }
 
 func (GachaPool) TableName() string {
@@ -23,7 +23,7 @@ func (GachaPool) TableName() string {
 type GachaPoolItem struct {
 	ID        uint64    `gorm:"primaryKey;column:id"`
 	PoolID    uint64    `gorm:"column:pool_id"`
-	ItemType  string    `gorm:"column:item_type"`
+	ItemType  string    `gorm:"column:item_type;size:32"`
 	ItemID    uint64    `gorm:"column:item_id"`
 	ItemCount uint32    `gorm:"column:item_count"`
 	Quality   uint8     `gorm:"column:quality"`
@@ -38,13 +38,13 @@ func (GachaPoolItem) TableName() string {
 }
 
 type PlayerGachaState struct {
-	ID           uint64    `gorm:"primaryKey;column:id"`
-	PlayerID     uint64    `gorm:"column:player_id"`
-	PoolID       uint64    `gorm:"column:pool_id"`
-	PityCounter  uint32    `gorm:"column:pity_counter"`
-	TotalDraw    uint32    `gorm:"column:total_draw"`
-	CreatedAt    time.Time `gorm:"column:created_at"`
-	UpdatedAt    time.Time `gorm:"column:updated_at"`
+	ID          uint64    `gorm:"primaryKey;column:id"`
+	PlayerID    uint64    `gorm:"column:player_id"`
+	PoolID      uint64    `gorm:"column:pool_id"`
+	PityCounter uint32    `gorm:"column:pity_counter"`
+	TotalDraw   uint32    `gorm:"column:total_draw"`
+	CreatedAt   time.Time `gorm:"column:created_at"`
+	UpdatedAt   time.Time `gorm:"column:updated_at"`
 }
 
 func (PlayerGachaState) TableName() string {
@@ -55,8 +55,8 @@ type GachaRecord struct {
 	ID        uint64    `gorm:"primaryKey;column:id"`
 	PlayerID  uint64    `gorm:"column:player_id"`
 	PoolID    uint64    `gorm:"column:pool_id"`
-	DrawNo    string    `gorm:"column:draw_no"`
-	ItemType  string    `gorm:"column:item_type"`
+	DrawNo    string    `gorm:"column:draw_no;size:64"`
+	ItemType  string    `gorm:"column:item_type;size:32"`
 	ItemID    uint64    `gorm:"column:item_id"`
 	ItemCount uint32    `gorm:"column:item_count"`
 	Quality   uint8     `gorm:"column:quality"`

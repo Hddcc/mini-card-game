@@ -56,3 +56,16 @@ CREATE TABLE gacha_record (
   KEY idx_player_time (player_id, created_at),
   KEY idx_draw_no (draw_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO gacha_pool (id, name, cost_item, cost_one, cost_ten, pity_limit, status)
+VALUES
+  (1, '天命召唤', 'diamond', 160, 1600, 90, 1);
+
+INSERT INTO gacha_pool_item (pool_id, item_type, item_id, item_count, quality, weight, is_pity)
+VALUES
+  (1, 'hero', 1, 1, 5, 40, 1),
+  (1, 'hero', 2, 1, 4, 120, 0),
+  (1, 'hero', 4, 1, 4, 120, 0),
+  (1, 'hero', 3, 1, 3, 260, 0),
+  (1, 'hero', 5, 1, 3, 260, 0),
+  (1, 'gold', 0, 1000, 2, 200, 0);

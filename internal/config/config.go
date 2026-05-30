@@ -11,6 +11,7 @@ type Config struct {
 	AppName          string
 	AppEnv           string
 	HTTPAddr         string
+	FrontendDist     string
 	MySQLDSN         string
 	RedisAddr        string
 	RedisPassword    string
@@ -34,7 +35,8 @@ func Load() (*Config, error) {
 	return &Config{
 		AppName:          getEnv("APP_NAME", "mini-card-game"),
 		AppEnv:           getEnv("APP_ENV", "local"),
-		HTTPAddr:         getEnv("HTTP_ADDR", ":8086"),
+		HTTPAddr:         getEnv("HTTP_ADDR", ":5290"),
+		FrontendDist:     getEnv("FRONTEND_DIST", "frontend/stitch"),
 		MySQLDSN:         getEnv("MYSQL_DSN", ""),
 		RedisAddr:        getEnv("REDIS_ADDR", "localhost:6379"),
 		RedisPassword:    getEnv("REDIS_PASSWORD", ""),

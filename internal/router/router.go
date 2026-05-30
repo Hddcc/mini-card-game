@@ -1,6 +1,11 @@
 package router
 
 import (
+	"errors"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"mini-card-game/internal/config"
 	"mini-card-game/internal/handler"
 	"mini-card-game/internal/middleware"
@@ -53,12 +58,49 @@ func New(deps Dependencies) *gin.Engine {
 	teamHandler := handler.NewTeamHandler(teamService)
 	stageHandler := handler.NewStageHandler(stageService)
 
+	frontendDist := deps.Config.FrontendDist
+	if frontendDist == "" {
+		frontendDist = "frontend/stitch"
+	}
+
+	if info, err := os.Stat(frontendDist); err == nil && info.IsDir() {
+		r.Static("/static", frontendDist)
+		indexHTML := filepath.Join(frontendDist, "mini_1", "code.html")
+		fallbackPath := ""
+		if _, err := os.Stat(indexHTML); err == nil {
+			fallbackPath = indexHTML
+		} else {
+			_ = filepath.Walk(frontendDist, func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return nil
+				}
+				if info.IsDir() {
+					return nil
+				}
+				if strings.HasSuffix(strings.ToLower(info.Name()), ".html") {
+					fallbackPath = path
+					return errors.New("found")
+				}
+				return nil
+			})
+		}
+		if fallbackPath != "" {
+			r.GET("/", func(c *gin.Context) {
+				c.File(fallbackPath)
+			})
+			r.NoRoute(func(c *gin.Context) {
+				c.File(fallbackPath)
+			})
+		}
+	}
+
 	api := r.Group("/api/v1")
 	loginRequired := api.Group("")
 	loginRequired.Use(middleware.Auth(deps.Config.JWTSecret))
 	loginRequired.GET("/player/profile", playerHandler.Profile)
 	loginRequired.GET("/player/assets", playerHandler.Assets)
 	loginRequired.GET("/heroes", heroHandler.List)
+	loginRequired.GET("/gacha/state", gachaHandler.State)
 	loginRequired.POST("/gacha/draw", gachaHandler.Draw)
 	loginRequired.POST("/team/save", teamHandler.Save)
 	loginRequired.GET("/team", teamHandler.Get)

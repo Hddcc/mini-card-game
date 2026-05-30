@@ -4,6 +4,7 @@ import (
 	"errors"
 	"mini-card-game/internal/model"
 	"mini-card-game/internal/repository"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -39,13 +40,15 @@ func NewStageService(
 }
 
 type StageFightResult struct {
-	Win            bool   `json:"win"`
-	CurrentPower   uint64 `json:"current_power"`
-	RecommendPower uint64 `json:"recommend_power"`
-	RewardGold     uint64 `json:"reward_gold"`
-	RewardExp      uint32 `json:"reward_exp"`
-	Stamina        uint32 `json:"stamina"`
-	BestPower      uint64 `json:"best_power"`
+	Win                bool   `json:"win"`
+	CurrentPower       uint64 `json:"current_power"`
+	RecommendPower     uint64 `json:"recommend_power"`
+	RewardGold         uint64 `json:"reward_gold"`
+	RewardExp          uint32 `json:"reward_exp"`
+	Stamina            uint32 `json:"stamina"`
+	MaxStamina         uint32 `json:"max_stamina"`
+	NextStaminaSeconds int64  `json:"next_stamina_seconds"`
+	BestPower          uint64 `json:"best_power"`
 }
 
 var (
@@ -131,16 +134,19 @@ func (s *StageService) Fight(playerID uint64, stageID uint64) (*StageFightResult
 		RecommendPower: config.RecommendPower,
 	}
 
+	now := time.Now()
 	err = s.db.Transaction(func(tx *gorm.DB) error {
 		asset, err := s.assetRepo.LockByPlayerID(tx, playerID)
 		if err != nil {
 			return err
 		}
+		SettleStamina(asset, now)
 		if asset.Stamina < config.StaminaCost {
 			return ErrNotEnoughStamina
 		}
 
 		asset.Stamina -= config.StaminaCost
+		TouchStaminaAfterSpend(asset, now)
 		if totalPower >= config.RecommendPower {
 			result.Win = true
 			result.RewardGold = config.RewardGold
@@ -159,6 +165,8 @@ func (s *StageService) Fight(playerID uint64, stageID uint64) (*StageFightResult
 		}
 
 		result.Stamina = asset.Stamina
+		result.MaxStamina = MaxStamina
+		result.NextStaminaSeconds = NextStaminaSeconds(asset, now)
 
 		if result.Win {
 			stageRow, err := s.stageRepo.LockPlayerStage(tx, playerID, stageID)
