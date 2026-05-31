@@ -110,6 +110,7 @@ func New(deps Dependencies) *gin.Engine {
 	loginRequired.POST("/stage/fight", stageHandler.Fight)
 	loginRequired.POST("/stage/battle/start", battleHandler.Start)
 	loginRequired.POST("/stage/battle/action", battleHandler.Action)
+	loginRequired.POST("/stage/battle/surrender", battleHandler.Surrender)
 	loginRequired.GET("/tasks/daily", taskHandler.ListDaily)
 	loginRequired.POST("/tasks/claim", taskHandler.Claim)
 

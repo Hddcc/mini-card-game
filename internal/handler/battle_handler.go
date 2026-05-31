@@ -32,6 +32,10 @@ type battleActionRequest struct {
 	SkillID   uint64 `json:"skill_id"`
 }
 
+type surrenderBattleRequest struct {
+	SessionID uint64 `json:"session_id" binding:"required"`
+}
+
 func (h *BattleHandler) Start(c *gin.Context) {
 	var req startBattleRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -61,6 +65,21 @@ func (h *BattleHandler) Action(c *gin.Context) {
 		TargetID:  req.TargetID,
 		SkillID:   req.SkillID,
 	})
+	if err != nil {
+		writeBattleError(c, err)
+		return
+	}
+	app.OK(c, result)
+}
+
+func (h *BattleHandler) Surrender(c *gin.Context) {
+	var req surrenderBattleRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		app.Fail(c, http.StatusBadRequest, apperrors.CodeInvalidParam, "invalid param")
+		return
+	}
+
+	result, err := h.battleService.Surrender(middleware.PlayerID(c), req.SessionID)
 	if err != nil {
 		writeBattleError(c, err)
 		return
