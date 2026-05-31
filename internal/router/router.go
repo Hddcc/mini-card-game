@@ -32,6 +32,17 @@ func New(deps Dependencies) *gin.Engine {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
+	registerStaticRoutes(r, deps.Config)
+
+	if deps.DB == nil {
+		unavailable := func(c *gin.Context) {
+			c.JSON(503, gin.H{"error": "database is not configured"})
+		}
+		r.Any("/api/v1", unavailable)
+		r.Any("/api/v1/*path", unavailable)
+		return r
+	}
+
 	userRepo := repository.NewUserRepository(deps.DB)
 	playerRepo := repository.NewPlayerRepository(deps.DB)
 	authService := service.NewAuthService(deps.Config, deps.DB, userRepo, playerRepo)
@@ -61,7 +72,32 @@ func New(deps Dependencies) *gin.Engine {
 	stageHandler := handler.NewStageHandler(stageService)
 	battleHandler := handler.NewBattleHandler(battleService)
 
-	frontendDist := deps.Config.FrontendDist
+	api := r.Group("/api/v1")
+	loginRequired := api.Group("")
+	loginRequired.Use(middleware.Auth(deps.Config.JWTSecret))
+	loginRequired.GET("/player/profile", playerHandler.Profile)
+	loginRequired.GET("/player/assets", playerHandler.Assets)
+	loginRequired.GET("/heroes", heroHandler.List)
+	loginRequired.GET("/gacha/state", gachaHandler.State)
+	loginRequired.POST("/gacha/draw", gachaHandler.Draw)
+	loginRequired.POST("/team/save", teamHandler.Save)
+	loginRequired.GET("/team", teamHandler.Get)
+	loginRequired.POST("/stage/fight", stageHandler.Fight)
+	loginRequired.POST("/stage/battle/start", battleHandler.Start)
+	loginRequired.POST("/stage/battle/action", battleHandler.Action)
+	loginRequired.POST("/stage/battle/surrender", battleHandler.Surrender)
+	loginRequired.GET("/tasks/daily", taskHandler.ListDaily)
+	loginRequired.POST("/tasks/claim", taskHandler.Claim)
+
+	auth := api.Group("/auth")
+	auth.POST("/register", authHandler.Register)
+	auth.POST("/login", authHandler.Login)
+
+	return r
+}
+
+func registerStaticRoutes(r *gin.Engine, cfg *config.Config) {
+	frontendDist := cfg.FrontendDist
 	if frontendDist == "" {
 		frontendDist = "frontend/stitch"
 	}
@@ -96,27 +132,4 @@ func New(deps Dependencies) *gin.Engine {
 			})
 		}
 	}
-
-	api := r.Group("/api/v1")
-	loginRequired := api.Group("")
-	loginRequired.Use(middleware.Auth(deps.Config.JWTSecret))
-	loginRequired.GET("/player/profile", playerHandler.Profile)
-	loginRequired.GET("/player/assets", playerHandler.Assets)
-	loginRequired.GET("/heroes", heroHandler.List)
-	loginRequired.GET("/gacha/state", gachaHandler.State)
-	loginRequired.POST("/gacha/draw", gachaHandler.Draw)
-	loginRequired.POST("/team/save", teamHandler.Save)
-	loginRequired.GET("/team", teamHandler.Get)
-	loginRequired.POST("/stage/fight", stageHandler.Fight)
-	loginRequired.POST("/stage/battle/start", battleHandler.Start)
-	loginRequired.POST("/stage/battle/action", battleHandler.Action)
-	loginRequired.POST("/stage/battle/surrender", battleHandler.Surrender)
-	loginRequired.GET("/tasks/daily", taskHandler.ListDaily)
-	loginRequired.POST("/tasks/claim", taskHandler.Claim)
-
-	auth := api.Group("/auth")
-	auth.POST("/register", authHandler.Register)
-	auth.POST("/login", authHandler.Login)
-
-	return r
 }
