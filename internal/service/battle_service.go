@@ -417,6 +417,55 @@ func (s *BattleService) Action(playerID uint64, input BattleActionInput) (*Battl
 	return response, err
 }
 
+func (s *BattleService) Surrender(playerID uint64, sessionID uint64) (*BattleResponse, error) {
+	if sessionID == 0 {
+		return nil, ErrInvalidBattleAction
+	}
+
+	now := time.Now()
+	var response *BattleResponse
+	err := s.db.Transaction(func(tx *gorm.DB) error {
+		session, err := s.battleRepo.LockSession(tx, playerID, sessionID)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return ErrBattleNotFound
+			}
+			return err
+		}
+		if err := ensureActionableSession(session, now); err != nil {
+			if errors.Is(err, ErrBattleExpired) {
+				session.Status = model.BattleStatusAbandoned
+				if saveErr := s.battleRepo.SaveSession(tx, session); saveErr != nil {
+					return saveErr
+				}
+			}
+			return err
+		}
+
+		state, err := decodeBattleState(session.StateJSON)
+		if err != nil {
+			return err
+		}
+		result, err := s.settleSurrender(tx, playerID, &state, now)
+		if err != nil {
+			return err
+		}
+		session.Status = model.BattleStatusLost
+		session.SettledAt = &now
+		state.Status = model.BattleStatusLost
+		state.FailureHint = result.FailureHint
+		session.ResultJSON = mustEncodeBattleResult(result)
+		session.StateJSON = mustEncodeBattleState(state)
+		session.Round = state.Round
+		if err := s.battleRepo.SaveSession(tx, session); err != nil {
+			return err
+		}
+		response = buildBattleResponse(session, state, result)
+		return nil
+	})
+	return response, err
+}
+
 func (s *BattleService) ensureStageUnlocked(playerID uint64, config *model.StageConfig) error {
 	if config.PrevStageID == 0 {
 		return nil
@@ -728,6 +777,37 @@ func (s *BattleService) settleDefeat(tx *gorm.DB, playerID uint64, state *Battle
 	hint := buildFailureHint(*state)
 	state.appendLog(BattleLog{Round: state.Round, Action: "defeat", EffectKey: "effect-defeat", AnimationKey: "fx-defeat-smoke", Text: hint})
 	return &BattleResult{Win: false, Stamina: asset.Stamina, MaxStamina: MaxStamina, NextStaminaSeconds: NextStaminaSeconds(asset, now), FailureHint: hint}, nil
+}
+
+func (s *BattleService) settleSurrender(tx *gorm.DB, playerID uint64, state *BattleState, now time.Time) (*BattleResult, error) {
+	asset, err := s.assetRepo.LockByPlayerID(tx, playerID)
+	if err != nil {
+		return nil, err
+	}
+	SettleStamina(asset, now)
+	if err := s.assetRepo.Save(tx, asset); err != nil {
+		return nil, err
+	}
+	return applySurrenderState(state, asset, now), nil
+}
+
+func applySurrenderState(state *BattleState, asset *model.PlayerAsset, now time.Time) *BattleResult {
+	hint := "已投降，本次挑战结束。"
+	if state != nil {
+		state.Status = model.BattleStatusLost
+		state.SelectableActors = nil
+		state.AvailableActions = nil
+		state.SelectedTargets = nil
+		state.FailureHint = hint
+		state.appendLog(BattleLog{Round: state.Round, Action: "surrender", EffectKey: "effect-surrender", AnimationKey: "fx-defeat-smoke", Text: hint})
+	}
+	stamina := uint32(0)
+	nextSeconds := int64(0)
+	if asset != nil {
+		stamina = asset.Stamina
+		nextSeconds = NextStaminaSeconds(asset, now)
+	}
+	return &BattleResult{Win: false, Stamina: stamina, MaxStamina: MaxStamina, NextStaminaSeconds: nextSeconds, FailureHint: hint}
 }
 
 func spendBattleStamina(asset *model.PlayerAsset, cost uint32, now time.Time) error {

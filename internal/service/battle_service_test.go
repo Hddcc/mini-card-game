@@ -253,3 +253,40 @@ func TestExpiredSessionRejectsAction(t *testing.T) {
 		t.Fatalf("expected expired error, got %v", err)
 	}
 }
+
+func TestApplySurrenderStateReturnsDefeatWithoutRewards(t *testing.T) {
+	now := time.Now()
+	state := testBattleState(t)
+	asset := &model.PlayerAsset{PlayerID: 1, Stamina: 18}
+
+	result := applySurrenderState(&state, asset, now)
+
+	if result.Win {
+		t.Fatalf("surrender should not win")
+	}
+	if result.RewardGold != 0 || result.RewardExp != 0 || result.BestPower != 0 {
+		t.Fatalf("surrender should not grant rewards: %#v", result)
+	}
+	if result.Stamina != 18 {
+		t.Fatalf("surrender should preserve current stamina, got %d", result.Stamina)
+	}
+	if state.Status != model.BattleStatusLost || state.FailureHint == "" {
+		t.Fatalf("expected terminal defeat state, state=%#v", state)
+	}
+	if len(state.SelectableActors) != 0 || len(state.AvailableActions) != 0 || len(state.SelectedTargets) != 0 {
+		t.Fatalf("surrender should clear actionable state")
+	}
+	if len(state.Logs) == 0 || state.Logs[len(state.Logs)-1].Action != "surrender" {
+		t.Fatalf("expected surrender log, logs=%#v", state.Logs)
+	}
+}
+
+func TestSurrenderUsesActionableSessionRules(t *testing.T) {
+	now := time.Now()
+	if err := ensureActionableSession(&model.PlayerBattleSession{Status: model.BattleStatusLost, ExpiresAt: now.Add(time.Minute)}, now); !errors.Is(err, ErrBattleFinished) {
+		t.Fatalf("expected terminal surrender rejection, got %v", err)
+	}
+	if err := ensureActionableSession(&model.PlayerBattleSession{Status: model.BattleStatusActive, ExpiresAt: now.Add(-time.Minute)}, now); !errors.Is(err, ErrBattleExpired) {
+		t.Fatalf("expected expired surrender rejection, got %v", err)
+	}
+}

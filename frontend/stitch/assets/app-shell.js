@@ -15,6 +15,7 @@
     let activeFrame = null;
     let pendingFrame = null;
     let pendingPath = '';
+    let battleLocked = false;
 
     function currentKey(pathname) {
         if (pathname.includes('/mini_3/')) return 'heroes';
@@ -34,6 +35,10 @@
             [data-app-shell]{position:fixed;inset:0;z-index:9999;background:#131313;color:#e5e2e1}
             [data-app-frame]{position:absolute;left:18rem;top:0;width:calc(100% - 18rem);height:100%;border:0;background:#131313}
             [data-app-frame][data-pending-frame]{opacity:0;pointer-events:none}
+            [data-app-shell][data-battle-locked="true"] [data-app-sidebar]{width:5.5rem}
+            [data-app-shell][data-battle-locked="true"] [data-app-sidebar] a{justify-content:center;pointer-events:none;opacity:.55}
+            [data-app-shell][data-battle-locked="true"] [data-app-sidebar] span:last-child{display:none}
+            [data-app-shell][data-battle-locked="true"] [data-app-frame]{left:5.5rem;width:calc(100% - 5.5rem)}
             @media (max-width:767px){[data-app-shell] [data-app-sidebar]{display:none}[data-app-frame]{left:0;width:100%}}
         `;
         document.head.appendChild(style);
@@ -89,6 +94,12 @@
         });
     }
 
+    function setBattleLocked(locked) {
+        battleLocked = !!locked;
+        const shell = document.querySelector('[data-app-shell]');
+        if (shell) shell.setAttribute('data-battle-locked', battleLocked ? 'true' : 'false');
+    }
+
     function embeddedCleanup() {
         document.querySelectorAll('body > aside, body > nav.fixed.left-0').forEach((node) => node.remove());
         const main = document.querySelector('body > main');
@@ -115,10 +126,12 @@
         activeFrame = readyFrame;
         pendingFrame = null;
         pendingPath = '';
+        setBattleLocked(false);
         setActive(currentKey(path));
     }
 
     function navigateFrame(path, push) {
+        if (battleLocked) return;
         const shell = document.querySelector('[data-app-shell]');
         if (!shell) return;
         if (pendingFrame) {
@@ -151,6 +164,7 @@
             const link = event.target.closest('[data-shell-link]');
             if (!link) return;
             event.preventDefault();
+            if (battleLocked) return;
             const target = new URL(link.getAttribute('href'), location.origin);
             if (target.pathname === location.pathname) return;
             navigateFrame(target.pathname, true);
@@ -158,7 +172,14 @@
     }
 
     window.addEventListener('message', (event) => {
-        if (event.origin !== location.origin || !event.data || event.data.type !== 'mini-xiyou-route') return;
+        if (event.origin !== location.origin || !event.data) return;
+        if (event.data.type === 'mini-xiyou-battle-lock') {
+            if (activeFrame && event.source === activeFrame.contentWindow) {
+                setBattleLocked(!!event.data.locked);
+            }
+            return;
+        }
+        if (event.data.type !== 'mini-xiyou-route') return;
         const path = event.data.path || '';
         if (pendingFrame && event.source === pendingFrame.contentWindow) {
             showPendingFrame(path || pendingPath || location.pathname);
@@ -173,6 +194,10 @@
     });
 
     window.addEventListener('popstate', () => {
+        if (battleLocked) {
+            history.pushState({ shell: true }, '', location.pathname);
+            return;
+        }
         navigateFrame(location.pathname, false);
     });
 
