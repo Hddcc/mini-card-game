@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#081b29"/>
+  <path d="M74 160c12-72 86-104 124-44-26 4-45 19-55 46 29 0 45 18 47 42-44-30-80-17-116-44z" fill="#54b7d3"/>
+  <path d="M83 92l-25-34M173 92l25-34" stroke="#dff7ff" stroke-width="8"/>
+  <circle cx="108" cy="120" r="7" fill="#00131f"/>
+  <text x="128" y="232" text-anchor="middle" font-size="23" fill="#9de7ff" font-family="serif">虾兵</text>
+</svg>

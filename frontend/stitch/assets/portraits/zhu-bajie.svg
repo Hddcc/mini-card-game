@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#1d1712"/>
+  <circle cx="128" cy="118" r="74" fill="#d08b5b"/>
+  <circle cx="98" cy="104" r="17" fill="#5b2f25"/><circle cx="158" cy="104" r="17" fill="#5b2f25"/>
+  <ellipse cx="128" cy="136" rx="38" ry="26" fill="#f3b27b"/>
+  <circle cx="115" cy="136" r="6" fill="#5b2f25"/><circle cx="141" cy="136" r="6" fill="#5b2f25"/>
+  <path d="M62 216c28-49 104-58 132 0z" fill="#4b6b57"/>
+  <text x="128" y="232" text-anchor="middle" font-size="26" fill="#ffe16d" font-family="serif">八戒</text>
+</svg>

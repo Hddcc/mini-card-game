@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#2b160d"/>
+  <circle cx="128" cy="120" r="76" fill="#a85b28"/>
+  <path d="M75 92c22-33 84-33 106 0-26-8-80-8-106 0z" fill="#4b2113"/>
+  <circle cx="98" cy="122" r="9" fill="#ffe16d"/><circle cx="158" cy="122" r="9" fill="#ffe16d"/>
+  <path d="M92 158c20 18 52 18 72 0" stroke="#2b160d" stroke-width="8" fill="none"/>
+  <text x="128" y="232" text-anchor="middle" font-size="24" fill="#ffb86b" font-family="serif">山猿</text>
+</svg>

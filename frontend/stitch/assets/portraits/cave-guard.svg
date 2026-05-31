@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#121820"/>
+  <path d="M66 196V88l62-42 62 42v108z" fill="#66717c"/>
+  <path d="M84 112h88v64H84z" fill="#29323a"/>
+  <circle cx="106" cy="136" r="8" fill="#ff4d3d"/><circle cx="150" cy="136" r="8" fill="#ff4d3d"/>
+  <path d="M72 210h112l-20-32H92z" fill="#3d454d"/>
+  <text x="128" y="232" text-anchor="middle" font-size="23" fill="#d7dce2" font-family="serif">守卫</text>
+</svg>
