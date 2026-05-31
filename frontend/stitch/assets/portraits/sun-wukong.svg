@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#ffcf3f"/><stop offset="1" stop-color="#b52818"/></linearGradient></defs>
+  <rect width="256" height="256" fill="#26120b"/>
+  <circle cx="128" cy="112" r="72" fill="url(#g)"/>
+  <path d="M58 184c35-42 105-42 140 0v44H58z" fill="#70400f"/>
+  <path d="M82 112c34-50 58-50 92 0-18 19-74 19-92 0z" fill="#ffe7a6"/>
+  <path d="M92 96l34 18 38-24-13 52H103z" fill="#c1121f"/>
+  <text x="128" y="232" text-anchor="middle" font-size="28" fill="#ffe16d" font-family="serif">悟空</text>
+</svg>

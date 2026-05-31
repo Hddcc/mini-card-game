@@ -5,7 +5,7 @@ import "time"
 type HeroConfig struct {
 	ID          uint64    `gorm:"primaryKey;column:id" json:"id"`
 	Name        string    `gorm:"column:name;size:64" json:"name"`
-	Quality     uint8     `grom:"column:quality" json:"quality"`
+	Quality     uint8     `gorm:"column:quality" json:"quality"`
 	Role        string    `gorm:"column:role;size:32" json:"role"`
 	BaseHP      uint32    `gorm:"column:base_hp" json:"base_hp"`
 	BaseATK     uint32    `gorm:"column:base_atk" json:"base_atk"`

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#9333ea"/><stop offset="1" stop-color="#1e40af"/></linearGradient></defs>
+  <rect width="256" height="256" fill="#10091c"/>
+  <path d="M52 154c34-101 116-119 160-45-42-5-64 19-67 61 26-18 52-9 67 19-60 4-98-3-160-35z" fill="url(#g)"/>
+  <path d="M84 80l-20-38M168 78l24-36" stroke="#ffe16d" stroke-width="9"/>
+  <circle cx="128" cy="118" r="11" fill="#ffe16d"/>
+  <text x="128" y="232" text-anchor="middle" font-size="23" fill="#c4b5fd" font-family="serif">龙将</text>
+</svg>

@@ -349,6 +349,46 @@
 </div>
 </section>
 </main>
+<!-- Interactive Battle Panel -->
+<section class="fixed inset-0 z-[55] bg-black/90 backdrop-blur-sm hidden items-center justify-center p-2 overflow-hidden" id="battlePanel">
+<div class="w-full max-w-[calc(100vw-1rem)] h-[calc(100vh-1rem)] bg-[#1b1410] border-2 border-primary-fixed meander-corner overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.65)] flex flex-col">
+<div class="px-5 py-3 border-b border-outline-variant flex items-center justify-between gap-stack-md bg-gradient-to-r from-[#3a2115] via-[#1f1712] to-[#3a2115] shrink-0">
+<div>
+<p class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-widest" id="battleEncounterTitle">回合战斗</p>
+<h2 class="font-display-hero text-title-lg md:text-headline-sm text-on-surface" id="battleRoundTitle">Round 1 · 选择卡牌</h2>
+</div>
+<button class="border border-outline-variant px-4 py-2 font-label-sm text-label-sm hover:bg-surface-variant" onclick="closeBattlePanel()">收起</button>
+</div>
+<div class="relative px-4 py-3 bg-[radial-gradient(circle_at_center,#d7b879_0,#a87942_45%,#49301f_100%)] overflow-hidden flex-1 min-h-0">
+<div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none"></div>
+<div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
+<div class="relative z-10 grid grid-rows-[auto_1fr_auto] h-full gap-3 min-h-0">
+<div class="min-h-0">
+<p class="font-label-sm text-xs text-secondary-fixed mb-2 text-center tracking-widest">敌方战场</p>
+<div class="flex flex-wrap gap-2 justify-center overflow-hidden" id="enemyBattleUnits"></div>
+</div>
+<div class="min-h-[76px] flex items-center justify-center">
+<div class="bg-black/25 border border-primary-fixed/30 px-5 py-3 text-center backdrop-blur-sm">
+<p class="font-label-sm text-label-sm text-primary-fixed" id="battleActorText">请选择我方卡牌</p>
+<p class="font-body-md text-sm text-on-surface-variant mt-1" id="battleTargetText">再选择目标与行动</p>
+</div>
+</div>
+<div class="min-h-0">
+<p class="font-label-sm text-xs text-tertiary-fixed mb-2 text-center tracking-widest">我方手牌 / 阵容</p>
+<div class="flex flex-wrap gap-2 justify-center overflow-hidden" id="playerBattleUnits"></div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-3 p-3 bg-[#171210] border-t border-outline-variant shrink-0">
+<div class="bg-surface-container-high/60 border border-outline-variant p-3 h-28 overflow-y-auto" id="battleLogList"></div>
+<div class="bg-surface-container border border-outline-variant p-3">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-2">行动</p>
+<div class="grid grid-cols-3 gap-2" id="battleActionButtons"></div>
+</div>
+</div>
+</div>
+</section>
+<div class="fixed bottom-6 left-1/2 z-[80] -translate-x-1/2 rounded-lg border border-primary-fixed bg-[#1b1711]/95 px-6 py-3 font-title-md text-sm text-primary-fixed shadow-2xl opacity-0 transition-opacity pointer-events-none" id="battleToast"></div>
 <!-- Battle Result Modal (Hidden by Default) -->
 <div class="fixed inset-0 z-[60] flex items-center justify-center p-margin-mobile bg-black/90 backdrop-blur-sm hidden" id="battleResultModal">
 <div class="bg-ink-wash w-full max-w-md border-2 border-primary-fixed meander-corner relative overflow-hidden">
@@ -433,63 +473,385 @@
             return res.json();
         }
 
+        let currentBattle = null;
+        let selectedBattleActor = '';
+        let selectedBattleTarget = '';
+        let selectedBattleAction = '';
+        let selectedBattleSkillId = 0;
+        let battleActionPending = false;
+        const battleHeroImages = {
+            1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBacfl2KZJjEeKjbIXzp4XKS01iarwm87pVxf92bYPbhB03ppB7JGO5mDN629EbZdoKWzJs01KZZPOJWRHTWfldMHC3PgDZiVTFLbxL3xE6hlJGQ-0lXqRjKgEBJYBZtsAwGMk73bgDEgIuZ8lu6LE9IJhAaMUlHTzQyqHdOndKljJYCKg0ZFr-fYh4MQ8Wte4V3R870G7H0uII1t2sn-fjxdIn6s7c7iVMKrisf_z02ljOQ8OsiLY2j_DNVkuWCNHNbUP5gSmaaQU',
+            2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKb0-qek8mcN6fiqdlEeZQh01p7Zk1sXD9Y59e_87Nr_hWhbKcXb3UiVE7YZ8DWVxAtCSST1P6ebg2Go91sJTBIgu_jXFDGDhTDmW_eht8gdnvEEE5q_W6trMOUmrXI6R4izbHRN2EeC_f-sOzYmuUBc5RlAl9MfpbkkZNyTR6E1xS6in50r-Xk5fU-a2Rc-3CRhABy_YDi9hEmi3NCTXSLdnU5e2FYcgQEPBmTFBgjFVBykj5d0UvpO5btvThzfsMegMCK7_GEbw',
+            3: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1sO831rf0XcvBhM2ksFpDcw7RLiy1NxHuNTgbg-ub6m_qV2QoRdWJowXXh-SVZaxkLE6DaoPM89mR9JmSiiDWI1lg40l9xnrRlDGSpuIuJzVF3j6Phm8S-xVrTjpXe-dq2tpGzjR04JAc0DW7E7ORC8WVJu9gBvk1DvIP1_V_Boy-Jdb5YTZdsGqs-4MWkfMd4Iq3oCgxZo9n6r79PrvUWiC4AiVs-yieugg49MqcTplQUNLsP--X2k33OdnWwsamOHD3qys48M',
+            4: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsoIS-wmBeOGAvGjEgYY9CkL28lSk4hiiYlb-bXrtyGYhOZLxv2GEzIwzNrBIiZY4fyr1FeGbDQ2PDNHhzwDCwiunb2RlA0kpd93BTIWsl77k8DeErsLipspZI09o7m0C4Yeq4wqGAQPoAveFOjgJRbUhtye3_t7qqXreo2eemhnjP-LnEIr5jNJOggEtzgvRYVulRQ1Ke1MQ2LPcgNTq7LR3f9IF-USlJ-N7BYM66nYdxY16HpV-grE8M4xx9rjrOk92sao0BR00',
+            5: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCL69GlYj5IZtJRYLu5XpEUDWyAWMAbycg0A2zHQnwXxcIe7mdzr9s7bm4C2di9yytISwbY5QDvvDtLkxLKkYbeQy54LevFnbguHMdv60aYoshf7aCoDPcKPfP3_B8JyzUln0XrSHveUkdg0m_e--oKx3MZRJk50JltTSOB9Skodt_LelnU2owqQEsUCqcTxfs64Yv9zUX-I5eX2DDiNBgihipyeNPwYJhAot4s-GxB9SGxjb0ZnQiNmw3vLbLgLxHlsLVlj3RCxZg'
+        };
+
         async function simulateFight(stageId) {
+            await startBattle(stageId);
+        }
+
+        async function startBattle(stageId) {
+            let sid = stageId;
+            if (typeof stageId === 'string' && stageId.includes('-')) {
+                sid = Number(stageId.split('-')[1]) || stageId;
+            }
+
+            try {
+                const data = await apiFetch('/api/v1/stage/battle/start', {
+                    method: 'POST',
+                    body: JSON.stringify({ stage_id: sid })
+                });
+                if (!data || data.code !== 0) {
+                    showToast('开战失败：' + (data && data.message ? data.message : '未知错误'));
+                    return;
+                }
+                currentBattle = data.data;
+                selectedBattleActor = firstSelectableActorId(currentBattle.state);
+                selectedBattleAction = '';
+                selectedBattleSkillId = 0;
+                selectedBattleTarget = '';
+                renderBattle(currentBattle);
+                const panel = document.getElementById('battlePanel');
+                panel.classList.remove('hidden');
+                panel.classList.add('flex');
+                if (window.loadAssetBar) window.loadAssetBar();
+            } catch (err) {
+                showToast('网络错误，请稍后重试');
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function escapeAttr(value) {
+            return escapeHtml(value).replace(/`/g, '&#96;');
+        }
+
+        function unitCard(unit, side) {
+            const hpPct = unit.max_hp ? Math.max(0, Math.round(unit.hp * 100 / unit.max_hp)) : 0;
+            const ragePct = Math.max(0, Math.min(100, unit.rage || 0));
+            const state = (currentBattle && currentBattle.state) || {};
+            const action = currentActionView(state);
+            const validTargets = action && Array.isArray(action.valid_targets) ? action.valid_targets : [];
+            const selectableActor = side === 'player' && unit.alive && (state.selectable_actors || []).includes(unit.id);
+            const selectableTarget = unit.alive && validTargets.includes(unit.id);
+            const selectedActor = unit.id === selectedBattleActor;
+            const selectedTarget = unit.id === selectedBattleTarget;
+            const selectable = selectableActor || selectableTarget;
+            const selected = selectedActor || selectedTarget;
+            const pickingTarget = targetPickRequired(action);
+            const click = selectableTarget && pickingTarget ? `onclick="selectBattleTarget('${unit.id}')"` : (selectableActor ? `onclick="selectBattleActor('${unit.id}')"` : (selectableTarget ? `onclick="selectBattleTarget('${unit.id}')"` : ''));
+            const frame = side === 'enemy' ? 'from-[#4b1717] to-[#1f1111]' : 'from-[#17334b] to-[#101720]';
+            const atk = unit.atk || 0;
+            const def = unit.def || 0;
+            const fx = unit.animation_keys || {};
+            const heroArt = side === 'player' ? (battleHeroImages[unit.config_id] || '') : '';
+            const cardArt = heroArt || unit.card_art || '';
+            const portraitArt = heroArt || unit.portrait_art || unit.card_art || '';
+            const cardStyle = cardArt ? `style="background-image:linear-gradient(180deg,rgba(10,8,6,.18),rgba(10,8,6,.78)),url('${escapeAttr(cardArt)}');background-size:cover;background-position:center;"` : '';
+            const fallbackIcon = side === 'enemy' ? 'pets' : 'auto_awesome';
+            return `
+                <button class="relative w-[104px] md:w-28 h-40 md:h-44 rounded-t-full rounded-b-lg border-2 ${selected ? 'border-primary-fixed shadow-[0_0_18px_rgba(255,215,0,0.75)] scale-[1.03]' : 'border-[#7a6a4a]'} bg-gradient-to-b ${frame} p-2 transition-all overflow-hidden ${selectable ? 'hover:border-primary-fixed hover:-translate-y-1' : 'opacity-70'} ${unit.alive ? (fx.idle || 'fx-idle') : (fx.defeat || 'fx-defeat')}" ${cardStyle} ${click}>
+                    <div class="absolute inset-1 rounded-t-full rounded-b-md border border-white/10 pointer-events-none"></div>
+                    <div class="absolute top-2 left-2 w-7 h-7 rounded-full bg-[#d8d2c2] text-[#15110c] border-2 border-[#5b503d] flex items-center justify-center font-stats-num text-xs">${atk}</div>
+                    <div class="absolute top-2 right-2 w-7 h-7 rounded-full bg-[#b72b2b] text-white border-2 border-[#5b1a1a] flex items-center justify-center font-stats-num text-xs">${unit.hp}</div>
+                    <div class="mt-6 mx-auto w-16 h-16 md:w-[4.5rem] md:h-[4.5rem] rounded-xl border-4 border-[#8f8165] bg-surface overflow-hidden flex items-center justify-center">
+                        ${portraitArt ? `<img src="${escapeAttr(portraitArt)}" alt="${escapeAttr(unit.name || 'card art')}" class="w-full h-full object-cover" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">` : ''}
+                        <span class="${portraitArt ? 'hidden ' : ''}material-symbols-outlined text-primary-fixed/80 text-3xl" data-icon="${fallbackIcon}">${fallbackIcon}</span>
+                    </div>
+                    <div class="mt-1 text-center">
+                        <p class="font-title-md text-xs md:text-sm text-on-surface truncate drop-shadow">${escapeHtml(unit.name)}</p>
+                        <p class="font-label-sm text-[10px] text-on-surface-variant">${escapeHtml(unit.role || 'unit')} · Lv.${unit.level}</p>
+                    </div>
+                    <div class="absolute left-3 right-3 bottom-8 h-2 bg-black/40 rounded overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-tertiary-fixed to-[#4ADE80]" style="width:${hpPct}%"></div>
+                    </div>
+                    <div class="absolute left-3 right-3 bottom-5 h-1 bg-black/40 rounded overflow-hidden">
+                        <div class="h-full bg-primary-fixed" style="width:${ragePct}%"></div>
+                    </div>
+                    <div class="absolute bottom-1 left-2 right-2 flex justify-between text-[10px] font-label-sm text-on-surface-variant">
+                        <span>DEF ${def}</span><span>${unit.alive ? '可战' : '击败'}</span>
+                    </div>
+                </button>
+            `;
+        }
+
+        function renderBattle(battle) {
+            const state = battle.state || {};
+            if (!selectedBattleActor || !(state.selectable_actors || []).includes(selectedBattleActor)) {
+                selectedBattleActor = firstSelectableActorId(state);
+                selectedBattleAction = '';
+                selectedBattleSkillId = 0;
+                selectedBattleTarget = '';
+            }
+            let action = currentActionView(state);
+            if (selectedBattleTarget && (!action || !(action.valid_targets || []).includes(selectedBattleTarget))) {
+                selectedBattleTarget = '';
+            }
+            if (!selectedBattleTarget && !targetPickRequired(action)) {
+                selectedBattleTarget = firstValidTargetId(state, selectedBattleActor, selectedBattleAction, selectedBattleSkillId);
+            }
+            action = currentActionView(state);
+            document.getElementById('battleEncounterTitle').innerText = state.encounter_name ? `遭遇 · ${state.encounter_name}` : '回合战斗';
+            document.getElementById('battleRoundTitle').innerText = `Round ${state.round || 1} · ${state.status === 'active' ? '选择卡牌' : '结算'}`;
+            document.getElementById('playerBattleUnits').innerHTML = (state.player_units || []).map(u => unitCard(u, 'player')).join('');
+            document.getElementById('enemyBattleUnits').innerHTML = (state.enemy_units || []).map(u => unitCard(u, 'enemy')).join('');
+            const actor = (state.player_units || []).find(u => u.id === selectedBattleActor);
+            document.getElementById('battleActorText').innerText = actor ? `已选：${actor.name}` : '请选择我方卡牌';
+            document.getElementById('battleTargetText').innerText = action ? `行动：${action.label} · ${targetHint(action)}` : '请选择普攻、防御或技能';
+            document.getElementById('battleLogList').innerHTML = (state.logs || []).slice().reverse().map(log => `<p class="font-body-md text-sm text-on-surface-variant mb-1 ${log.animation_key || ''}">第${log.round}回合 · ${log.text}</p>`).join('');
+            document.getElementById('battleActionButtons').innerHTML = actionsForSelectedActor(state).map(action => {
+                const disabled = !action.enabled ? 'disabled' : '';
+                const active = action.type === selectedBattleAction && (action.skill_id || 0) === selectedBattleSkillId;
+                const opacity = action.enabled ? (active ? 'bg-primary-fixed text-on-primary-fixed shadow-[0_0_12px_rgba(255,215,0,0.55)]' : 'bg-surface-container-high text-on-surface hover:bg-primary-fixed hover:text-on-primary-fixed') : 'bg-surface-container-high text-on-surface-variant cursor-not-allowed';
+                return `
+                    <div class="relative group">
+                        <button class="w-full ${opacity} py-3 px-2 font-label-sm text-label-sm ${action.animation_key || ''}" ${disabled} title="${escapeAttr(actionTooltipText(action))}" onclick="selectBattleAction('${action.type}', ${action.skill_id || 0})">${escapeHtml(action.label)}</button>
+                        ${actionTooltip(action)}
+                    </div>
+                `;
+            }).join('');
+
+            if (battle.result) {
+                showBattleResult(battle.result, !!battle.result.win);
+            }
+        }
+
+        function selectBattleTarget(targetId) {
+            if (!currentBattle) return;
+            const action = currentActionView(currentBattle.state || {});
+            if (!action) {
+                selectedBattleTarget = '';
+                renderBattle(currentBattle);
+                showToast('请先选择普攻、防御或技能');
+                return;
+            }
+            if (!(action.valid_targets || []).includes(targetId)) {
+                selectedBattleTarget = '';
+                renderBattle(currentBattle);
+                showToast('请选择高亮目标');
+                return;
+            }
+            selectedBattleTarget = targetId;
+            renderBattle(currentBattle);
+            if (action && targetPickRequired(action)) {
+                submitBattleAction(selectedBattleAction, selectedBattleSkillId);
+            }
+        }
+
+        function selectBattleActor(actorId) {
+            selectedBattleActor = actorId;
+            selectedBattleAction = '';
+            selectedBattleSkillId = 0;
+            selectedBattleTarget = '';
+            renderBattle(currentBattle);
+        }
+
+        function selectBattleAction(action, skillId) {
+            selectedBattleAction = action;
+            selectedBattleSkillId = skillId || 0;
+            selectedBattleTarget = firstValidTargetId(currentBattle.state, selectedBattleActor, selectedBattleAction, selectedBattleSkillId);
+            const actionView = currentActionView(currentBattle.state || {});
+            if (targetPickRequired(actionView)) {
+                renderBattle(currentBattle);
+                return;
+            }
+            submitBattleAction(action, skillId);
+        }
+
+        function firstSelectableActorId(state) {
+            const actorId = ((state && state.selectable_actors) || [])[0];
+            return actorId || '';
+        }
+
+        function actionsForSelectedActor(state) {
+            const actor = (state.player_units || []).find(u => u.id === selectedBattleActor) || (state.player_units || []).find(u => u.id === state.current_actor_id);
+            if (!actor) return [];
+            const enemyTargets = (state.enemy_units || []).filter(u => u.alive).map(u => u.id);
+            const allyTargets = (state.player_units || []).filter(u => u.alive).map(u => u.id);
+            const actions = [
+                { type: 'normal_attack', label: '普攻', enabled: enemyTargets.length > 0, target_type: 'enemy', effect_type: 'damage', valid_targets: enemyTargets, animation_key: actor.animation_keys && actor.animation_keys.attack, description: '选择一个敌方目标，造成基于攻击力的普通伤害。', cost_rage: 0, cooldown: 0, cooldown_left: 0 },
+                { type: 'defend', label: '防御', enabled: true, target_type: 'self', effect_type: 'defense_buff', valid_targets: [actor.id], animation_key: actor.animation_keys && actor.animation_keys.skill, description: '本回合采取守势，降低受到的伤害。', cost_rage: 0, cooldown: 0, cooldown_left: 0 },
+            ];
+            actions.push({
+                type: 'skill',
+                label: actor.skill_name || '技能',
+                skill_id: actor.skill_id || 0,
+                enabled: !!actor.skill_id && (actor.rage || 0) >= (actor.skill_cost_rage || 0) && (actor.cooldown_left || 0) === 0,
+                target_type: actor.skill_target || 'enemy',
+                effect_type: actor.skill_effect || 'damage',
+                valid_targets: targetsForAction(actor.skill_target || 'enemy', state, actor.id),
+                animation_key: actor.skill_animation,
+                description: actor.skill_description || '释放该卡牌的专属技能。',
+                cost_rage: actor.skill_cost_rage || 0,
+                cooldown: actor.skill_cooldown || 0,
+                cooldown_left: actor.cooldown_left || 0,
+            });
+            return actions;
+        }
+
+        function currentActionView(state) {
+            if (!selectedBattleAction) return null;
+            return actionsForSelectedActor(state).find(action => action.type === selectedBattleAction && (action.skill_id || 0) === selectedBattleSkillId) || null;
+        }
+
+        function targetsForAction(targetType, state, actorId) {
+            if (targetType === 'enemy') return (state.enemy_units || []).filter(u => u.alive).map(u => u.id);
+            if (targetType === 'ally') return (state.player_units || []).filter(u => u.alive).map(u => u.id);
+            if (targetType === 'ally_lowest') {
+                const allies = (state.player_units || []).filter(u => u.alive).sort((a, b) => (a.hp || 0) - (b.hp || 0));
+                return allies[0] ? [allies[0].id] : [];
+            }
+            if (targetType === 'self') return [actorId];
+            return [];
+        }
+
+        function firstValidTargetId(state, actorId, actionType, skillId = 0) {
+            selectedBattleAction = actionType || selectedBattleAction;
+            selectedBattleSkillId = skillId || 0;
+            const action = currentActionView(state || {});
+            if (targetPickRequired(action)) return '';
+            return action && action.valid_targets && action.valid_targets[0] ? action.valid_targets[0] : '';
+        }
+
+        function targetPickRequired(action) {
+            return !!action && (action.target_type === 'enemy' || action.target_type === 'ally');
+        }
+
+        function targetLabel(action) {
+            if (!action) return '目标';
+            if (action.target_type === 'enemy') return '敌方单体';
+            if (action.target_type === 'ally') return '我方单体';
+            if (action.target_type === 'ally_lowest') return '我方最低血量';
+            if (action.target_type === 'self') return '自身';
+            return action.target_type || '目标';
+        }
+
+        function effectLabel(effectType) {
+            const labels = {
+                damage: '伤害',
+                heal: '治疗',
+                attack_buff: '攻击提升',
+                defense_buff: '防御提升',
+            };
+            return labels[effectType] || effectType || '效果';
+        }
+
+        function actionTooltipText(action) {
+            if (!action) return '';
+            const parts = [
+                action.label,
+                `目标：${targetLabel(action)}`,
+                `效果：${effectLabel(action.effect_type)}`,
+                `怒气：${action.cost_rage || 0}`,
+                `冷却：${action.cooldown_left ? `${action.cooldown_left} 回合剩余` : `${action.cooldown || 0} 回合`}`,
+                action.description || '',
+            ];
+            return parts.filter(Boolean).join('\n');
+        }
+
+        function actionTooltip(action) {
+            if (!action) return '';
+            return `
+                <div class="pointer-events-none absolute bottom-full left-1/2 z-30 mb-2 w-64 -translate-x-1/2 rounded-xl border border-outline-variant bg-[#1b1711]/95 p-3 text-left shadow-2xl opacity-0 transition-opacity group-hover:opacity-100">
+                    <p class="font-title-md text-sm text-primary-fixed">${escapeHtml(action.label)}</p>
+                    <p class="mt-1 font-body-sm text-xs text-on-surface-variant">目标：${escapeHtml(targetLabel(action))} · 效果：${escapeHtml(effectLabel(action.effect_type))}</p>
+                    <p class="mt-1 font-body-sm text-xs text-on-surface-variant">怒气 ${action.cost_rage || 0} · 冷却 ${action.cooldown_left ? `${action.cooldown_left} 回合剩余` : `${action.cooldown || 0} 回合`}</p>
+                    <p class="mt-2 font-body-md text-xs text-on-surface">${escapeHtml(action.description || '释放该行动。')}</p>
+                </div>
+            `;
+        }
+
+        function targetHint(action) {
+            if (!action) return '选择目标';
+            if (action.target_type === 'enemy') return '选择敌方卡牌';
+            if (action.target_type === 'ally' || action.target_type === 'ally_lowest') return '选择我方卡牌';
+            if (action.target_type === 'self') return '作用于自身';
+            return '选择目标';
+        }
+
+        async function submitBattleAction(action, skillId) {
+            if (!currentBattle) return;
+            if (battleActionPending) return;
+            const body = {
+                session_id: currentBattle.session_id,
+                action,
+                actor_id: selectedBattleActor,
+                target_id: selectedBattleTarget,
+                skill_id: skillId || 0
+            };
+            battleActionPending = true;
+            try {
+                const data = await apiFetch('/api/v1/stage/battle/action', {
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                });
+                if (!data || data.code !== 0) {
+                    showToast('行动失败：' + (data && data.message ? data.message : '未知错误'));
+                    return;
+                }
+                currentBattle = data.data;
+                selectedBattleActor = firstSelectableActorId(currentBattle.state);
+                selectedBattleAction = '';
+                selectedBattleSkillId = 0;
+                selectedBattleTarget = '';
+                renderBattle(currentBattle);
+                if (window.loadAssetBar) window.loadAssetBar();
+            } catch (err) {
+                showToast('网络错误，请稍后重试');
+            } finally {
+                battleActionPending = false;
+            }
+        }
+
+        function closeBattlePanel() {
+            const panel = document.getElementById('battlePanel');
+            panel.classList.add('hidden');
+            panel.classList.remove('flex');
+        }
+
+        function showBattleResult(result, isWin) {
             const modal = document.getElementById('battleResultModal');
             const statusIcon = document.getElementById('statusIcon');
             const statusTitle = document.getElementById('statusTitle');
             const statusSub = document.getElementById('statusSub');
             const winGlow = document.getElementById('modalWinGlow');
             const nextBtn = document.getElementById('nextStageBtn');
+            if (statusSub) statusSub.innerText = isWin ? '挑战成功' : (result.failure_hint || '挑战未通过');
 
-            // translate stageId like '4-1' to numeric id if needed
-            let sid = stageId;
-            if (typeof stageId === 'string' && stageId.includes('-')) {
-                // pick the second part as numeric identifier when possible
-                sid = Number(stageId.split('-')[1]) || stageId;
+            if (isWin) {
+                statusTitle.innerText = "胜利";
+                statusTitle.className = "font-display-hero text-headline-lg-mobile text-primary-fixed mb-1 shimmer-text";
+                statusIcon.innerHTML = '<span class="material-symbols-outlined text-4xl text-primary-fixed" data-icon="military_tech">military_tech</span>';
+                statusIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mb-stack-md border-4 border-primary-fixed jade-glow";
+                winGlow.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+            } else {
+                statusTitle.innerText = "失败";
+                statusTitle.className = "font-display-hero text-headline-lg-mobile text-error mb-1";
+                statusIcon.innerHTML = '<span class="material-symbols-outlined text-4xl text-error" data-icon="skull">skull</span>';
+                statusIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mb-stack-md border-4 border-error";
+                winGlow.classList.add('hidden');
+                nextBtn.classList.add('hidden');
             }
 
-            try {
-                const data = await apiFetch('/api/v1/stage/fight', {
-                    method: 'POST',
-                    body: JSON.stringify({ stage_id: sid })
-                });
-                if (!data || data.code !== 0) {
-                    showToast('挑战失败：' + (data && data.message ? data.message : '未知错误'));
-                    return;
-                }
-                const result = data.data || {};
-                const isWin = !!result.win;
-                if (statusSub) statusSub.innerText = isWin ? '挑战成功' : '挑战未通过';
+            const rewardGold = document.getElementById('rewardGold');
+            const rewardExp = document.getElementById('rewardExp');
+            const remainingStamina = document.getElementById('remainingStamina');
+            if (rewardGold) rewardGold.innerText = `+${result.reward_gold || 0}`;
+            if (rewardExp) rewardExp.innerText = `+${result.reward_exp || 0}`;
+            if (remainingStamina) remainingStamina.innerText = `${result.stamina || 0}/${result.max_stamina || 120}`;
+            if (window.loadAssetBar) window.loadAssetBar();
 
-                if (isWin) {
-                    statusTitle.innerText = "胜利";
-                    statusTitle.className = "font-display-hero text-headline-lg-mobile text-primary-fixed mb-1 shimmer-text";
-                    statusIcon.innerHTML = '<span class="material-symbols-outlined text-4xl text-primary-fixed" data-icon="military_tech">military_tech</span>';
-                    statusIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mb-stack-md border-4 border-primary-fixed jade-glow";
-                    winGlow.classList.remove('hidden');
-                    nextBtn.classList.remove('hidden');
-                } else {
-                    statusTitle.innerText = "失败";
-                    statusTitle.className = "font-display-hero text-headline-lg-mobile text-error mb-1";
-                    statusIcon.innerHTML = '<span class="material-symbols-outlined text-4xl text-error" data-icon="skull">skull</span>';
-                    statusIcon.className = "w-20 h-20 rounded-full flex items-center justify-center mb-stack-md border-4 border-error";
-                    winGlow.classList.add('hidden');
-                    nextBtn.classList.add('hidden');
-                }
-
-                const rewardGold = document.getElementById('rewardGold');
-                const rewardExp = document.getElementById('rewardExp');
-                const remainingStamina = document.getElementById('remainingStamina');
-                if (rewardGold) rewardGold.innerText = `+${result.reward_gold || 0}`;
-                if (rewardExp) rewardExp.innerText = `+${result.reward_exp || 0}`;
-                if (remainingStamina) remainingStamina.innerText = `${result.stamina || 0}/${result.max_stamina || 120}`;
-                if (window.loadAssetBar) window.loadAssetBar();
-
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            } catch (err) {
-                showToast('网络错误，请稍后重试');
-            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function showToast(msg) {

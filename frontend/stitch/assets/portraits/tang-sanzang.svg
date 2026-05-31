@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#23130d"/>
+  <circle cx="128" cy="115" r="72" fill="#ffd59c"/>
+  <path d="M78 90c20-48 80-48 100 0z" fill="#b72b2b"/>
+  <rect x="92" y="76" width="72" height="28" rx="6" fill="#ffe16d"/>
+  <path d="M70 218c28-58 88-68 116 0z" fill="#8e1f1f"/>
+  <circle cx="105" cy="122" r="6" fill="#3a240f"/><circle cx="151" cy="122" r="6" fill="#3a240f"/>
+  <text x="128" y="232" text-anchor="middle" font-size="25" fill="#ffe16d" font-family="serif">三藏</text>
+</svg>

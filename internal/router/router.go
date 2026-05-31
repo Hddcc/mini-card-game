@@ -44,6 +44,7 @@ func New(deps Dependencies) *gin.Engine {
 	taskRepo := repository.NewTaskRepository(deps.DB)
 	teamRepo := repository.NewTeamRepository(deps.DB)
 	stageRepo := repository.NewStageRepository(deps.DB)
+	battleRepo := repository.NewBattleRepository(deps.DB)
 
 	rewardService := service.NewRewardService(assetRepo, heroRepo)
 	taskService := service.NewTaskService(deps.DB, taskRepo, rewardService)
@@ -51,12 +52,14 @@ func New(deps Dependencies) *gin.Engine {
 	gachaService := service.NewGachaService(deps.DB, assetRepo, gachaRepo, rewardService, taskService)
 	teamService := service.NewTeamService(teamRepo, heroRepo, playerRepo)
 	stageService := service.NewStageService(deps.DB, stageRepo, teamRepo, heroRepo, assetRepo, playerRepo, taskService)
+	battleService := service.NewBattleService(deps.DB, battleRepo, stageRepo, teamRepo, heroRepo, assetRepo, playerRepo, taskService)
 
 	heroHandler := handler.NewHeroHandler(heroService)
 	gachaHandler := handler.NewGachaHandler(gachaService)
 	taskHandler := handler.NewTaskHandler(taskService)
 	teamHandler := handler.NewTeamHandler(teamService)
 	stageHandler := handler.NewStageHandler(stageService)
+	battleHandler := handler.NewBattleHandler(battleService)
 
 	frontendDist := deps.Config.FrontendDist
 	if frontendDist == "" {
@@ -105,6 +108,8 @@ func New(deps Dependencies) *gin.Engine {
 	loginRequired.POST("/team/save", teamHandler.Save)
 	loginRequired.GET("/team", teamHandler.Get)
 	loginRequired.POST("/stage/fight", stageHandler.Fight)
+	loginRequired.POST("/stage/battle/start", battleHandler.Start)
+	loginRequired.POST("/stage/battle/action", battleHandler.Action)
 	loginRequired.GET("/tasks/daily", taskHandler.ListDaily)
 	loginRequired.POST("/tasks/claim", taskHandler.Claim)
 

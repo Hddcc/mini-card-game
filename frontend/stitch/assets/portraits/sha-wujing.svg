@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#6ff2ae"/><stop offset="1" stop-color="#19505b"/></linearGradient></defs>
+  <rect width="256" height="256" fill="#0d1d23"/>
+  <circle cx="128" cy="115" r="70" fill="url(#g)"/>
+  <path d="M84 86c20-30 68-30 88 0-18 24-70 24-88 0z" fill="#25374a"/>
+  <path d="M74 216c30-52 78-62 108 0z" fill="#263f5f"/>
+  <circle cx="105" cy="122" r="7" fill="#dbffe6"/><circle cx="151" cy="122" r="7" fill="#dbffe6"/>
+  <text x="128" y="232" text-anchor="middle" font-size="26" fill="#dbffe6" font-family="serif">悟净</text>
+</svg>
