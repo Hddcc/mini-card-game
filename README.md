@@ -7,17 +7,28 @@
 ## 项目预览
 
 登录 / 注册页：
-![image-20260602155737909](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20260602155737909.png)
 
-主页与任务：![image-20260602155845190](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20260602155845190.png)
+![登录注册](docs/images/image-20260602155737909.png)
 
-阵容编成：![image-20260602155914118](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20260602155914118.png)
+主页与任务：
 
-关卡挑战：![image-20260602155940257](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20260602155940257.png)
+![主页任务](docs/images/image-20260602155845190.png)
 
-抽卡界面：![image-20260602160018881](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20260602160018881.png)
+阵容编成：
 
-战斗面板：![image-20260602160144184](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20260602160144184.png)
+![阵容编成](docs/images/image-20260602155914118.png)
+
+关卡挑战：
+
+![关卡挑战](docs/images/image-20260602155940257.png)
+
+抽卡界面：
+
+![抽卡界面](docs/images/image-20260602160018881.png)
+
+战斗面板：
+
+![战斗面板](docs/images/image-20260602160144184.png)
 
 
 
