@@ -90,9 +90,13 @@ func (r *BattleRepository) LockActiveSession(tx *gorm.DB, playerID uint64, now t
 	err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
 		Where("player_id = ? AND status = ? AND expires_at > ?", playerID, model.BattleStatusActive, now).
 		Order("id DESC").
-		First(&session).Error
+		Limit(1).
+		Find(&session).Error
 	if err != nil {
 		return nil, err
+	}
+	if session.ID == 0 {
+		return nil, gorm.ErrRecordNotFound
 	}
 	return &session, nil
 }
