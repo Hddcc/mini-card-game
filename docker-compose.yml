@@ -1,26 +1,73 @@
-version: "3.9"
-
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mini-card-game:latest
+    container_name: mini_card_app
+    restart: unless-stopped
+    init: true
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      APP_NAME: mini-card-game
+      APP_ENV: production
+      HTTP_ADDR: :5290
+      FRONTEND_DIST: /app/frontend/stitch
+      MYSQL_DSN: "root:${MYSQL_ROOT_PASSWORD:-mini_card_root_password}@tcp(mysql:3306)/mini_card_game?charset=utf8mb4&parseTime=True&loc=Local"
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+      JWT_SECRET: ${JWT_SECRET:-please-change-mini-card-game-jwt-secret}
+      JWT_EXPIRE_SECONDS: ${JWT_EXPIRE_SECONDS:-86400}
+      TZ: Asia/Shanghai
+    ports:
+      - "${APP_PORT:-5290}:5290"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:5290/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
   mysql:
     image: mysql:8.0
     container_name: mini_card_mysql
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-mini_card_root_password}
       MYSQL_DATABASE: mini_card_game
       TZ: Asia/Shanghai
-    ports:
-      - "3306:3306"
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
     volumes:
       - mysql_data:/var/lib/mysql
 
   redis:
     image: redis:7.2
     container_name: mini_card_redis
-    ports:
-      - "6379:6379"
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    volumes:
+      - redis_data:/data
 
 volumes:
   mysql_data:
+  redis_data:
