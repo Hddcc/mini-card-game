@@ -35,7 +35,7 @@
             border-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H10V5H5V10H0V0ZM40 0H30V5H35V10H40V0ZM0 40H10V35H5V30H0V40ZM40 40H30V35H35V30H40V40Z' fill='%23ffd700'/%3E%3C/svg%3E") 10 / 10px / 0px repeat;
         }
         .ink-overlay {
-            background-image: radial-gradient(circle at 50% 50%, transparent 0%, rgba(19,19,19,0.8) 100%);
+            background-image: radial-gradient(circle at 50% 50%, transparent 0%, rgba(19,19,19,0.45) 100%);
         }
     </style>
 <!-- Tailwind Config Injection -->
@@ -187,7 +187,8 @@
 <main class="flex-grow pt-24 pb-20 md:pl-72 relative">
 <!-- Immersive Background -->
 <div class="absolute inset-0 -z-10 overflow-hidden">
-<img alt="Divine Mountain Palace" class="w-full h-full object-cover scale-105" data-alt="A breathtaking landscape of a serene divine palace nestled atop a misty, jagged mountain peak during a golden sunset. The architecture features ornate red pillars and gold tiled roofs, floating amongst swirling ethereal clouds. The atmosphere is mystical and powerful, with a soft divine glow emanating from the central temple, dominated by a palette of deep ink-wash blacks, imperial gold, and vibrant vermilion accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLmoCL3grWqPvI1-jPKM0p0oVhSB5iL83Qfo6dG3BxIrb8P-aa8H5wT0l9sBr5lX5TnREentC8eGXTPTkX-a0G1zLKydKQTj4-ywDiNBC8xjhUpstfhhEzg6cDbZqo9JJW3C7ld13W_Y-i6NhL56Pe0vEg3YoddiBTVMTemF7EqOrHEJVBYkAj267Vf0QrxsSyqDbyKt-m70l2nYiecdz26-nmxhrxRTG7oRCrxW_DFyVOmquHUFIHpRpleWoDA7jku4pTBV37Y5g"/>
+<img alt="" class="w-full h-full object-cover object-center opacity-95" id="homeBackdrop" src="/static/assets/images/home-background.png"/>
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_32%_18%,rgba(255,225,109,.22),transparent_24%),linear-gradient(135deg,rgba(45,45,45,.18)_0%,rgba(19,19,19,.45)_65%,rgba(14,14,14,.62)_100%)]"></div>
 <div class="absolute inset-0 ink-overlay"></div>
 </div>
 <div class="px-margin-mobile md:px-margin-desktop space-y-stack-lg max-w-7xl mx-auto">
@@ -197,9 +198,13 @@
 <!-- Avatar Frame -->
 <div class="relative group">
 <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-primary-container p-1 bg-ink-wash overflow-hidden shadow-[0_0_20px_rgba(255,215,0,0.4)]">
-<img alt="Player Portrait" class="w-full h-full object-cover rounded-full" data-alt="A portrait of a legendary celestial warrior with long flowing black hair, adorned in ancient Chinese armor made of jade and polished stone. The warrior has a determined, serene expression with subtle gold markings under the eyes. The background is a soft blur of a starry ink-black night sky with golden wisps of energy, matching the game's mythical oriental aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1sO831rf0XcvBhM2ksFpDcw7RLiy1NxHuNTgbg-ub6m_qV2QoRdWJowXXh-SVZaxkLE6DaoPM89mR9JmSiiDWI1lg40l9xnrRlDGSpuIuJzVF3j6Phm8S-xVrTjpXe-dq2tpGzjR04JAc0DW7E7ORC8WVJu9gBvk1DvIP1_V_Boy-Jdb5YTZdsGqs-4MWkfMd4Iq3oCgxZo9n6r79PrvUWiC4AiVs-yieugg49MqcTplQUNLsP--X2k33OdnWwsamOHD3qys48M"/>
+<img alt="Player Portrait" class="w-full h-full object-cover rounded-full bg-surface-container" data-alt="取经人头像" id="playerAvatar" src="/static/assets/images/hero-xiao-bailong.png"/>
 </div>
-<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 min-w-[76px] h-7 px-3 bg-primary-container text-on-primary-container rounded-full font-stats-num text-label-sm border border-on-primary-container/30 flex items-center justify-center whitespace-nowrap text-center leading-none">
+<label class="absolute -right-2 top-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-primary-container bg-surface-container-high text-primary-fixed shadow-lg transition hover:bg-primary-container hover:text-on-primary-container" title="更换头像">
+<span class="material-symbols-outlined text-lg">photo_camera</span>
+<input accept="image/*" class="hidden" id="avatarInput" type="file"/>
+</label>
+<div class="absolute -bottom-3 left-1/2 -translate-x-1/2 min-w-[76px] h-7 px-3 bg-primary-container text-on-primary-container rounded-full font-stats-num text-label-sm border border-on-primary-container/30 flex items-center justify-center whitespace-nowrap text-center leading-none" id="profileLevelBadge">
                             等级 1
                         </div>
 </div>
@@ -307,9 +312,9 @@
 <!-- 活动入口侧栏 -->
 <aside class="space-y-stack-lg">
 <!-- Event Banner -->
-<div class="relative rounded-xl overflow-hidden min-h-[360px] lg:min-h-[460px] border-2 border-quality-ur shadow-[0_0_20px_rgba(255,69,0,0.4)] cursor-pointer" onclick="window.location.href='/static/mini_2/code.html'">
-<img class="w-full h-full object-cover" data-alt="A dramatic cinematic scene of a celestial battle against a massive fire dragon. The sky is dark and filled with swirling red and orange embers. A powerful monk character stands in the foreground, staff raised, surrounded by golden Sanskrit characters that glow intensely. The overall mood is epic, high-stakes, and fiery, following the game's dark mythical style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-UwYrfB6Xp2HJ8ObuNJrM_ToYhK_HlJA1Cd6pb18-l8k6ATp_6g1ieW0bp9_5YW3zVzFPlRNIHP-3ZFDIeBx1HQcbyxj4FLSamOte5oI2j_097g78l5jpDTMXCHUdjoD04An_rGLaSpJ18slM2KKdvJdZ6uK9mlvpogvI_niUtfYlyGnXurWcO3oE7GihB051oAG-yKcX41bLN2X9L6HqnNkPwXVHuo_jWMR5jJGYcU1EeYOJ-y4NCzwF2Z5Ja97psMQaIVr789A"/>
-<div class="absolute inset-0 bg-gradient-to-t from-ink-wash to-transparent"></div>
+<div class="relative rounded-xl overflow-hidden min-h-[360px] lg:min-h-[460px] border-2 border-outline-variant bg-surface-container cursor-pointer" onclick="window.location.href='/static/mini_6/code.html'">
+<img alt="火焰山活动" class="absolute inset-0 h-full w-full object-cover object-center" src="/static/assets/images/activity-flame-mountain.png"/>
+<div class="absolute inset-0 bg-gradient-to-t from-ink-wash via-ink-wash/35 to-transparent"></div>
 <div class="absolute bottom-3 left-3">
 <span class="bg-quality-ur text-white text-[10px] font-bold px-2 py-0.5 rounded-full mb-1 inline-block">热门活动</span>
 <p class="font-title-md text-primary leading-tight">火焰山突袭</p>
@@ -373,13 +378,67 @@
             return obj[pascal] ?? obj[camel] ?? fallback;
         }
 
+        const avatarStorageKey = 'mini-xiyou-local-avatar';
+        const defaultPlayerAvatar = '/static/assets/images/hero-xiao-bailong.png';
+
+        function applyAvatar(src) {
+            const avatar = document.getElementById('playerAvatar');
+            if (avatar) avatar.src = src || defaultPlayerAvatar;
+        }
+
+        function restoreLocalAvatar() {
+            applyAvatar(localStorage.getItem(avatarStorageKey) || defaultPlayerAvatar);
+        }
+
+        function initAvatarUpload() {
+            const input = document.getElementById('avatarInput');
+            if (!input) return;
+            input.addEventListener('change', () => {
+                const file = input.files && input.files[0];
+                input.value = '';
+                if (!file) return;
+                if (!file.type || !file.type.startsWith('image/')) {
+                    alert('请选择图片文件作为头像');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => resizeAndStoreAvatar(String(reader.result || ''));
+                reader.onerror = () => alert('头像读取失败，请换一张图片试试');
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function resizeAndStoreAvatar(dataUrl) {
+            const image = new Image();
+            image.onload = () => {
+                const size = 512;
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                const side = Math.min(image.width, image.height);
+                const sx = Math.max(0, (image.width - side) / 2);
+                const sy = Math.max(0, (image.height - side) / 2);
+                ctx.drawImage(image, sx, sy, side, side, 0, 0, size, size);
+                const avatarData = canvas.toDataURL('image/jpeg', 0.86);
+                try {
+                    localStorage.setItem(avatarStorageKey, avatarData);
+                    applyAvatar(avatarData);
+                } catch (err) {
+                    alert('头像图片过大，请选择更小的图片');
+                }
+            };
+            image.onerror = () => alert('头像图片无法解析，请换一张图片试试');
+            image.src = dataUrl;
+        }
+
         function renderProfile(profile) {
             const nickname = read(profile, 'Nickname', 'nickname', '取经人');
             const level = read(profile, 'Level', 'level', 1);
             const exp = read(profile, 'Exp', 'exp', 0);
             const power = read(profile, 'Power', 'power', 0);
             const nameEl = document.querySelector('section h2');
-            const levelEl = document.querySelector('.absolute.-bottom-2');
+            const levelEl = document.getElementById('profileLevelBadge');
             const expText = document.querySelector('.flex.justify-between.items-center.text-label-sm span:last-child');
             if (nameEl) nameEl.textContent = nickname;
             if (levelEl) levelEl.textContent = `等级 ${level}`;
@@ -454,17 +513,10 @@
             }
         }
 
-        document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth > 768) {
-                const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
-                const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
-                const bg = document.querySelector('main img');
-                if (bg) bg.style.transform = `scale(1.05) translate(${moveX}px, ${moveY}px)`;
-            }
-        });
-
+        restoreLocalAvatar();
+        initAvatarUpload();
         initHome();
     </script>
-<script src="/static/assets/status-bar.js"></script>
-<script src="/static/assets/app-shell.js"></script>
+<script src="../assets/status-bar.js"></script>
+<script src="../assets/app-shell.js"></script>
 </body></html>

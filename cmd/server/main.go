@@ -6,6 +6,7 @@ import (
 	"mini-card-game/internal/cache"
 	"mini-card-game/internal/config"
 	"mini-card-game/internal/model"
+	"mini-card-game/internal/mq"
 	"mini-card-game/internal/pkg/logger"
 	"mini-card-game/internal/router"
 )
@@ -36,10 +37,24 @@ func main() {
 		redisClient = nil
 	}
 
+	rabbitClient, err := mq.NewRabbitMQ(mq.Config{
+		URL:        cfg.RabbitMQURL,
+		Exchange:   cfg.AwardExchange,
+		Queue:      cfg.AwardQueue,
+		RoutingKey: cfg.AwardRoutingKey,
+	})
+	if err != nil {
+		zapLogger.Warn("init rabbitmq failed, continuing with local message retry", zap.Error(err))
+		rabbitClient = nil
+	} else {
+		defer rabbitClient.Close()
+	}
+
 	r := router.New(router.Dependencies{
 		Config: cfg,
 		DB:     db,
 		Redis:  redisClient,
+		MQ:     rabbitClient,
 		Logger: zapLogger,
 	})
 

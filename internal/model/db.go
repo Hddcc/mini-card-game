@@ -1,6 +1,8 @@
 package model
 
 import (
+	"time"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -33,6 +35,12 @@ func EnsureSchema(db *gorm.DB) error {
 		&CardSkinConfig{},
 		&StageEncounterVariant{},
 		&StageEncounterEnemy{},
+		&ActivityLottery{},
+		&ActivityLotteryPrize{},
+		&ActivityLotteryRecord{},
+		&ActivityLotteryBlacklist{},
+		&ActivityLotteryLocalMessage{},
+		&ActivityPrizeReleaseState{},
 	); err != nil {
 		return err
 	}
@@ -48,7 +56,13 @@ func EnsureSchema(db *gorm.DB) error {
 	if err := seedBattleConfig(db); err != nil {
 		return err
 	}
-	return seedCardBoardConfig(db)
+	if err := seedCardBoardConfig(db); err != nil {
+		return err
+	}
+	if err := syncProvidedArtPaths(db); err != nil {
+		return err
+	}
+	return seedActivityLotteryConfig(db)
 }
 
 func seedBaseConfig(db *gorm.DB) error {
@@ -109,10 +123,10 @@ func seedBattleConfig(db *gorm.DB) error {
 	}
 
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create([]EnemyConfig{
-		{ID: 1, Name: "山猿小妖", Role: "minion", BaseHP: 520, BaseATK: 95, BaseDEF: 35, SkillID: 101, CardArt: "/static/assets/cards/enemy-minion.svg", PortraitArt: "/static/assets/portraits/mountain-ape.svg", AttackAnimation: "fx-claw", SkillAnimation: "fx-bite", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
-		{ID: 2, Name: "水帘洞守卫", Role: "guard", BaseHP: 780, BaseATK: 125, BaseDEF: 55, SkillID: 102, CardArt: "/static/assets/cards/enemy-guard.svg", PortraitArt: "/static/assets/portraits/cave-guard.svg", AttackAnimation: "fx-smash", SkillAnimation: "fx-heavy-smash", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
-		{ID: 3, Name: "东海虾兵", Role: "minion", BaseHP: 620, BaseATK: 115, BaseDEF: 45, SkillID: 101, CardArt: "/static/assets/cards/enemy-shrimp.svg", PortraitArt: "/static/assets/portraits/shrimp-soldier.svg", AttackAnimation: "fx-spear", SkillAnimation: "fx-bite", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
-		{ID: 4, Name: "龙宫巡将", Role: "boss", BaseHP: 1100, BaseATK: 150, BaseDEF: 75, SkillID: 102, CardArt: "/static/assets/cards/enemy-boss.svg", PortraitArt: "/static/assets/portraits/dragon-general.svg", AttackAnimation: "fx-cleave", SkillAnimation: "fx-heavy-smash", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
+		{ID: 1, Name: "山猿小妖", Role: "minion", BaseHP: 520, BaseATK: 95, BaseDEF: 35, SkillID: 101, CardArt: "/static/assets/images/enemy-leopard-spirit.png", PortraitArt: "/static/assets/images/enemy-leopard-spirit.png", AttackAnimation: "fx-claw", SkillAnimation: "fx-bite", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
+		{ID: 2, Name: "水帘洞守卫", Role: "guard", BaseHP: 780, BaseATK: 125, BaseDEF: 55, SkillID: 102, CardArt: "/static/assets/images/enemy-rhino-spirit.png", PortraitArt: "/static/assets/images/enemy-rhino-spirit.png", AttackAnimation: "fx-smash", SkillAnimation: "fx-heavy-smash", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
+		{ID: 3, Name: "东海虾兵", Role: "minion", BaseHP: 620, BaseATK: 115, BaseDEF: 45, SkillID: 101, CardArt: "/static/assets/images/enemy-leopard-spirit.png", PortraitArt: "/static/assets/images/enemy-leopard-spirit.png", AttackAnimation: "fx-spear", SkillAnimation: "fx-bite", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
+		{ID: 4, Name: "龙宫巡将", Role: "boss", BaseHP: 1100, BaseATK: 150, BaseDEF: 75, SkillID: 102, CardArt: "/static/assets/images/enemy-rhino-spirit.png", PortraitArt: "/static/assets/images/enemy-rhino-spirit.png", AttackAnimation: "fx-cleave", SkillAnimation: "fx-heavy-smash", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
 	}).Error; err != nil {
 		return err
 	}
@@ -129,15 +143,15 @@ func seedBattleConfig(db *gorm.DB) error {
 
 func seedCardBoardConfig(db *gorm.DB) error {
 	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create([]CardSkinConfig{
-		{OwnerType: "hero", OwnerID: 1, CardArt: "/static/assets/cards/hero-warrior.svg", PortraitArt: "/static/assets/portraits/sun-wukong.svg", AttackAnimation: "fx-slash", SkillAnimation: "fx-gold-burst", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
-		{OwnerType: "hero", OwnerID: 2, CardArt: "/static/assets/cards/hero-tank.svg", PortraitArt: "/static/assets/portraits/zhu-bajie.svg", AttackAnimation: "fx-smash", SkillAnimation: "fx-shield", HitAnimation: "fx-hit-shield", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
-		{OwnerType: "hero", OwnerID: 3, CardArt: "/static/assets/cards/hero-guardian.svg", PortraitArt: "/static/assets/portraits/sha-wujing.svg", AttackAnimation: "fx-staff", SkillAnimation: "fx-water-heal", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
-		{OwnerType: "hero", OwnerID: 4, CardArt: "/static/assets/cards/hero-assassin.svg", PortraitArt: "/static/assets/portraits/xiao-bailong.svg", AttackAnimation: "fx-pierce", SkillAnimation: "fx-dragon-sting", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
-		{OwnerType: "hero", OwnerID: 5, CardArt: "/static/assets/cards/hero-support.svg", PortraitArt: "/static/assets/portraits/tang-sanzang.svg", AttackAnimation: "fx-prayer", SkillAnimation: "fx-buddha-heal", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
-		{OwnerType: "enemy", OwnerID: 1, CardArt: "/static/assets/cards/enemy-minion.svg", PortraitArt: "/static/assets/portraits/mountain-ape.svg", AttackAnimation: "fx-claw", SkillAnimation: "fx-bite", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
-		{OwnerType: "enemy", OwnerID: 2, CardArt: "/static/assets/cards/enemy-guard.svg", PortraitArt: "/static/assets/portraits/cave-guard.svg", AttackAnimation: "fx-smash", SkillAnimation: "fx-heavy-smash", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
-		{OwnerType: "enemy", OwnerID: 3, CardArt: "/static/assets/cards/enemy-shrimp.svg", PortraitArt: "/static/assets/portraits/shrimp-soldier.svg", AttackAnimation: "fx-spear", SkillAnimation: "fx-bite", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
-		{OwnerType: "enemy", OwnerID: 4, CardArt: "/static/assets/cards/enemy-boss.svg", PortraitArt: "/static/assets/portraits/dragon-general.svg", AttackAnimation: "fx-cleave", SkillAnimation: "fx-heavy-smash", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
+		{OwnerType: "hero", OwnerID: 1, CardArt: "/static/assets/images/hero-sun-wukong.png", PortraitArt: "/static/assets/images/hero-sun-wukong.png", AttackAnimation: "fx-slash", SkillAnimation: "fx-gold-burst", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
+		{OwnerType: "hero", OwnerID: 2, CardArt: "/static/assets/images/hero-zhu-bajie.png", PortraitArt: "/static/assets/images/hero-zhu-bajie.png", AttackAnimation: "fx-smash", SkillAnimation: "fx-shield", HitAnimation: "fx-hit-shield", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
+		{OwnerType: "hero", OwnerID: 3, CardArt: "/static/assets/images/hero-sha-wujing.png", PortraitArt: "/static/assets/images/hero-sha-wujing.png", AttackAnimation: "fx-staff", SkillAnimation: "fx-water-heal", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
+		{OwnerType: "hero", OwnerID: 4, CardArt: "/static/assets/images/hero-xiao-bailong.png", PortraitArt: "/static/assets/images/hero-xiao-bailong.png", AttackAnimation: "fx-pierce", SkillAnimation: "fx-dragon-sting", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
+		{OwnerType: "hero", OwnerID: 5, CardArt: "/static/assets/images/hero-tang-sanzang.png", PortraitArt: "/static/assets/images/hero-tang-sanzang.png", AttackAnimation: "fx-prayer", SkillAnimation: "fx-buddha-heal", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
+		{OwnerType: "enemy", OwnerID: 1, CardArt: "/static/assets/images/enemy-leopard-spirit.png", PortraitArt: "/static/assets/images/enemy-leopard-spirit.png", AttackAnimation: "fx-claw", SkillAnimation: "fx-bite", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
+		{OwnerType: "enemy", OwnerID: 2, CardArt: "/static/assets/images/enemy-rhino-spirit.png", PortraitArt: "/static/assets/images/enemy-rhino-spirit.png", AttackAnimation: "fx-smash", SkillAnimation: "fx-heavy-smash", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
+		{OwnerType: "enemy", OwnerID: 3, CardArt: "/static/assets/images/enemy-leopard-spirit.png", PortraitArt: "/static/assets/images/enemy-leopard-spirit.png", AttackAnimation: "fx-spear", SkillAnimation: "fx-bite", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-breathe"},
+		{OwnerType: "enemy", OwnerID: 4, CardArt: "/static/assets/images/enemy-rhino-spirit.png", PortraitArt: "/static/assets/images/enemy-rhino-spirit.png", AttackAnimation: "fx-cleave", SkillAnimation: "fx-heavy-smash", HitAnimation: "fx-hit-spark", DefeatAnimation: "fx-defeat-smoke", IdleAnimation: "fx-idle-glow"},
 	}).Error; err != nil {
 		return err
 	}
@@ -165,4 +179,74 @@ func seedCardBoardConfig(db *gorm.DB) error {
 		{ID: 9, VariantID: 6, EnemyConfigID: 4, Slot: 1, Level: 4, Count: 1, SkillID: 102},
 		{ID: 10, VariantID: 6, EnemyConfigID: 3, Slot: 2, Level: 3, Count: 2, SkillID: 101},
 	}).Error
+}
+
+func seedActivityLotteryConfig(db *gorm.DB) error {
+	startAt := time.Date(2025, 1, 1, 0, 0, 0, 0, time.Local)
+	endAt := time.Date(2035, 12, 31, 23, 59, 59, 0, time.Local)
+	activity := ActivityLottery{
+		ID:           1,
+		Code:         "peach-festival-blessing",
+		Name:         "蟠桃会·天庭赐福",
+		Description:  "每日限次抽取天庭赏赐，奖励通过异步发奖到账。",
+		BannerImage:  "",
+		DailyLimit:   3,
+		IPDailyLimit: 20,
+		Status:       1,
+		StartAt:      startAt,
+		EndAt:        endAt,
+	}
+	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&activity).Error; err != nil {
+		return err
+	}
+
+	return db.Clauses(clause.OnConflict{DoNothing: true}).Create([]ActivityLotteryPrize{
+		{ID: 1, ActivityID: 1, Name: "灵玉福袋", Description: "灵玉 x88", Icon: "diamond", RewardType: "diamond", RewardCount: 88, Quality: 5, Weight: 80, TotalNum: 80, LeftNum: 80, ReleasePlan: "daily:20", DisplayOrder: 1, Status: 1},
+		{ID: 2, ActivityID: 1, Name: "金铢宝匣", Description: "金币 x5000", Icon: "account_balance_wallet", RewardType: "gold", RewardCount: 5000, Quality: 4, Weight: 260, TotalNum: -1, LeftNum: -1, DisplayOrder: 2, Status: 1},
+		{ID: 3, ActivityID: 1, Name: "行囊补给", Description: "体力 x30", Icon: "bolt", RewardType: "stamina", RewardCount: 30, Quality: 3, Weight: 300, TotalNum: 300, LeftNum: 300, ReleasePlan: "daily:80", DisplayOrder: 3, Status: 1},
+		{ID: 4, ActivityID: 1, Name: "大圣显灵", Description: "孙悟空 x1", Icon: "auto_awesome", RewardType: "hero", RewardID: 1, RewardCount: 1, Quality: 5, Weight: 20, TotalNum: 10, LeftNum: 10, ReleasePlan: "daily:2", DisplayOrder: 4, Status: 1},
+		{ID: 5, ActivityID: 1, Name: "安慰香火", Description: "金币 x800", Icon: "redeem", RewardType: "gold", RewardCount: 800, Quality: 2, Weight: 340, TotalNum: -1, LeftNum: -1, DisplayOrder: 5, Fallback: 1, Status: 1},
+	}).Error
+}
+
+func syncProvidedArtPaths(db *gorm.DB) error {
+	if err := db.Model(&ActivityLottery{}).
+		Where("code = ? AND banner_image = ?", "peach-festival-blessing", "/static/assets/portraits/tang-sanzang.svg").
+		Update("banner_image", "").Error; err != nil {
+		return err
+	}
+
+	enemyArt := map[uint64]string{
+		1: "/static/assets/images/enemy-leopard-spirit.png",
+		2: "/static/assets/images/enemy-rhino-spirit.png",
+		3: "/static/assets/images/enemy-leopard-spirit.png",
+		4: "/static/assets/images/enemy-rhino-spirit.png",
+	}
+	for id, art := range enemyArt {
+		if err := db.Model(&EnemyConfig{}).
+			Where("id = ?", id).
+			Updates(map[string]interface{}{"card_art": art, "portrait_art": art}).Error; err != nil {
+			return err
+		}
+	}
+
+	skinArt := []CardSkinConfig{
+		{OwnerType: "hero", OwnerID: 1, CardArt: "/static/assets/images/hero-sun-wukong.png", PortraitArt: "/static/assets/images/hero-sun-wukong.png"},
+		{OwnerType: "hero", OwnerID: 2, CardArt: "/static/assets/images/hero-zhu-bajie.png", PortraitArt: "/static/assets/images/hero-zhu-bajie.png"},
+		{OwnerType: "hero", OwnerID: 3, CardArt: "/static/assets/images/hero-sha-wujing.png", PortraitArt: "/static/assets/images/hero-sha-wujing.png"},
+		{OwnerType: "hero", OwnerID: 4, CardArt: "/static/assets/images/hero-xiao-bailong.png", PortraitArt: "/static/assets/images/hero-xiao-bailong.png"},
+		{OwnerType: "hero", OwnerID: 5, CardArt: "/static/assets/images/hero-tang-sanzang.png", PortraitArt: "/static/assets/images/hero-tang-sanzang.png"},
+		{OwnerType: "enemy", OwnerID: 1, CardArt: "/static/assets/images/enemy-leopard-spirit.png", PortraitArt: "/static/assets/images/enemy-leopard-spirit.png"},
+		{OwnerType: "enemy", OwnerID: 2, CardArt: "/static/assets/images/enemy-rhino-spirit.png", PortraitArt: "/static/assets/images/enemy-rhino-spirit.png"},
+		{OwnerType: "enemy", OwnerID: 3, CardArt: "/static/assets/images/enemy-leopard-spirit.png", PortraitArt: "/static/assets/images/enemy-leopard-spirit.png"},
+		{OwnerType: "enemy", OwnerID: 4, CardArt: "/static/assets/images/enemy-rhino-spirit.png", PortraitArt: "/static/assets/images/enemy-rhino-spirit.png"},
+	}
+	for _, skin := range skinArt {
+		if err := db.Model(&CardSkinConfig{}).
+			Where("owner_type = ? AND owner_id = ?", skin.OwnerType, skin.OwnerID).
+			Updates(map[string]interface{}{"card_art": skin.CardArt, "portrait_art": skin.PortraitArt}).Error; err != nil {
+			return err
+		}
+	}
+	return nil
 }

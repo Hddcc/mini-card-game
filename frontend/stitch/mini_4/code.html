@@ -189,7 +189,7 @@
 <main class="ml-20 md:ml-64 pt-20 h-screen relative overflow-hidden ink-texture">
 <!-- Mythical Backdrop -->
 <div class="absolute inset-0 z-0 opacity-40 mix-blend-screen pointer-events-none">
-<img alt="Mythical Backdrop" class="w-full h-full object-cover" data-alt="A mystical ancient Chinese celestial background with swirling ink-wash clouds, golden particle light floating through the air, and distant silhouettes of floating pagoda islands. The lighting is ethereal and divine, featuring deep blacks and vibrant imperial gold accents in a cinematic wide-angle shot. The atmosphere is charged with spiritual energy and ancient power." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs0TZE-W99NXqClowG20eoH6Enr59z6-fCTYO0ieIyPLPsHQ5vA7V0wY9vbQb-kWyk_stxDeYKZYvFize74hQwXyqYBk1QWarAyaqeK_FSCi6w1HzCSwCWUro2l5bOtH2uC7k3Y03RIgqY2OeY15T41TLrScS3oSk0yf-Ou6sCG4TwrQQhP1gcaPSir85PTqNmVpWA4EVeOkZ-uqptcuX0oebNOjy2rJmFJN31hbpoQlv60sUAtBiIbFbvnwQou3-AhxGwXa-gZxA"/>
+<div class="w-full h-full bg-[radial-gradient(circle_at_35%_20%,rgba(255,225,109,.28),transparent_24%),radial-gradient(circle_at_70%_55%,rgba(111,242,174,.16),transparent_22%),linear-gradient(135deg,#2d2d2d_0%,#131313_65%,#0e0e0e_100%)]"></div>
 </div>
 <!-- 召唤ing Pool Display -->
 <div class="relative z-10 h-full flex flex-col items-center justify-between p-gutter md:p-margin-desktop">
@@ -224,7 +224,7 @@
 <div class="relative group">
 <div class="absolute -inset-10 bg-primary-fixed/20 blur-3xl rounded-full transition-all duration-700 group-hover:scale-125"></div>
 <div class="relative w-64 md:w-96 aspect-[3/4] rounded-xl overflow-hidden border-2 border-primary-fixed shadow-2xl transform hover:scale-105 transition-transform">
-<img alt="主打英雄" class="w-full h-full object-cover" data-alt="孙悟空主打英雄立绘，身披赤金战甲，手持金箍棒，背后有玉龙灵影盘旋。" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBacfl2KZJjEeKjbIXzp4XKS01iarwm87pVxf92bYPbhB03ppB7JGO5mDN629EbZdoKWzJs01KZZPOJWRHTWfldMHC3PgDZiVTFLbxL3xE6hlJGQ-0lXqRjKgEBJYBZtsAwGMk73bgDEgIuZ8lu6LE9IJhAaMUlHTzQyqHdOndKljJYCKg0ZFr-fYh4MQ8Wte4V3R870G7H0uII1t2sn-fjxdIn6s7c7iVMKrisf_z02ljOQ8OsiLY2j_DNVkuWCNHNbUP5gSmaaQU"/>
+<img alt="主打英雄" class="w-full h-full object-cover bg-surface-container" data-alt="孙悟空主打英雄立绘，身披赤金战甲，手持金箍棒，背后有玉龙灵影盘旋。" src="/static/assets/images/hero-sun-wukong.png"/>
 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black p-stack-lg">
 <span class="text-quality-ssr font-display-hero text-headline-lg-mobile italic">孙悟空</span>
 <div class="flex gap-1 mt-1">
@@ -270,7 +270,7 @@
 <div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-gutter" id="result-modal">
 <div class="absolute inset-0 bg-black/95 backdrop-blur-xl"></div>
 <div class="relative w-full max-w-5xl z-10 flex flex-col items-center">
-<h2 class="font-display-hero text-headline-lg md:text-display-hero text-primary-fixed mb-stack-lg opacity-0 transform translate-y-10 transition-all duration-700" id="modal-title">天命显现</h2>
+<h2 class="font-display-hero text-headline-lg md:text-display-hero text-primary-fixed mb-stack-lg opacity-0 transform translate-y-10 transition-all duration-700" id="modal-title">恭喜你获得</h2>
 <!-- Result Grid -->
 <div class="grid grid-cols-2 md:grid-cols-5 gap-stack-lg w-full mb-12" id="result-grid">
 <!-- Cards will be injected here -->
@@ -285,11 +285,11 @@
         const qualityColors = { SSR: '#FFD700', SR: '#DA70D6', R: '#1E90FF', N: '#A9A9A9' };
         const heroNames = { 1: '孙悟空', 2: '猪八戒', 3: '沙悟净', 4: '小白龙', 5: '唐三藏' };
         const heroImages = {
-            1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBacfl2KZJjEeKjbIXzp4XKS01iarwm87pVxf92bYPbhB03ppB7JGO5mDN629EbZdoKWzJs01KZZPOJWRHTWfldMHC3PgDZiVTFLbxL3xE6hlJGQ-0lXqRjKgEBJYBZtsAwGMk73bgDEgIuZ8lu6LE9IJhAaMUlHTzQyqHdOndKljJYCKg0ZFr-fYh4MQ8Wte4V3R870G7H0uII1t2sn-fjxdIn6s7c7iVMKrisf_z02ljOQ8OsiLY2j_DNVkuWCNHNbUP5gSmaaQU',
-            2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKb0-qek8mcN6fiqdlEeZQh01p7Zk1sXD9Y59e_87Nr_hWhbKcXb3UiVE7YZ8DWVxAtCSST1P6ebg2Go91sJTBIgu_jXFDGDhTDmW_eht8gdnvEEE5q_W6trMOUmrXI6R4izbHRN2EeC_f-sOzYmuUBc5RlAl9MfpbkkZNyTR6E1xS6in50r-Xk5fU-a2Rc-3CRhABy_YDi9hEmi3NCTXSLdnU5e2FYcgQEPBmTFBgjFVBykj5d0UvpO5btvThzfsMegMCK7_GEbw',
-            3: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1sO831rf0XcvBhM2ksFpDcw7RLiy1NxHuNTgbg-ub6m_qV2QoRdWJowXXh-SVZaxkLE6DaoPM89mR9JmSiiDWI1lg40l9xnrRlDGSpuIuJzVF3j6Phm8S-xVrTjpXe-dq2tpGzjR04JAc0DW7E7ORC8WVJu9gBvk1DvIP1_V_Boy-Jdb5YTZdsGqs-4MWkfMd4Iq3oCgxZo9n6r79PrvUWiC4AiVs-yieugg49MqcTplQUNLsP--X2k33OdnWwsamOHD3qys48M',
-            4: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsoIS-wmBeOGAvGjEgYY9CkL28lSk4hiiYlb-bXrtyGYhOZLxv2GEzIwzNrBIiZY4fyr1FeGbDQ2PDNHhzwDCwiunb2RlA0kpd93BTIWsl77k8DeErsLipspZI09o7m0C4Yeq4wqGAQPoAveFOjgJRbUhtye3_t7qqXreo2eemhnjP-LnEIr5jNJOggEtzgvRYVulRQ1Ke1MQ2LPcgNTq7LR3f9IF-USlJ-N7BYM66nYdxY16HpV-grE8M4xx9rjrOk92sao0BR00',
-            5: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCL69GlYj5IZtJRYLu5XpEUDWyAWMAbycg0A2zHQnwXxcIe7mdzr9s7bm4C2di9yytISwbY5QDvvDtLkxLKkYbeQy54LevFnbguHMdv60aYoshf7aCoDPcKPfP3_B8JyzUln0XrSHveUkdg0m_e--oKx3MZRJk50JltTSOB9Skodt_LelnU2owqQEsUCqcTxfs64Yv9zUX-I5eX2DDiNBgihipyeNPwYJhAot4s-GxB9SGxjb0ZnQiNmw3vLbLgLxHlsLVlj3RCxZg'
+            1: '/static/assets/images/hero-sun-wukong.png',
+            2: '/static/assets/images/hero-zhu-bajie.png',
+            3: '/static/assets/images/hero-sha-wujing.png',
+            4: '/static/assets/images/hero-xiao-bailong.png',
+            5: '/static/assets/images/hero-tang-sanzang.png'
         };
 
         async function apiFetch(path, opts = {}) {
@@ -334,6 +334,8 @@
             const modal = document.getElementById('result-modal');
             const grid = document.getElementById('result-grid');
             const title = document.getElementById('modal-title');
+            title.textContent = '恭喜你获得';
+            setResultGridLayout('message');
             grid.innerHTML = '<div class="col-span-full text-center text-primary-fixed">召唤中...</div>';
             modal.classList.remove('hidden');
             title.classList.remove('opacity-0', 'translate-y-10');
@@ -344,19 +346,43 @@
                     body: JSON.stringify({ pool_id: 1, times: count })
                 });
                 if (!data || data.code !== 0) {
-                    grid.innerHTML = `<div class="col-span-full text-center text-error">召唤失败：${data && data.message ? data.message : '未知错误'}</div>`;
+                    const errorState = summonErrorState(data && data.message);
+                    title.textContent = errorState.title;
+                    setResultGridLayout('message');
+                    grid.innerHTML = errorState.body ? `<div class="col-span-full text-center text-error">${errorState.body}</div>` : '';
                     return;
                 }
+                title.textContent = '恭喜你获得';
                 renderResults(data.data.results || []);
                 if (window.loadAssetBar) window.loadAssetBar();
                 updatePity(data.data.pity_counter, data.data.pity_limit);
             } catch (err) {
+                title.textContent = '召唤失败';
+                setResultGridLayout('message');
                 grid.innerHTML = '<div class="col-span-full text-center text-error">网络错误，请稍后重试</div>';
             }
         }
 
+        function summonErrorState(message) {
+            const text = String(message || '');
+            const normalized = text.toLowerCase();
+            if (normalized.includes('diamond not enough') || normalized.includes('not enough diamond')) {
+                return { title: '钻石不足', body: '' };
+            }
+            return { title: '召唤失败', body: `召唤失败：${text || '未知错误'}` };
+        }
+
+        function setResultGridLayout(mode) {
+            const grid = document.getElementById('result-grid');
+            if (!grid) return;
+            grid.className = mode === 'single'
+                ? 'grid grid-cols-1 justify-items-center gap-stack-lg w-full mb-12'
+                : 'grid grid-cols-2 md:grid-cols-5 gap-stack-lg w-full mb-12';
+        }
+
         function renderResults(results) {
             const grid = document.getElementById('result-grid');
+            setResultGridLayout(results.length === 1 ? 'single' : 'multi');
             grid.innerHTML = '';
             results.forEach((item, i) => {
                 const rarity = qualityNames[item.quality] || 'N';
@@ -364,10 +390,10 @@
                 const isHero = item.item_type === 'hero';
                 const name = isHero ? (heroNames[item.item_id] || `英雄 ${item.item_id}`) : `金币 x${item.item_count}`;
                 const card = document.createElement('div');
-                card.className = `opacity-0 transform scale-50 transition-all duration-500 flex flex-col items-center`;
+                card.className = `opacity-0 transform scale-50 transition-all duration-500 flex flex-col items-center w-full ${results.length === 1 ? 'max-w-[260px]' : ''}`;
                 card.innerHTML = `
                     <div class="relative w-full aspect-square border-2 rounded-xl overflow-hidden shadow-2xl" style="border-color: ${color}">
-                        ${isHero ? `<img src="${heroImages[item.item_id] || heroImages[1]}" class="w-full h-full object-cover" alt="${name}">` : `<div class="w-full h-full flex items-center justify-center bg-surface-container"><span class="material-symbols-outlined text-4xl" style="color: ${color}; font-variation-settings: 'FILL' 1;">account_balance_wallet</span></div>`}
+                        ${isHero ? `<img src="${heroImages[item.item_id] || heroImages[1]}" class="w-full h-full object-cover" alt="${name}">` : `<div class="w-full h-full flex items-center justify-center bg-surface-container"><img src="/static/assets/images/reward-gold.png" class="w-full h-full object-cover object-center" alt="${name}"></div>`}
                         <div class="absolute top-0 right-0 bg-black/60 px-2 py-0.5 text-[10px] font-label-sm" style="color: ${color}">${rarity}</div>
                     </div>
                     <span class="mt-2 font-label-sm text-center line-clamp-1">${name}${item.is_pity ? ' · 保底' : ''}</span>`;
@@ -387,6 +413,6 @@
         loadAssets();
         loadPityState();
     </script>
-<script src="/static/assets/status-bar.js"></script>
-<script src="/static/assets/app-shell.js"></script>
+<script src="../assets/status-bar.js"></script>
+<script src="../assets/app-shell.js"></script>
 </body></html>

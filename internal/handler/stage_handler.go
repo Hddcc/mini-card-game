@@ -24,6 +24,15 @@ type fightStageRequest struct {
 	StageID uint64 `json:"stage_id" binding:"required"`
 }
 
+func (h *StageHandler) Progress(c *gin.Context) {
+	progress, err := h.stageService.Progress(middleware.PlayerID(c))
+	if err != nil {
+		app.Fail(c, http.StatusInternalServerError, apperrors.CodeInternal, err.Error())
+		return
+	}
+	app.OK(c, progress)
+}
+
 func (h *StageHandler) Fight(c *gin.Context) {
 	var req fightStageRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

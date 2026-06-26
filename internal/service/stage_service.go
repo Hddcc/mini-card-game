@@ -51,12 +51,36 @@ type StageFightResult struct {
 	BestPower          uint64 `json:"best_power"`
 }
 
+type StageProgressView struct {
+	StageID       uint64     `json:"stage_id"`
+	Status        uint8      `json:"status"`
+	BestPower     uint64     `json:"best_power"`
+	FirstPassedAt *time.Time `json:"first_passed_at,omitempty"`
+}
+
 var (
 	ErrStageNotFound       = errors.New("stage not found")
 	ErrPrevStageNotCleared = errors.New("previous stage is not cleared")
 	ErrNoTeam              = errors.New("team not found")
 	ErrNotEnoughStamina    = errors.New("not enough stamina")
 )
+
+func (s *StageService) Progress(playerID uint64) ([]StageProgressView, error) {
+	rows, err := s.stageRepo.ListPlayerStages(playerID)
+	if err != nil {
+		return nil, err
+	}
+	progress := make([]StageProgressView, 0, len(rows))
+	for _, row := range rows {
+		progress = append(progress, StageProgressView{
+			StageID:       row.StageID,
+			Status:        row.Status,
+			BestPower:     row.BestPower,
+			FirstPassedAt: row.FirstPassedAt,
+		})
+	}
+	return progress, nil
+}
 
 func (s *StageService) Fight(playerID uint64, stageID uint64) (*StageFightResult, error) {
 	config, err := s.stageRepo.FindConfig(stageID)

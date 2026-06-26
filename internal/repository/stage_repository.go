@@ -31,6 +31,12 @@ func (r *StageRepository) FindPlayerStage(playerID uint64, stageID uint64) (*mod
 	return &playerStage, nil
 }
 
+func (r *StageRepository) ListPlayerStages(playerID uint64) ([]model.PlayerStage, error) {
+	var rows []model.PlayerStage
+	err := r.db.Where("player_id = ?", playerID).Order("stage_id ASC").Find(&rows).Error
+	return rows, err
+}
+
 func (r *StageRepository) LockPlayerStage(tx *gorm.DB, playerID uint64, stageID uint64) (*model.PlayerStage, error) {
 	var playerStage model.PlayerStage
 	err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
