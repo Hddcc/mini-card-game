@@ -61,15 +61,15 @@ CREATE TABLE stage_encounter_enemy (
 
 INSERT INTO card_skin_config (owner_type, owner_id, card_art, portrait_art, attack_animation, skill_animation, hit_animation, defeat_animation, idle_animation)
 VALUES
-  ('hero', 1, '/static/assets/cards/hero-warrior.svg', '/static/assets/portraits/sun-wukong.svg', 'fx-slash', 'fx-gold-burst', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-glow'),
-  ('hero', 2, '/static/assets/cards/hero-tank.svg', '/static/assets/portraits/zhu-bajie.svg', 'fx-smash', 'fx-shield', 'fx-hit-shield', 'fx-defeat-smoke', 'fx-idle-breathe'),
-  ('hero', 3, '/static/assets/cards/hero-guardian.svg', '/static/assets/portraits/sha-wujing.svg', 'fx-staff', 'fx-water-heal', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-breathe'),
-  ('hero', 4, '/static/assets/cards/hero-assassin.svg', '/static/assets/portraits/xiao-bailong.svg', 'fx-pierce', 'fx-dragon-sting', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-glow'),
-  ('hero', 5, '/static/assets/cards/hero-support.svg', '/static/assets/portraits/tang-sanzang.svg', 'fx-prayer', 'fx-buddha-heal', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-glow'),
-  ('enemy', 1, '/static/assets/cards/enemy-minion.svg', '/static/assets/portraits/mountain-ape.svg', 'fx-claw', 'fx-bite', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-breathe'),
-  ('enemy', 2, '/static/assets/cards/enemy-guard.svg', '/static/assets/portraits/cave-guard.svg', 'fx-smash', 'fx-heavy-smash', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-breathe'),
-  ('enemy', 3, '/static/assets/cards/enemy-shrimp.svg', '/static/assets/portraits/shrimp-soldier.svg', 'fx-spear', 'fx-bite', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-breathe'),
-  ('enemy', 4, '/static/assets/cards/enemy-boss.svg', '/static/assets/portraits/dragon-general.svg', 'fx-cleave', 'fx-heavy-smash', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-glow');
+  ('hero', 1, '/static/assets/images/hero-sun-wukong.png', '/static/assets/images/hero-sun-wukong.png', 'fx-slash', 'fx-gold-burst', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-glow'),
+  ('hero', 2, '/static/assets/images/hero-zhu-bajie.png', '/static/assets/images/hero-zhu-bajie.png', 'fx-smash', 'fx-shield', 'fx-hit-shield', 'fx-defeat-smoke', 'fx-idle-breathe'),
+  ('hero', 3, '/static/assets/images/hero-sha-wujing.png', '/static/assets/images/hero-sha-wujing.png', 'fx-staff', 'fx-water-heal', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-breathe'),
+  ('hero', 4, '/static/assets/images/hero-xiao-bailong.png', '/static/assets/images/hero-xiao-bailong.png', 'fx-pierce', 'fx-dragon-sting', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-glow'),
+  ('hero', 5, '/static/assets/images/hero-tang-sanzang.png', '/static/assets/images/hero-tang-sanzang.png', 'fx-prayer', 'fx-buddha-heal', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-glow'),
+  ('enemy', 1, '/static/assets/images/enemy-leopard-spirit.png', '/static/assets/images/enemy-leopard-spirit.png', 'fx-claw', 'fx-bite', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-breathe'),
+  ('enemy', 2, '/static/assets/images/enemy-rhino-spirit.png', '/static/assets/images/enemy-rhino-spirit.png', 'fx-smash', 'fx-heavy-smash', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-breathe'),
+  ('enemy', 3, '/static/assets/images/enemy-leopard-spirit.png', '/static/assets/images/enemy-leopard-spirit.png', 'fx-spear', 'fx-bite', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-breathe'),
+  ('enemy', 4, '/static/assets/images/enemy-rhino-spirit.png', '/static/assets/images/enemy-rhino-spirit.png', 'fx-cleave', 'fx-heavy-smash', 'fx-hit-spark', 'fx-defeat-smoke', 'fx-idle-glow');
 
 INSERT INTO stage_encounter_variant (id, stage_id, name, min_power, max_power, estimated_power, weight, status)
 VALUES

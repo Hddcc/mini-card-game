@@ -11,6 +11,7 @@ openspec/
 # Go build and test output
 bin/
 tmp/
+.tmp/
 *.test
 *.out
 coverage.out
@@ -32,3 +33,4 @@ frontend/**/build/
 Thumbs.db
 .idea/
 .vscode/
+Dockerfile.localbin

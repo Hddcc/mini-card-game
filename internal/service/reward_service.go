@@ -39,6 +39,15 @@ func (s *RewardService) Grant(tx *gorm.DB, playerID uint64, rewards []model.Rewa
 			if err := s.assetRepo.Save(tx, asset); err != nil {
 				return err
 			}
+		case "stamina":
+			asset, err := s.assetRepo.LockByPlayerID(tx, playerID)
+			if err != nil {
+				return err
+			}
+			asset.Stamina += uint32(reward.Count)
+			if err := s.assetRepo.Save(tx, asset); err != nil {
+				return err
+			}
 		case "hero":
 			if err := s.grantHero(tx, playerID, reward.ID); err != nil {
 				return err

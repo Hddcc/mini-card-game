@@ -166,7 +166,7 @@
 <span class="font-label-sm text-label-sm text-on-surface-variant">灵玉</span>
 </div>
 <div class="w-10 h-10 rounded-full border-2 border-primary-fixed overflow-hidden">
-<img alt="Player Portrait" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsoIS-wmBeOGAvGjEgYY9CkL28lSk4hiiYlb-bXrtyGYhOZLxv2GEzIwzNrBIiZY4fyr1FeGbDQ2PDNHhzwDCwiunb2RlA0kpd93BTIWsl77k8DeErsLipspZI09o7m0C4Yeq4wqGAQPoAveFOjgJRbUhtye3_t7qqXreo2eemhnjP-LnEIr5jNJOggEtzgvRYVulRQ1Ke1MQ2LPcgNTq7LR3f9IF-USlJ-N7BYM66nYdxY16HpV-grE8M4xx9rjrOk92sao0BR00"/>
+<img alt="Player Portrait" class="w-full h-full object-cover bg-surface-container" src="/static/assets/images/hero-xiao-bailong.png"/>
 </div>
 </div>
 </header>
@@ -187,7 +187,8 @@
 <main class="pt-24 pb-20 md:pl-64 min-h-screen relative">
 <!-- Hero Visual Section -->
 <section class="relative h-64 md:h-80 w-full overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="A cinematic digital landscape of ancient misty mountains in China with floating stone pagodas and cherry blossom petals swirling in the air. The lighting is golden and ethereal, suggesting a divine dawn. The art style is a blend of traditional ink wash painting and modern high-fidelity digital rendering with deep blacks and vibrant gold accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsN9Kphp_PvSt4yw2Ifi70h4jH884dSReP3e2rccoTamTcJ0tJiQy1kNiUtSS_PNvSZgj6tFcRVUrB2PJKn8R82mVFK4TC-2gU5yrugRchvm6c1LtfHdf3rccL85zcGEXNfxj3E_sQfq27cX0J4eEgWw1B_7In5YPiOOtip_9obEXe2GgTYKIHX9BnrItAG8L7tykpcEGiwj32rQIBUMMnLAJH1TJtUa7yNnDjFmsBAPXGBDz0ZgrfU-4vp6hv94uzt7yE2Rki87M"/>
+<img alt="" class="absolute inset-0 h-full w-full object-cover object-center opacity-70" src="/static/assets/images/home-background.png"/>
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_28%_24%,rgba(255,225,109,.18),transparent_24%),radial-gradient(circle_at_78%_62%,rgba(111,242,174,.1),transparent_24%),linear-gradient(135deg,rgba(45,45,45,.3)_0%,rgba(19,19,19,.72)_62%,rgba(14,14,14,.88)_100%)]"></div>
 <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
 <div class="absolute bottom-stack-lg left-margin-mobile md:left-margin-desktop">
 <span class="px-3 py-1 bg-quality-ssr/20 border border-quality-ssr text-quality-ssr rounded-full font-label-sm text-label-sm uppercase mb-2 inline-block">第一章</span>
@@ -225,7 +226,7 @@
 <section class="px-margin-mobile md:px-margin-desktop mt-stack-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-stack-lg pb-24">
 <!-- Stage Card: 4-1 (Unlocked/Cleared) -->
 <div class="group relative bg-ink-wash border-2 border-outline-variant p-stack-md meander-corner transition-all hover:scale-[1.02] active:scale-95 cursor-pointer" data-stage-battle-id="1">
-<div class="absolute top-2 right-2 flex gap-1">
+<div class="absolute top-2 right-2 flex gap-1" data-stage-badge>
 <span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span>
 <span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span>
 <span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span>
@@ -250,7 +251,7 @@
 </div>
 <!-- Stage Card: 4-2 (Unlocked/Current) -->
 <div class="group relative bg-ink-wash border-2 border-primary-fixed p-stack-md meander-corner transition-all hover:scale-[1.02] active:scale-95 cursor-pointer shadow-[0_0_10px_rgba(255,215,0,0.2)]" data-stage-battle-id="2">
-<div class="absolute top-2 right-2">
+<div class="absolute top-2 right-2" data-stage-badge>
 <span class="px-2 py-0.5 bg-quality-ur text-white font-label-sm text-[10px] rounded animate-pulse">可挑战</span>
 </div>
 <div class="mb-stack-md">
@@ -274,7 +275,7 @@
 </div>
 <!-- Stage Card: 4-3 (Locked) -->
 <div class="relative bg-surface-container-low border-2 border-outline-variant/30 p-stack-md meander-corner opacity-60" data-stage-battle-id="3">
-<div class="absolute inset-0 flex items-center justify-center z-10">
+<div class="absolute inset-0 flex items-center justify-center z-10" data-lock-overlay>
 <div class="bg-black/60 p-4 rounded-full border border-outline-variant">
 <span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="lock">lock</span>
 </div>
@@ -304,11 +305,11 @@
 <p class="font-body-md text-on-surface-variant text-sm mb-4">Master all stages in this chapter to unlock the 灵玉 Serpent avatar frame.</p>
 <div class="flex gap-stack-md">
 <div class="w-16 h-16 bg-surface-container-high border border-outline-variant flex items-center justify-center relative">
-<img alt="Reward 1" class="w-10 h-10 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL69GlYj5IZtJRYLu5XpEUDWyAWMAbycg0A2zHQnwXxcIe7mdzr9s7bm4C2di9yytISwbY5QDvvDtLkxLKkYbeQy54LevFnbguHMdv60aYoshf7aCoDPcKPfP3_B8JyzUln0XrSHveUkdg0m_e--oKx3MZRJk50JltTSOB9Skodt_LelnU2owqQEsUCqcTxfs64Yv9zUX-I5eX2DDiNBgihipyeNPwYJhAot4s-GxB9SGxjb0ZnQiNmw3vLbLgLxHlsLVlj3RCxZg"/>
+<img alt="金币奖励" class="h-12 w-12 object-contain opacity-90" src="/static/assets/images/reward-gold.png"/>
 <span class="absolute bottom-0 right-1 font-label-sm text-[10px] text-primary-fixed">x50</span>
 </div>
 <div class="w-16 h-16 bg-surface-container-high border border-outline-variant flex items-center justify-center relative">
-<img alt="Reward 2" class="w-10 h-10 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo_G1zAajOr3G0yFWSd-GIhXoOW64xIErMOWNl0_pJq9EQgd0SVQIbBu_WHkyGUH31-sEeokpMXeftbhEk_khwM0WFueYKOHVVxX4yGgdhpV6_u0sMPYB2JCKOX49V0OXdKVqrL_T173bJs6tfz2X98BfDJV8TR2PmGRavo2XASueICFzxjoL7YhcvpKAGrTSUWqsXYWGH1TqjtK4io7cyElgJtEcLUL3TXaLYGvEGd3YmNUJdr8oSpFt3QMfJhYcbXYjC9UfimEw"/>
+<img alt="Reward 2" class="w-10 h-10 opacity-80" src="../assets/cards/hero-guardian.svg"/>
 <span class="absolute bottom-0 right-1 font-label-sm text-[10px] text-primary-fixed">x1</span>
 </div>
 </div>
@@ -406,7 +407,7 @@
 <span class="font-label-sm text-label-sm text-on-surface-variant">奖励</span>
 <div class="flex gap-4">
 <div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-primary-fixed text-lg" data-icon="account_balance_wallet">account_balance_wallet</span>
+<img alt="" class="h-6 w-6 object-contain" src="/static/assets/images/reward-gold.png"/>
 <span class="font-stats-num text-stats-num text-sm text-on-surface" id="rewardGold">+0</span>
 </div>
 <div class="flex items-center gap-1">
@@ -483,12 +484,13 @@
         let battleActionPending = false;
         let battleNavigationLocked = false;
         const battleHeroImages = {
-            1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBacfl2KZJjEeKjbIXzp4XKS01iarwm87pVxf92bYPbhB03ppB7JGO5mDN629EbZdoKWzJs01KZZPOJWRHTWfldMHC3PgDZiVTFLbxL3xE6hlJGQ-0lXqRjKgEBJYBZtsAwGMk73bgDEgIuZ8lu6LE9IJhAaMUlHTzQyqHdOndKljJYCKg0ZFr-fYh4MQ8Wte4V3R870G7H0uII1t2sn-fjxdIn6s7c7iVMKrisf_z02ljOQ8OsiLY2j_DNVkuWCNHNbUP5gSmaaQU',
-            2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKb0-qek8mcN6fiqdlEeZQh01p7Zk1sXD9Y59e_87Nr_hWhbKcXb3UiVE7YZ8DWVxAtCSST1P6ebg2Go91sJTBIgu_jXFDGDhTDmW_eht8gdnvEEE5q_W6trMOUmrXI6R4izbHRN2EeC_f-sOzYmuUBc5RlAl9MfpbkkZNyTR6E1xS6in50r-Xk5fU-a2Rc-3CRhABy_YDi9hEmi3NCTXSLdnU5e2FYcgQEPBmTFBgjFVBykj5d0UvpO5btvThzfsMegMCK7_GEbw',
-            3: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1sO831rf0XcvBhM2ksFpDcw7RLiy1NxHuNTgbg-ub6m_qV2QoRdWJowXXh-SVZaxkLE6DaoPM89mR9JmSiiDWI1lg40l9xnrRlDGSpuIuJzVF3j6Phm8S-xVrTjpXe-dq2tpGzjR04JAc0DW7E7ORC8WVJu9gBvk1DvIP1_V_Boy-Jdb5YTZdsGqs-4MWkfMd4Iq3oCgxZo9n6r79PrvUWiC4AiVs-yieugg49MqcTplQUNLsP--X2k33OdnWwsamOHD3qys48M',
-            4: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsoIS-wmBeOGAvGjEgYY9CkL28lSk4hiiYlb-bXrtyGYhOZLxv2GEzIwzNrBIiZY4fyr1FeGbDQ2PDNHhzwDCwiunb2RlA0kpd93BTIWsl77k8DeErsLipspZI09o7m0C4Yeq4wqGAQPoAveFOjgJRbUhtye3_t7qqXreo2eemhnjP-LnEIr5jNJOggEtzgvRYVulRQ1Ke1MQ2LPcgNTq7LR3f9IF-USlJ-N7BYM66nYdxY16HpV-grE8M4xx9rjrOk92sao0BR00',
-            5: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCL69GlYj5IZtJRYLu5XpEUDWyAWMAbycg0A2zHQnwXxcIe7mdzr9s7bm4C2di9yytISwbY5QDvvDtLkxLKkYbeQy54LevFnbguHMdv60aYoshf7aCoDPcKPfP3_B8JyzUln0XrSHveUkdg0m_e--oKx3MZRJk50JltTSOB9Skodt_LelnU2owqQEsUCqcTxfs64Yv9zUX-I5eX2DDiNBgihipyeNPwYJhAot4s-GxB9SGxjb0ZnQiNmw3vLbLgLxHlsLVlj3RCxZg'
+            1: '/static/assets/images/hero-sun-wukong.png',
+            2: '/static/assets/images/hero-zhu-bajie.png',
+            3: '/static/assets/images/hero-sha-wujing.png',
+            4: '/static/assets/images/hero-xiao-bailong.png',
+            5: '/static/assets/images/hero-tang-sanzang.png'
         };
+        const clearedStageIds = new Set();
 
         async function simulateFight(stageId) {
             if (isActiveBattle()) {
@@ -912,6 +914,8 @@
             if (statusSub) statusSub.innerText = isWin ? '挑战成功' : (result.failure_hint || '挑战未通过');
 
             if (isWin) {
+                markStageCleared(currentBattle && currentBattle.stage_id);
+                loadStageProgress();
                 statusTitle.innerText = "胜利";
                 statusTitle.className = "font-display-hero text-headline-lg-mobile text-primary-fixed mb-1 shimmer-text";
                 statusIcon.innerHTML = '<span class="material-symbols-outlined text-4xl text-primary-fixed" data-icon="military_tech">military_tech</span>';
@@ -991,6 +995,97 @@
 
         function refreshPostBattleState() {
             if (window.loadAssetBar) window.loadAssetBar();
+            refreshStageCards();
+        }
+
+        async function loadStageProgress() {
+            try {
+                const data = await apiFetch('/api/v1/stages/progress');
+                if (!data || data.code !== 0) {
+                    refreshStageCards();
+                    return;
+                }
+                const progress = Array.isArray(data.data) ? data.data : (data.data && data.data.progress) || [];
+                clearedStageIds.clear();
+                progress.forEach(item => {
+                    const id = Number(item.stage_id || 0);
+                    if (id && Number(item.status || 0) === 1) clearedStageIds.add(id);
+                });
+                refreshStageCards();
+            } catch (err) {
+                refreshStageCards();
+            }
+        }
+
+        function markStageCleared(stageId) {
+            const id = Number(stageId || 0);
+            if (!id) return;
+            clearedStageIds.add(id);
+            refreshStageCards();
+        }
+
+        function refreshStageCards() {
+            const sequence = stageBattleSequence();
+            if (!sequence.length) return;
+            const maxCleared = Math.max(0, ...Array.from(clearedStageIds));
+            sequence.forEach(id => {
+                const card = document.querySelector(`[data-stage-battle-id="${id}"]`);
+                if (!card) return;
+                const cleared = clearedStageIds.has(id);
+                const challengeable = cleared || id === 1 || (maxCleared > 0 && id <= maxCleared + 1);
+                const current = !cleared && challengeable;
+                applyStageCardState(card, { id, cleared, challengeable, current });
+            });
+        }
+
+        function applyStageCardState(card, state) {
+            const title = card.querySelector('h3');
+            const stageLabel = card.querySelector('.mb-stack-md p');
+            const button = card.querySelector('button');
+            let badge = card.querySelector('[data-stage-badge]');
+            let lockOverlay = card.querySelector('[data-lock-overlay]');
+            if (!badge) {
+                badge = document.createElement('div');
+                badge.dataset.stageBadge = '';
+                badge.className = 'absolute top-2 right-2';
+                card.prepend(badge);
+            }
+            if (state.challengeable) {
+                card.className = state.current
+                    ? 'group relative bg-ink-wash border-2 border-primary-fixed p-stack-md meander-corner transition-all hover:scale-[1.02] active:scale-95 cursor-pointer shadow-[0_0_10px_rgba(255,215,0,0.2)]'
+                    : 'group relative bg-ink-wash border-2 border-outline-variant p-stack-md meander-corner transition-all hover:scale-[1.02] active:scale-95 cursor-pointer';
+                if (lockOverlay) lockOverlay.remove();
+                if (stageLabel) stageLabel.className = 'font-label-sm text-label-sm text-primary-fixed';
+                if (title) title.className = 'font-display-hero text-title-md text-on-surface';
+                if (button) {
+                    button.disabled = false;
+                    button.className = state.current
+                        ? 'w-full bg-primary-fixed text-on-primary-fixed py-3 font-label-sm text-label-sm hover:brightness-110 active:scale-[0.98] transition-all relative overflow-hidden group-hover:shadow-[0_0_15px_rgba(255,215,0,0.4)]'
+                        : 'w-full bg-surface-variant border border-outline text-on-surface py-3 font-label-sm text-label-sm hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors';
+                    button.innerHTML = state.cleared ? '再次挑战' : '<span class="relative z-10 font-bold">挑战</span>';
+                }
+                badge.innerHTML = state.cleared
+                    ? '<span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span><span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span><span class="material-symbols-outlined text-quality-ssr" data-icon="star" data-weight="fill">star</span>'
+                    : '<span class="px-2 py-0.5 bg-quality-ur text-white font-label-sm text-[10px] rounded animate-pulse">可挑战</span>';
+                return;
+            }
+
+            card.className = 'relative bg-surface-container-low border-2 border-outline-variant/30 p-stack-md meander-corner opacity-60';
+            if (!lockOverlay) {
+                lockOverlay = document.createElement('div');
+                lockOverlay.dataset.lockOverlay = '';
+                lockOverlay.className = 'absolute inset-0 flex items-center justify-center z-10';
+                lockOverlay.innerHTML = '<div class="bg-black/60 p-4 rounded-full border border-outline-variant"><span class="material-symbols-outlined text-4xl text-on-surface-variant" data-icon="lock">lock</span></div>';
+                card.prepend(lockOverlay);
+            }
+            badge.innerHTML = '';
+            if (stageLabel) stageLabel.className = 'font-label-sm text-label-sm text-on-surface-variant';
+            if (title) title.className = 'font-display-hero text-title-md text-on-surface-variant';
+            if (button) {
+                button.disabled = true;
+                button.className = 'w-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant py-3 font-label-sm text-label-sm cursor-not-allowed';
+                button.textContent = '未解锁';
+            }
         }
 
         function showToast(msg) {
@@ -1012,7 +1107,8 @@
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
+        loadStageProgress();
     </script>
-<script src="/static/assets/status-bar.js"></script>
-<script src="/static/assets/app-shell.js"></script>
+<script src="../assets/status-bar.js"></script>
+<script src="../assets/app-shell.js"></script>
 </body></html>

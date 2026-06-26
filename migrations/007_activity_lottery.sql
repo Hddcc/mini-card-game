@@ -1,0 +1,102 @@
+CREATE TABLE activity_lottery (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  code VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  description VARCHAR(255) NOT NULL DEFAULT '',
+  banner_image VARCHAR(255) NOT NULL DEFAULT '',
+  daily_limit INT UNSIGNED NOT NULL DEFAULT 3,
+  ip_daily_limit INT UNSIGNED NOT NULL DEFAULT 20,
+  status TINYINT NOT NULL DEFAULT 1,
+  start_at DATETIME NOT NULL,
+  end_at DATETIME NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_activity_code (code),
+  KEY idx_activity_window (status, start_at, end_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE activity_lottery_prize (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  activity_id BIGINT UNSIGNED NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  description VARCHAR(255) NOT NULL DEFAULT '',
+  icon VARCHAR(64) NOT NULL DEFAULT '',
+  reward_type VARCHAR(32) NOT NULL,
+  reward_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  reward_count BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  quality TINYINT NOT NULL DEFAULT 1,
+  weight INT UNSIGNED NOT NULL DEFAULT 0,
+  total_num BIGINT NOT NULL DEFAULT -1,
+  left_num BIGINT NOT NULL DEFAULT -1,
+  release_plan TEXT NULL,
+  display_order INT UNSIGNED NOT NULL DEFAULT 0,
+  fallback TINYINT NOT NULL DEFAULT 0,
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_activity_status (activity_id, status, display_order),
+  KEY idx_activity_fallback (activity_id, fallback)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE activity_lottery_record (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  activity_id BIGINT UNSIGNED NOT NULL,
+  prize_id BIGINT UNSIGNED NOT NULL,
+  player_id BIGINT UNSIGNED NOT NULL,
+  draw_no VARCHAR(64) NOT NULL,
+  random_point INT UNSIGNED NOT NULL DEFAULT 0,
+  prize_name VARCHAR(64) NOT NULL,
+  reward_type VARCHAR(32) NOT NULL,
+  reward_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  reward_count BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  delivery_status TINYINT NOT NULL DEFAULT 0,
+  request_ip VARCHAR(64) NOT NULL DEFAULT '',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_draw_no (draw_no),
+  KEY idx_player_time (player_id, created_at),
+  KEY idx_activity_prize (activity_id, prize_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE activity_lottery_blacklist (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  target_type VARCHAR(16) NOT NULL,
+  target VARCHAR(64) NOT NULL,
+  reason VARCHAR(255) NOT NULL DEFAULT '',
+  expire_at DATETIME NULL,
+  status TINYINT NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_activity_blacklist (target_type, target, status, expire_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE activity_lottery_local_message (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  business_id VARCHAR(64) NOT NULL,
+  message_type VARCHAR(32) NOT NULL,
+  payload TEXT NOT NULL,
+  status TINYINT NOT NULL DEFAULT 0,
+  retry_count INT UNSIGNED NOT NULL DEFAULT 0,
+  next_retry_at DATETIME NULL,
+  last_error VARCHAR(255) NOT NULL DEFAULT '',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_business_id (business_id),
+  KEY idx_message_retry (status, next_retry_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE activity_prize_release_state (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  prize_id BIGINT UNSIGNED NOT NULL,
+  window_key VARCHAR(64) NOT NULL,
+  released BIGINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_prize_window (prize_id, window_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

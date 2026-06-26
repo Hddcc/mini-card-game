@@ -34,6 +34,11 @@
         .meander-border {
             border-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h10v2h-8v8H0V0zm40 0v10h-2V2h-8V0h10zM0 40v-10h2v8h8v2H0zm40 0H30v-2h8v-8h2v10z' fill='%23999077'/%3E%3C/svg%3E") 10 stretch;
         }
+        .linen-texture {
+            background-image:
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 7px),
+                repeating-linear-gradient(90deg, rgba(0,0,0,0.32) 0 1px, transparent 1px 9px);
+        }
     </style>
 <script id="tailwind-config">
         tailwind.config = {
@@ -157,7 +162,7 @@
 <div class="px-6 mb-8">
 <div class="flex items-center gap-4">
 <div class="w-12 h-12 rounded-full border-2 border-primary-fixed overflow-hidden">
-<img alt="Player Portrait" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKb0-qek8mcN6fiqdlEeZQh01p7Zk1sXD9Y59e_87Nr_hWhbKcXb3UiVE7YZ8DWVxAtCSST1P6ebg2Go91sJTBIgu_jXFDGDhTDmW_eht8gdnvEEE5q_W6trMOUmrXI6R4izbHRN2EeC_f-sOzYmuUBc5RlAl9MfpbkkZNyTR6E1xS6in50r-Xk5fU-a2Rc-3CRhABy_YDi9hEmi3NCTXSLdnU5e2FYcgQEPBmTFBgjFVBykj5d0UvpO5btvThzfsMegMCK7_GEbw"/>
+<img alt="Player Portrait" class="w-full h-full object-cover bg-surface-container" src="/static/assets/images/hero-tang-sanzang.png"/>
 </div>
 <div>
 <h2 class="font-title-md text-title-md text-primary-fixed">取经人</h2>
@@ -190,7 +195,7 @@
 <div class="grid grid-cols-1 md:grid-cols-5 gap-stack-md" id="teamSlotsContainer">
 <!-- Slot 1 -->
 <div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="1">
-<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="absolute inset-0 linen-texture opacity-20 pointer-events-none"></div>
 <div class="slot-empty flex flex-col items-center gap-2">
 <span class="material-symbols-outlined text-outline-variant text-4xl">add_circle</span>
 <span class="font-label-sm text-label-sm text-outline-variant">位置 01</span>
@@ -208,7 +213,7 @@
 </div>
 <!-- Slot 2 -->
 <div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="2">
-<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="absolute inset-0 linen-texture opacity-20 pointer-events-none"></div>
 <div class="slot-empty flex flex-col items-center gap-2 text-outline-variant">
 <span class="material-symbols-outlined text-4xl">add_circle</span>
 <span class="font-label-sm text-label-sm">位置 02</span>
@@ -226,7 +231,7 @@
 </div>
 <!-- Slot 3 -->
 <div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="3">
-<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="absolute inset-0 linen-texture opacity-20 pointer-events-none"></div>
 <div class="slot-empty flex flex-col items-center gap-2 text-outline-variant">
 <span class="material-symbols-outlined text-4xl">add_circle</span>
 <span class="font-label-sm text-label-sm">位置 03</span>
@@ -244,7 +249,7 @@
 </div>
 <!-- Slot 4 -->
 <div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="4">
-<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="absolute inset-0 linen-texture opacity-20 pointer-events-none"></div>
 <div class="slot-empty flex flex-col items-center gap-2 text-outline-variant">
 <span class="material-symbols-outlined text-4xl">add_circle</span>
 <span class="font-label-sm text-label-sm">位置 04</span>
@@ -262,7 +267,7 @@
 </div>
 <!-- Slot 5 -->
 <div class="relative group h-64 bg-ink-wash border-2 border-outline-variant flex flex-col items-center justify-center cursor-pointer hover:border-primary-fixed transition-colors overflow-hidden meander-border team-slot" data-slot="5">
-<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-linen.png')] opacity-20 pointer-events-none"></div>
+<div class="absolute inset-0 linen-texture opacity-20 pointer-events-none"></div>
 <div class="slot-empty flex flex-col items-center gap-2 text-outline-variant">
 <span class="material-symbols-outlined text-4xl">add_circle</span>
 <span class="font-label-sm text-label-sm">位置 05</span>
@@ -311,11 +316,11 @@
         const qualityNames = { 5: 'SSR', 4: 'SR', 3: 'R', 2: 'N', 1: 'N' };
         const qualityClasses = { SSR: 'quality-ssr', SR: 'quality-sr', R: 'quality-r', N: 'quality-n' };
         const heroImages = {
-            1: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBacfl2KZJjEeKjbIXzp4XKS01iarwm87pVxf92bYPbhB03ppB7JGO5mDN629EbZdoKWzJs01KZZPOJWRHTWfldMHC3PgDZiVTFLbxL3xE6hlJGQ-0lXqRjKgEBJYBZtsAwGMk73bgDEgIuZ8lu6LE9IJhAaMUlHTzQyqHdOndKljJYCKg0ZFr-fYh4MQ8Wte4V3R870G7H0uII1t2sn-fjxdIn6s7c7iVMKrisf_z02ljOQ8OsiLY2j_DNVkuWCNHNbUP5gSmaaQU',
-            2: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKb0-qek8mcN6fiqdlEeZQh01p7Zk1sXD9Y59e_87Nr_hWhbKcXb3UiVE7YZ8DWVxAtCSST1P6ebg2Go91sJTBIgu_jXFDGDhTDmW_eht8gdnvEEE5q_W6trMOUmrXI6R4izbHRN2EeC_f-sOzYmuUBc5RlAl9MfpbkkZNyTR6E1xS6in50r-Xk5fU-a2Rc-3CRhABy_YDi9hEmi3NCTXSLdnU5e2FYcgQEPBmTFBgjFVBykj5d0UvpO5btvThzfsMegMCK7_GEbw',
-            3: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJ1sO831rf0XcvBhM2ksFpDcw7RLiy1NxHuNTgbg-ub6m_qV2QoRdWJowXXh-SVZaxkLE6DaoPM89mR9JmSiiDWI1lg40l9xnrRlDGSpuIuJzVF3j6Phm8S-xVrTjpXe-dq2tpGzjR04JAc0DW7E7ORC8WVJu9gBvk1DvIP1_V_Boy-Jdb5YTZdsGqs-4MWkfMd4Iq3oCgxZo9n6r79PrvUWiC4AiVs-yieugg49MqcTplQUNLsP--X2k33OdnWwsamOHD3qys48M',
-            4: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsoIS-wmBeOGAvGjEgYY9CkL28lSk4hiiYlb-bXrtyGYhOZLxv2GEzIwzNrBIiZY4fyr1FeGbDQ2PDNHhzwDCwiunb2RlA0kpd93BTIWsl77k8DeErsLipspZI09o7m0C4Yeq4wqGAQPoAveFOjgJRbUhtye3_t7qqXreo2eemhnjP-LnEIr5jNJOggEtzgvRYVulRQ1Ke1MQ2LPcgNTq7LR3f9IF-USlJ-N7BYM66nYdxY16HpV-grE8M4xx9rjrOk92sao0BR00',
-            5: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCL69GlYj5IZtJRYLu5XpEUDWyAWMAbycg0A2zHQnwXxcIe7mdzr9s7bm4C2di9yytISwbY5QDvvDtLkxLKkYbeQy54LevFnbguHMdv60aYoshf7aCoDPcKPfP3_B8JyzUln0XrSHveUkdg0m_e--oKx3MZRJk50JltTSOB9Skodt_LelnU2owqQEsUCqcTxfs64Yv9zUX-I5eX2DDiNBgihipyeNPwYJhAot4s-GxB9SGxjb0ZnQiNmw3vLbLgLxHlsLVlj3RCxZg'
+            1: '/static/assets/images/hero-sun-wukong.png',
+            2: '/static/assets/images/hero-zhu-bajie.png',
+            3: '/static/assets/images/hero-sha-wujing.png',
+            4: '/static/assets/images/hero-xiao-bailong.png',
+            5: '/static/assets/images/hero-tang-sanzang.png'
         };
         let heroes = [];
         let activeTeam = [null, null, null, null, null];
@@ -480,6 +485,6 @@
 
         init();
     </script>
-<script src="/static/assets/status-bar.js"></script>
-<script src="/static/assets/app-shell.js"></script>
+<script src="../assets/status-bar.js"></script>
+<script src="../assets/app-shell.js"></script>
 </body></html>

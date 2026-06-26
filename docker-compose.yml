@@ -21,6 +21,10 @@ services:
       REDIS_ADDR: redis:6379
       REDIS_PASSWORD: ""
       REDIS_DB: 0
+      RABBITMQ_URL: ${RABBITMQ_URL:-amqp://mini_card:mini_card_mq_password@rabbitmq:5672/}
+      ACTIVITY_AWARD_EXCHANGE: ${ACTIVITY_AWARD_EXCHANGE:-mini_xiyou.activity}
+      ACTIVITY_AWARD_QUEUE: ${ACTIVITY_AWARD_QUEUE:-mini_xiyou.activity.awards}
+      ACTIVITY_AWARD_ROUTING_KEY: ${ACTIVITY_AWARD_ROUTING_KEY:-activity.award}
       JWT_SECRET: ${JWT_SECRET:-please-change-mini-card-game-jwt-secret}
       JWT_EXPIRE_SECONDS: ${JWT_EXPIRE_SECONDS:-86400}
       TZ: Asia/Shanghai
@@ -68,6 +72,27 @@ services:
     volumes:
       - redis_data:/data
 
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: mini_card_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-mini_card}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-mini_card_mq_password}
+      TZ: Asia/Shanghai
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
   mysql_data:
   redis_data:
+  rabbitmq_data:

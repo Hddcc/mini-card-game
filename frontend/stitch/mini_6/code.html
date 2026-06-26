@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mini 西游 - 活动</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800&amp;family=Hanken+Grotesk:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;vertical-align:middle}
+    .ink-bg{background:radial-gradient(circle at 20% 10%,rgba(255,225,109,.16),transparent 26%),radial-gradient(circle at 80% 20%,rgba(111,242,174,.1),transparent 24%),linear-gradient(135deg,#131313 0%,#20201f 48%,#111 100%)}
+    .talisman{background:linear-gradient(180deg,#ffe16d,#e9c400);box-shadow:0 12px 40px rgba(255,215,0,.28)}
+    .draw-glow{box-shadow:0 0 28px rgba(255,225,109,.26),inset 0 0 18px rgba(255,255,255,.12)}
+    .status-pill{border:1px solid rgba(153,144,119,.55);background:rgba(32,32,31,.74)}
+</style>
+<script>
+tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-container":"#20201f","surface-container-lowest":"#0e0e0e","surface-container-high":"#2a2a2a","surface-container-highest":"#353535","surface-variant":"#353535","outline":"#999077","outline-variant":"#4d4732","primary-fixed":"#ffe16d","primary-fixed-dim":"#e9c400","quality-ssr":"#FFD700","quality-sr":"#DA70D6","quality-r":"#1E90FF","quality-n":"#A9A9A9","quality-ur":"#FF4500","on-surface":"#e5e2e1","on-surface-variant":"#d0c6ab","background":"#131313","ink-wash":"#2D2D2D","error":"#ffb4ab","tertiary-container":"#6ff2ae"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{gutter:"16px","stack-md":"12px","stack-lg":"24px","margin-desktop":"40px","margin-mobile":"20px"},fontFamily:{"stats-num":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"body-md":["Hanken Grotesk"],"display-hero":["Epilogue"],"title-md":["Epilogue"]}}}}
+</script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile py-stack-md bg-ink-wash border-b-2 border-outline-variant shadow-[0_0_15px_rgba(255,215,0,0.22)]">
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary-fixed">celebration</span>
+        <span class="font-display-hero text-2xl font-extrabold text-primary-fixed">Mini 西游</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <div class="status-pill px-3 py-1 rounded-full flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary-fixed text-lg">account_balance_wallet</span>
+            <span class="font-stats-num text-primary-fixed" id="goldText">--</span>
+        </div>
+        <div class="status-pill px-3 py-1 rounded-full flex items-center gap-2">
+            <span class="material-symbols-outlined text-quality-ssr text-lg" style="font-variation-settings:'FILL' 1;">diamond</span>
+            <span class="font-stats-num text-quality-ssr" id="diamondText">--</span>
+        </div>
+        <div class="status-pill px-3 py-1 rounded-full flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary-container text-lg">bolt</span>
+            <span class="font-stats-num text-tertiary-container" id="staminaText">--</span>
+        </div>
+    </div>
+</nav>
+<main class="pt-24 md:pl-72 h-screen ink-bg overflow-y-auto">
+    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop pb-10 grid grid-cols-1 xl:grid-cols-[1.2fr_.8fr] gap-stack-lg">
+        <section class="min-h-[calc(100vh-8rem)] flex flex-col justify-center gap-stack-lg">
+            <div class="grid md:grid-cols-[1fr_220px] gap-stack-lg items-end">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 rounded-full bg-primary-fixed text-[#221b00] border border-primary-fixed/60 text-xs font-label-sm">限时活动</span>
+                        <span class="text-on-surface-variant font-label-sm text-sm" id="timeText">活动时间加载中</span>
+                    </div>
+                    <h1 class="font-display-hero text-4xl md:text-6xl font-extrabold text-primary-fixed leading-tight" id="activityName">蟠桃会·天庭赐福</h1>
+                    <p class="mt-4 max-w-2xl text-on-surface-variant text-lg" id="activityDesc">每日抽取天庭赏赐，赢取灵玉、金币与神将好礼。</p>
+                </div>
+                <div class="bg-surface-container/80 border border-outline-variant p-5 rounded-xl">
+                    <p class="text-on-surface-variant font-label-sm text-xs">今日次数</p>
+                    <div class="mt-2 flex items-end gap-2">
+                        <span class="font-stats-num text-5xl text-primary-fixed" id="remainText">0</span>
+                        <span class="pb-2 text-on-surface-variant">次可用</span>
+                    </div>
+                    <div class="mt-4 h-2 bg-surface-container-lowest rounded-full overflow-hidden">
+                        <div class="h-full bg-primary-fixed transition-all" id="quotaBar" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative min-h-[360px] bg-ink-wash/78 border border-outline-variant rounded-xl overflow-hidden">
+                <img alt="火焰山活动" class="absolute inset-0 h-full w-full object-cover object-center opacity-45 pointer-events-none" src="/static/assets/images/activity-flame-mountain.png"/>
+                <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-ink-wash/45 to-black/70 pointer-events-none"></div>
+                <div class="relative z-10 h-full grid md:grid-cols-[1fr_300px] gap-stack-lg p-6 md:p-10 items-center">
+                    <div class="flex justify-center">
+                        <button id="drawBtn" class="talisman draw-glow w-60 h-72 rounded-xl border-2 border-white/35 text-[#221b00] flex flex-col items-center justify-center gap-4 active:scale-95 transition-transform">
+                            <span class="material-symbols-outlined text-6xl" style="font-variation-settings:'FILL' 1;">redeem</span>
+                            <span class="font-display-hero text-3xl font-extrabold">抽取福签</span>
+                            <span class="font-label-sm text-xs">每日限次 · 好运加持</span>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-surface-container-lowest/80 border border-outline-variant rounded-lg p-4">
+                            <p class="font-title-md text-primary-fixed text-xl">今日赐福</p>
+                            <div class="mt-3 grid grid-cols-2 gap-2 text-sm text-on-surface-variant">
+                                <span>参与次数</span><span class="text-tertiary-container text-right">每日刷新</span>
+                                <span>奖励类型</span><span class="text-tertiary-container text-right">多种好礼</span>
+                                <span>活动状态</span><span class="text-tertiary-container text-right">限时开放</span>
+                                <span>到账提示</span><span class="text-primary-fixed text-right">稍后查看</span>
+                            </div>
+                        </div>
+                        <div class="bg-surface-container-lowest/80 border border-outline-variant rounded-lg p-4">
+                            <p class="font-title-md text-primary-fixed text-xl">活动说明</p>
+                            <p class="mt-2 text-sm text-on-surface-variant" id="eligibilityText">加载活动资格中...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <aside class="space-y-stack-lg pt-0 xl:pt-8">
+            <section class="bg-surface-container/80 border border-outline-variant rounded-xl p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-title-md text-xl text-primary-fixed">奖品池</h2>
+                    <span class="font-label-sm text-xs text-on-surface-variant">动态库存</span>
+                </div>
+                <div class="space-y-3" id="prizeList"></div>
+            </section>
+            <section class="bg-surface-container/80 border border-outline-variant rounded-xl p-5">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-title-md text-xl text-primary-fixed">中奖记录</h2>
+                    <button class="text-on-surface-variant hover:text-primary-fixed" onclick="loadState()">
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                </div>
+                <div class="space-y-3" id="recordList"></div>
+            </section>
+        </aside>
+    </div>
+</main>
+<div class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 p-5" id="resultModal">
+    <div class="w-full max-w-md bg-surface-container-highest border-2 border-primary-fixed rounded-xl p-7 text-center">
+        <span class="material-symbols-outlined text-6xl text-primary-fixed" id="resultIcon">redeem</span>
+        <h3 class="mt-4 font-display-hero text-3xl font-extrabold text-primary-fixed" id="resultTitle">获得奖励</h3>
+        <p class="mt-3 text-on-surface-variant" id="resultDesc"></p>
+        <button class="mt-6 px-8 py-3 bg-primary-fixed text-[#221b00] rounded-lg font-title-md active:scale-95" onclick="closeResult()">确认</button>
+    </div>
+</div>
+<script>
+const deliveryText={0:'领取中',1:'已到账',2:'稍后到账',3:'请稍后查看'};
+const friendlyReason=[
+    {match:['daily','limit'],text:'今日福签已抽完，明日再来。'},
+    {match:['ip','limit'],text:'今日参与人数较多，请明日再来。'},
+    {match:['inactive'],text:'活动暂未开放。'},
+    {match:['not','found'],text:'活动正在筹备中。'},
+    {match:['black'],text:'暂时无法参与本次活动。'}
+];
+const iconMap={gold:'account_balance_wallet',diamond:'diamond',stamina:'bolt',hero:'auto_awesome'};
+let currentState=null;
+
+function rewardIconMarkup(type, icon){
+    if(type==='gold'){
+        return '<img alt="" class="h-8 w-8 object-contain" src="/static/assets/images/reward-gold.png"/>';
+    }
+    return `<span class="material-symbols-outlined">${iconMap[type]||icon||'redeem'}</span>`;
+}
+
+async function apiFetch(path,opts={}){
+    const token=localStorage.getItem('token');
+    if(!token) return window.location.href='/';
+    const headers=opts.headers||{};
+    headers['Content-Type']=headers['Content-Type']||'application/json';
+    headers['Authorization']='Bearer '+token;
+    const res=await fetch(path,Object.assign({},opts,{headers}));
+    if(res.status===401){localStorage.removeItem('token');return window.location.href='/';}
+    return res.json();
+}
+function read(obj,pascal,camel,fallback){return obj && (obj[pascal] ?? obj[camel] ?? fallback);}
+function toFriendlyMessage(message){
+    if(!message)return '请稍后重试';
+    const normalized=String(message).toLowerCase();
+    const rule=friendlyReason.find(item=>item.match.every(key=>normalized.includes(key)));
+    return rule?rule.text:message;
+}
+async function loadAssets(){
+    if(window.loadAssetBar) return window.loadAssetBar();
+    try{
+        const data=await apiFetch('/api/v1/player/assets');
+        if(data&&data.code===0&&data.data){
+            goldText.textContent=read(data.data,'Gold','gold',0);
+            diamondText.textContent=read(data.data,'Diamond','diamond',0);
+            staminaText.textContent=read(data.data,'Stamina','stamina',0);
+        }
+    }catch(err){}
+}
+async function loadState(){
+    try{
+        const data=await apiFetch('/api/v1/activity/lottery/state');
+        if(!data||data.code!==0) throw new Error(data&&data.message?data.message:'加载失败');
+        currentState=data.data;
+        renderState(currentState);
+        loadAssets();
+    }catch(err){
+        eligibilityText.textContent='活动数据加载失败，请稍后重试';
+        prizeList.innerHTML='<p class="text-error">奖品池加载失败</p>';
+        recordList.innerHTML='<p class="text-error">记录加载失败</p>';
+    }
+}
+function renderState(state){
+    if(!state||!state.active){
+        activityName.textContent='暂无活动';
+        activityDesc.textContent='天庭正在筹备下一场赐福。';
+        eligibilityText.textContent=state&&state.reason?toFriendlyMessage(state.reason):'暂无可参与活动';
+        drawBtn.disabled=true;
+        drawBtn.classList.add('opacity-50');
+        return;
+    }
+    activityName.textContent=state.activity.name;
+    activityDesc.textContent=state.activity.description;
+    const end=new Date(state.activity.end_at);
+    timeText.textContent=`截止 ${end.toLocaleString()}`;
+    const quota=state.quota||{};
+    remainText.textContent=quota.remaining_today||0;
+    const used=quota.used_today||0, limit=Math.max(1,quota.daily_limit||1);
+    quotaBar.style.width=`${Math.min(100,Math.round(used/limit*100))}%`;
+    eligibilityText.textContent=state.eligible?'可以抽取福签，中奖奖励会陆续到账。':toFriendlyMessage(state.reason||'暂不可参与');
+    drawBtn.disabled=!state.eligible;
+    drawBtn.classList.toggle('opacity-50',!state.eligible);
+    renderPrizes(state.prizes||[]);
+    renderRecords(state.records||[]);
+}
+function renderPrizes(prizes){
+    prizeList.innerHTML='';
+    prizes.forEach(prize=>{
+        const item=document.createElement('div');
+        item.className='flex items-center justify-between gap-3 bg-surface-container-lowest/70 border border-outline-variant rounded-lg p-3';
+        item.innerHTML=`<div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center text-primary-fixed">${rewardIconMarkup(prize.reward_type,prize.icon)}</div>
+            <div class="min-w-0"><p class="font-title-md text-on-surface truncate">${prize.name}</p><p class="text-xs text-on-surface-variant truncate">${prize.description}</p></div>
+        </div><span class="font-label-sm text-xs text-primary-fixed whitespace-nowrap">${prize.unlimited?'不限量':'余 '+Math.max(0,prize.left_num)}</span>`;
+        prizeList.appendChild(item);
+    });
+}
+function renderRecords(records){
+    recordList.innerHTML='';
+    if(!records.length){recordList.innerHTML='<p class="text-on-surface-variant text-sm">还没有抽奖记录</p>';return;}
+    records.forEach(record=>{
+        const item=document.createElement('div');
+        item.className='bg-surface-container-lowest/70 border border-outline-variant rounded-lg p-3';
+        item.innerHTML=`<div class="flex items-center justify-between gap-3">
+            <span class="font-title-md text-on-surface">${record.prize_name}</span>
+            <span class="text-xs text-primary-fixed">${deliveryText[record.delivery_status]||'处理中'}</span>
+        </div><p class="mt-1 text-xs text-on-surface-variant">${new Date(record.created_at).toLocaleString()}</p>`;
+        recordList.appendChild(item);
+    });
+}
+drawBtn.addEventListener('click',async()=>{
+    if(drawBtn.disabled)return;
+    drawBtn.disabled=true;
+    drawBtn.querySelector('.font-display-hero').textContent='抽取中';
+    try{
+        const data=await apiFetch('/api/v1/activity/lottery/draw',{method:'POST',body:'{}'});
+        if(!data||data.code!==0) throw new Error(toFriendlyMessage(data&&data.message?data.message:'抽奖失败'));
+        const result=data.data;
+        showResult(result);
+        await loadState();
+    }catch(err){
+        resultIcon.textContent='error';
+        resultTitle.textContent='抽取失败';
+        resultDesc.textContent=toFriendlyMessage(err.message);
+        resultModal.classList.remove('hidden');
+        resultModal.classList.add('flex');
+    }finally{
+        drawBtn.querySelector('.font-display-hero').textContent='抽取福签';
+        drawBtn.disabled=currentState? !currentState.eligible : false;
+    }
+});
+function showResult(result){
+    resultIcon.textContent=iconMap[result.prize.reward_type]||result.prize.icon||'redeem';
+    resultTitle.textContent=result.prize.name;
+    resultDesc.textContent=result.prize.description;
+    resultModal.classList.remove('hidden');
+    resultModal.classList.add('flex');
+}
+function closeResult(){
+    resultModal.classList.add('hidden');
+    resultModal.classList.remove('flex');
+    loadState();
+}
+loadState();
+</script>
+<script src="../assets/status-bar.js"></script>
+<script src="../assets/app-shell.js"></script>
+</body>
+</html>

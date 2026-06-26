@@ -1423,15 +1423,15 @@ func actorSkillDuration(actor *BattleUnit) uint32 {
 
 func skinWithDefaults(skin model.CardSkinConfig, ownerType string, ownerID uint64) model.CardSkinConfig {
 	if skin.CardArt == "" {
-		skin.CardArt = "/static/assets/cards/enemy-minion.svg"
+		skin.CardArt = "/static/assets/images/enemy-leopard-spirit.png"
 		if ownerType == "hero" {
-			skin.CardArt = "/static/assets/cards/hero-warrior.svg"
+			skin.CardArt = "/static/assets/images/hero-sun-wukong.png"
 		}
 	}
 	if skin.PortraitArt == "" {
-		skin.PortraitArt = "/static/assets/portraits/mountain-ape.svg"
+		skin.PortraitArt = "/static/assets/images/enemy-leopard-spirit.png"
 		if ownerType == "hero" {
-			skin.PortraitArt = "/static/assets/portraits/sun-wukong.svg"
+			skin.PortraitArt = "/static/assets/images/hero-sun-wukong.png"
 		}
 	}
 	skin.AttackAnimation = firstNonEmpty(skin.AttackAnimation, "fx-attack")

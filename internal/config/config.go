@@ -16,6 +16,10 @@ type Config struct {
 	RedisAddr        string
 	RedisPassword    string
 	RedisDB          int
+	RabbitMQURL      string
+	AwardExchange    string
+	AwardQueue       string
+	AwardRoutingKey  string
 	JWTSecret        string
 	JWTExpireSeconds int64
 }
@@ -41,6 +45,10 @@ func Load() (*Config, error) {
 		RedisAddr:        getEnv("REDIS_ADDR", "localhost:6379"),
 		RedisPassword:    getEnv("REDIS_PASSWORD", ""),
 		RedisDB:          redisDB,
+		RabbitMQURL:      getEnv("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/"),
+		AwardExchange:    getEnv("ACTIVITY_AWARD_EXCHANGE", "mini_xiyou.activity"),
+		AwardQueue:       getEnv("ACTIVITY_AWARD_QUEUE", "mini_xiyou.activity.awards"),
+		AwardRoutingKey:  getEnv("ACTIVITY_AWARD_ROUTING_KEY", "activity.award"),
 		JWTSecret:        getEnv("JWT_SECRET", ""),
 		JWTExpireSeconds: jwtExpire,
 	}, nil
