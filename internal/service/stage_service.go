@@ -150,7 +150,7 @@ func (s *StageService) Fight(playerID uint64, stageID uint64) (*StageFightResult
 		if !ok {
 			return nil, errors.New("hero config missing")
 		}
-		totalPower += CalcHeroPower(cfg.BaseATK, cfg.BaseHP, cfg.BaseDEF, hero.Level, hero.Star, cfg.PowerFactor)
+		totalPower += CalcHeroPower(cfg, hero.Level, hero.Star)
 	}
 
 	result := &StageFightResult{

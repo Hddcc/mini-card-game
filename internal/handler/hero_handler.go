@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,4 +28,33 @@ func (h *HeroHandler) List(c *gin.Context) {
 		return
 	}
 	app.OK(c, gin.H{"heroes": heroes})
+}
+
+type starUpRequest struct {
+	PlayerHeroID uint64 `json:"player_hero_id" binding:"required"`
+}
+
+func (h *HeroHandler) StarUp(c *gin.Context) {
+	var req starUpRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		app.Fail(c, http.StatusBadRequest, apperrors.CodeInvalidParam, "invalid param")
+		return
+	}
+
+	output, err := h.heroService.StarUp(middleware.PlayerID(c), req.PlayerHeroID)
+	if err != nil {
+		switch {
+		case errors.Is(err, service.ErrHeroNotOwned):
+			app.Fail(c, http.StatusNotFound, apperrors.CodeNotFound, err.Error())
+		case errors.Is(err, service.ErrHeroMaxStar),
+			errors.Is(err, service.ErrHeroShardNotEnough),
+			errors.Is(err, service.ErrHeroGoldNotEnough),
+			errors.Is(err, service.ErrHeroStarCostMissing):
+			app.Fail(c, http.StatusBadRequest, apperrors.CodeInvalidParam, err.Error())
+		default:
+			app.Fail(c, http.StatusInternalServerError, apperrors.CodeInternal, err.Error())
+		}
+		return
+	}
+	app.OK(c, output)
 }

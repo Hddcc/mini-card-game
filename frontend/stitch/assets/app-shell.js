@@ -5,6 +5,7 @@
         heroes: '\u82f1\u96c4',
         stages: '\u5173\u5361',
         summon: '\u53ec\u5524',
+        starup: '\u5347\u661f',
         activity: '\u6d3b\u52a8'
     };
     const pages = [
@@ -12,6 +13,7 @@
         { key: 'heroes', label: labels.heroes, icon: 'swords', href: '/static/mini_3/code.html' },
         { key: 'stages', label: labels.stages, icon: 'scrollable_header', href: '/static/mini_2/code.html' },
         { key: 'summon', label: labels.summon, icon: 'auto_awesome', href: '/static/mini_4/code.html' },
+        { key: 'starup', label: labels.starup, icon: 'upgrade', href: '/static/mini_7/code.html' },
         { key: 'activity', label: labels.activity, icon: 'celebration', href: '/static/mini_6/code.html' }
     ];
     let activeFrame = null;
@@ -23,6 +25,7 @@
         if (pathname.includes('/mini_3/')) return 'heroes';
         if (pathname.includes('/mini_2/')) return 'stages';
         if (pathname.includes('/mini_4/')) return 'summon';
+        if (pathname.includes('/mini_7/')) return 'starup';
         if (pathname.includes('/mini_6/')) return 'activity';
         return 'home';
     }

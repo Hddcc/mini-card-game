@@ -46,6 +46,20 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
             vertical-align: middle;
         }
+        .duplicate-shard-img {
+            clip-path: polygon(0 0, 100% 0, 100% 76%, 82% 76%, 82% 100%, 0 100%);
+            filter: saturate(0.72) contrast(1.08);
+        }
+        .duplicate-shard-notch {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 24%;
+            height: 24%;
+            background: #131313;
+            border-left: 2px solid rgba(255,225,109,.65);
+            border-top: 2px solid rgba(255,225,109,.65);
+        }
     </style>
 <script id="tailwind-config">
         tailwind.config = {
@@ -183,6 +197,7 @@
 <span class="hidden md:inline font-title-md text-label-sm">关卡</span>
 </a>
 <a class="text-primary-fixed border-l-4 border-primary-fixed bg-surface-variant px-4 py-3 flex items-center gap-4 active:translate-x-1 transition-all duration-200" href="/static/mini_4/code.html"><span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span><span class="hidden md:inline font-title-md text-label-sm">召唤</span></a>
+<a class="text-on-surface-variant px-4 py-3 flex items-center gap-4 hover:bg-surface-container-high hover:text-on-surface group" href="/static/mini_7/code.html"><span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="upgrade">upgrade</span><span class="hidden md:inline font-title-md text-label-sm">升星</span></a>
 </div>
 </aside>
 <!-- Main Canvas -->
@@ -388,15 +403,17 @@
                 const rarity = qualityNames[item.quality] || 'N';
                 const color = qualityColors[rarity];
                 const isHero = item.item_type === 'hero';
+                const isDuplicateHero = isHero && item.is_duplicate && Number(item.converted_shards || 0) > 0;
                 const name = isHero ? (heroNames[item.item_id] || `英雄 ${item.item_id}`) : `金币 x${item.item_count}`;
                 const card = document.createElement('div');
                 card.className = `opacity-0 transform scale-50 transition-all duration-500 flex flex-col items-center w-full ${results.length === 1 ? 'max-w-[260px]' : ''}`;
                 card.innerHTML = `
                     <div class="relative w-full aspect-square border-2 rounded-xl overflow-hidden shadow-2xl" style="border-color: ${color}">
-                        ${isHero ? `<img src="${heroImages[item.item_id] || heroImages[1]}" class="w-full h-full object-cover" alt="${name}">` : `<div class="w-full h-full flex items-center justify-center bg-surface-container"><img src="/static/assets/images/reward-gold.png" class="w-full h-full object-cover object-center" alt="${name}"></div>`}
+                        ${isHero ? `<img src="${heroImages[item.item_id] || heroImages[1]}" class="w-full h-full object-cover ${isDuplicateHero ? 'duplicate-shard-img' : ''}" alt="${name}">${isDuplicateHero ? '<div class="duplicate-shard-notch"></div>' : ''}` : `<div class="w-full h-full flex items-center justify-center bg-surface-container"><img src="/static/assets/images/reward-gold.png" class="w-full h-full object-cover object-center" alt="${name}"></div>`}
                         <div class="absolute top-0 right-0 bg-black/60 px-2 py-0.5 text-[10px] font-label-sm" style="color: ${color}">${rarity}</div>
+                        ${isDuplicateHero ? `<div class="absolute bottom-2 left-2 min-w-8 h-8 px-2 rounded-full bg-black/75 border border-primary-fixed text-primary-fixed font-stats-num flex items-center justify-center">+${item.converted_shards}</div>` : ''}
                     </div>
-                    <span class="mt-2 font-label-sm text-center line-clamp-1">${name}${item.is_pity ? ' · 保底' : ''}</span>`;
+                    <span class="mt-2 font-label-sm text-center line-clamp-1">${isDuplicateHero ? `${name}碎片` : name}${item.is_pity ? ' · 保底' : ''}</span>`;
                 grid.appendChild(card);
                 setTimeout(() => {
                     card.classList.remove('opacity-0', 'scale-50');

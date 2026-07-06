@@ -110,8 +110,7 @@ func (s *TeamService) Save(playerID uint64, slots []TeamSlot) error {
 				// should not happen because we fetched configs for used heroes
 				return errors.New("hero config missing")
 			}
-			// CalcHeroPower(baseATK, baseHP, baseDEF, level, star, factor)
-			p := CalcHeroPower(cfg.BaseATK, cfg.BaseHP, cfg.BaseDEF, ph.Level, ph.Star, cfg.PowerFactor)
+			p := CalcHeroPower(cfg, ph.Level, ph.Star)
 			totalPower += p
 		}
 

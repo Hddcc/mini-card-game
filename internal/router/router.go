@@ -66,7 +66,7 @@ func New(deps Dependencies) *gin.Engine {
 
 	rewardService := service.NewRewardService(assetRepo, heroRepo)
 	taskService := service.NewTaskService(deps.DB, taskRepo, rewardService)
-	heroService := service.NewHeroService(heroRepo)
+	heroService := service.NewHeroService(deps.DB, heroRepo, assetRepo)
 	gachaService := service.NewGachaService(deps.DB, assetRepo, gachaRepo, rewardService, taskService)
 	teamService := service.NewTeamService(teamRepo, heroRepo, playerRepo)
 	stageService := service.NewStageService(deps.DB, stageRepo, teamRepo, heroRepo, assetRepo, playerRepo, taskService)
@@ -126,6 +126,7 @@ func New(deps Dependencies) *gin.Engine {
 	loginRequired.GET("/player/profile", playerHandler.Profile)
 	loginRequired.GET("/player/assets", playerHandler.Assets)
 	loginRequired.GET("/heroes", heroHandler.List)
+	loginRequired.POST("/heroes/star-up", heroHandler.StarUp)
 	loginRequired.GET("/gacha/state", gachaHandler.State)
 	loginRequired.POST("/gacha/draw", gachaHandler.Draw)
 	loginRequired.POST("/team/save", teamHandler.Save)
