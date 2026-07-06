@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mini 西游 - 神将升星</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800&amp;family=Hanken+Grotesk:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-container":"#20201f","surface-container-lowest":"#0e0e0e","surface-container-high":"#2a2a2a","surface-container-highest":"#353535","surface-variant":"#353535","outline":"#999077","outline-variant":"#4d4732","primary-fixed":"#ffe16d","primary-fixed-dim":"#e9c400","quality-ssr":"#FFD700","quality-sr":"#DA70D6","quality-r":"#1E90FF","quality-n":"#A9A9A9","quality-ur":"#FF4500","on-surface":"#e5e2e1","on-surface-variant":"#d0c6ab","background":"#131313","ink-wash":"#2D2D2D","error":"#ffb4ab","tertiary-container":"#6ff2ae"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},fontFamily:{"stats-num":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"body-md":["Hanken Grotesk"],"display-hero":["Epilogue"],"title-md":["Epilogue"]}}}}
+</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.star-filled{color:#FFD700;font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24}
+.star-empty{color:#4d4732;font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.hero-card{background:linear-gradient(180deg,rgba(42,42,42,.95),rgba(19,19,19,.98))}
+.hero-card.active{border-color:#ffe16d;box-shadow:0 0 20px rgba(255,225,109,.18)}
+</style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen overflow-x-hidden">
+<nav class="fixed top-0 w-full z-30 flex justify-between items-center px-5 md:px-10 py-4 bg-ink-wash border-b-2 border-outline-variant">
+  <div>
+    <h1 class="font-display-hero text-2xl md:text-3xl font-extrabold text-primary-fixed">神将升星</h1>
+  </div>
+  <div class="flex items-center gap-3 bg-surface-container-high px-3 py-1 border border-outline-variant">
+    <span class="material-symbols-outlined text-primary-fixed">account_balance_wallet</span>
+    <span class="font-stats-num text-primary-fixed" id="topGold">0</span>
+  </div>
+</nav>
+
+<main class="pt-24 px-5 md:px-10 pb-8 min-h-screen bg-[radial-gradient(circle_at_30%_10%,rgba(255,225,109,.14),transparent_24%),linear-gradient(135deg,#20201f_0%,#131313_55%,#0e0e0e_100%)]">
+  <section class="grid grid-cols-1 xl:grid-cols-[280px_1fr_440px] gap-5 max-w-7xl mx-auto">
+    <aside class="bg-surface-container-lowest/90 border border-outline-variant p-4 min-h-[220px]">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-title-md text-xl text-primary-fixed">已拥有神将</h2>
+        <span class="font-label-sm text-on-surface-variant" id="heroCount">0</span>
+      </div>
+      <div class="grid grid-cols-2 xl:grid-cols-1 gap-3" id="heroList"></div>
+    </aside>
+
+    <section class="bg-surface-container/80 border border-outline-variant p-5 md:p-7 min-h-[560px]">
+      <div id="emptyState" class="hidden h-full min-h-[420px] items-center justify-center text-on-surface-variant">暂无神将，请先前往召唤。</div>
+      <div id="detailState" class="grid grid-cols-1 lg:grid-cols-[minmax(240px,360px)_1fr] gap-7 items-center">
+        <div class="relative mx-auto w-full max-w-[360px]">
+          <div class="aspect-[3/4] border-2 border-primary-fixed bg-ink-wash overflow-hidden shadow-[0_0_28px_rgba(255,225,109,.15)]">
+            <img id="heroImage" class="h-full w-full object-cover" alt="神将头像" src="/static/assets/images/hero-sun-wukong.png"/>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/75 to-transparent p-5">
+            <p class="font-display-hero text-3xl text-primary-fixed" id="heroName">神将</p>
+            <p class="font-label-sm text-on-surface-variant mt-1" id="heroMeta">品质 - 定位</p>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div>
+            <p class="font-label-sm text-on-surface-variant mb-2">当前星级 -> 目标星级</p>
+            <div class="flex flex-wrap items-center gap-2 text-3xl" id="starRow"></div>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="bg-surface-container-high border border-outline-variant p-4">
+              <p class="font-label-sm text-on-surface-variant">等级</p>
+              <p class="font-stats-num text-2xl text-primary-fixed" id="heroLevel">1</p>
+            </div>
+            <div class="bg-surface-container-high border border-outline-variant p-4">
+              <p class="font-label-sm text-on-surface-variant">碎片</p>
+              <p class="font-stats-num text-2xl text-primary-fixed" id="heroShard">0</p>
+            </div>
+            <div class="bg-surface-container-high border border-outline-variant p-4">
+              <p class="font-label-sm text-on-surface-variant">状态</p>
+              <p class="font-title-md text-xl text-tertiary-container" id="heroStatus">可升星</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="bg-surface-container-lowest/95 border border-outline p-5 h-fit">
+      <h2 class="font-title-md text-2xl text-primary-fixed mb-5">升星材料</h2>
+      <div class="space-y-4">
+        <div class="bg-surface-container border border-outline-variant p-4 flex gap-4">
+          <div class="w-16 h-16 bg-surface-container-high border border-outline-variant flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary-fixed text-4xl">auto_awesome</span>
+          </div>
+          <div class="flex-1">
+            <p class="font-title-md text-lg">对应神将碎片</p>
+            <p class="text-on-surface-variant">需消耗：<span id="needShard">0</span></p>
+            <p>当前拥有：<span id="ownShard" class="font-stats-num">0</span></p>
+          </div>
+        </div>
+        <div class="bg-surface-container border border-outline-variant p-4 flex gap-4">
+          <div class="w-16 h-16 bg-surface-container-high border border-outline-variant flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary-fixed text-4xl">account_balance_wallet</span>
+          </div>
+          <div class="flex-1">
+            <p class="font-title-md text-lg">金币</p>
+            <p class="text-on-surface-variant">需消耗：<span id="needGold">0</span></p>
+            <p>当前拥有：<span id="ownGold" class="font-stats-num">0</span></p>
+          </div>
+        </div>
+      </div>
+      <button id="starUpBtn" class="mt-6 w-full py-4 bg-primary-fixed text-on-primary-fixed font-title-md text-xl disabled:bg-surface-container-high disabled:text-on-surface-variant disabled:cursor-not-allowed border border-primary-fixed disabled:border-outline-variant">确认升星</button>
+      <p id="message" class="mt-4 min-h-[24px] text-center text-sm text-on-surface-variant"></p>
+    </aside>
+  </section>
+</main>
+
+<script>
+const heroImages={1:'/static/assets/images/hero-sun-wukong.png',2:'/static/assets/images/hero-zhu-bajie.png',3:'/static/assets/images/hero-sha-wujing.png',4:'/static/assets/images/hero-xiao-bailong.png',5:'/static/assets/images/hero-tang-sanzang.png'};
+const qualityNames={5:'SSR',4:'SR',3:'R',2:'N',1:'N'};
+let heroes=[];
+let assets={gold:0};
+let selectedId=0;
+
+async function apiFetch(path,opts={}){
+  const token=localStorage.getItem('token');
+  if(!token){window.location.href='/';return null;}
+  const headers=opts.headers||{};
+  headers['Content-Type']=headers['Content-Type']||'application/json';
+  headers['Authorization']='Bearer '+token;
+  const res=await fetch(path,Object.assign({},opts,{headers}));
+  if(res.status===401){localStorage.removeItem('token');window.location.href='/';return null;}
+  return res.json();
+}
+function fmt(n){return Number(n||0).toLocaleString('zh-CN');}
+function selectedHero(){return heroes.find(h=>h.player_hero_id===selectedId)||heroes[0];}
+
+async function loadData(){
+  const [heroData,assetData]=await Promise.all([apiFetch('/api/v1/heroes'),apiFetch('/api/v1/player/assets')]);
+  heroes=(heroData&&heroData.code===0&&heroData.data&&heroData.data.heroes)||[];
+  assets=(assetData&&assetData.code===0&&assetData.data)||{gold:0};
+  if(!selectedId&&heroes.length)selectedId=heroes[0].player_hero_id;
+  render();
+}
+
+function renderHeroList(){
+  const list=document.getElementById('heroList');
+  document.getElementById('heroCount').textContent=`${heroes.length} 位`;
+  list.innerHTML='';
+  heroes.forEach(hero=>{
+    const active=hero.player_hero_id===selectedId;
+    const card=document.createElement('button');
+    card.className=`hero-card ${active?'active':''} border border-outline-variant p-2 text-left flex items-center gap-3 hover:border-primary-fixed transition-colors`;
+    card.onclick=()=>{selectedId=hero.player_hero_id;render();};
+    card.innerHTML=`<img class="w-14 h-14 object-cover border border-outline-variant" src="${heroImages[hero.hero_config_id]||heroImages[1]}" alt="${hero.name||'神将'}">
+      <div class="min-w-0">
+        <p class="font-title-md text-primary truncate">${hero.name||'神将'}</p>
+        <p class="font-label-sm text-on-surface-variant">${qualityNames[hero.quality]||'N'} · ${hero.star}星</p>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function renderStars(hero){
+  const row=document.getElementById('starRow');
+  row.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const star=document.createElement('span');
+    star.className=`material-symbols-outlined ${i<=hero.star?'star-filled':'star-empty'}`;
+    star.textContent='star';
+    row.appendChild(star);
+    if(i===hero.star&&hero.star<10){
+      const arrow=document.createElement('span');
+      arrow.className='text-on-surface-variant text-2xl mx-1';
+      arrow.textContent='->';
+      row.appendChild(arrow);
+    }
+  }
+}
+
+function render(){
+  document.getElementById('topGold').textContent=fmt(assets.gold);
+  const empty=document.getElementById('emptyState');
+  const detail=document.getElementById('detailState');
+  if(!heroes.length){
+    empty.classList.remove('hidden');empty.classList.add('flex');
+    detail.classList.add('hidden');
+    document.getElementById('starUpBtn').disabled=true;
+    renderHeroList();
+    return;
+  }
+  empty.classList.add('hidden');empty.classList.remove('flex');
+  detail.classList.remove('hidden');
+  renderHeroList();
+  const hero=selectedHero();
+  selectedId=hero.player_hero_id;
+  document.getElementById('heroImage').src=heroImages[hero.hero_config_id]||heroImages[1];
+  document.getElementById('heroName').textContent=hero.name||'神将';
+  document.getElementById('heroMeta').textContent=`${qualityNames[hero.quality]||'N'} · ${hero.role||'未知定位'}`;
+  document.getElementById('heroLevel').textContent=hero.level||1;
+  document.getElementById('heroShard').textContent=fmt(hero.shard);
+  renderStars(hero);
+
+  const cost=hero.next_star_cost||{shard:0,gold:0};
+  const maxStar=!!hero.max_star;
+  const enoughShard=Number(hero.shard||0)>=Number(cost.shard||0);
+  const enoughGold=Number(assets.gold||0)>=Number(cost.gold||0);
+  document.getElementById('needShard').textContent=maxStar?'已满星':`${fmt(cost.shard)} 个`;
+  document.getElementById('needGold').textContent=maxStar?'已满星':fmt(cost.gold);
+  const ownShard=document.getElementById('ownShard');
+  const ownGold=document.getElementById('ownGold');
+  ownShard.textContent=fmt(hero.shard);
+  ownGold.textContent=fmt(assets.gold);
+  ownShard.className=`font-stats-num ${!maxStar&&!enoughShard?'text-error':'text-primary-fixed'}`;
+  ownGold.className=`font-stats-num ${!maxStar&&!enoughGold?'text-error':'text-primary-fixed'}`;
+  document.getElementById('heroStatus').textContent=maxStar?'满星':(enoughShard&&enoughGold?'可升星':'材料不足');
+  document.getElementById('starUpBtn').disabled=maxStar||!enoughShard||!enoughGold;
+}
+
+document.getElementById('starUpBtn').addEventListener('click',async()=>{
+  const hero=selectedHero();
+  if(!hero)return;
+  const btn=document.getElementById('starUpBtn');
+  const msg=document.getElementById('message');
+  btn.disabled=true;
+  msg.textContent='升星中...';
+  try{
+    const data=await apiFetch('/api/v1/heroes/star-up',{method:'POST',body:JSON.stringify({player_hero_id:hero.player_hero_id})});
+    if(!data||data.code!==0){
+      msg.textContent=(data&&data.message)||'升星失败';
+      msg.className='mt-4 min-h-[24px] text-center text-sm text-error';
+      render();
+      return;
+    }
+    assets=data.data.assets||assets;
+    const updated=data.data.hero;
+    heroes=heroes.map(h=>h.player_hero_id===updated.player_hero_id?updated:h);
+    msg.textContent='升星成功';
+    msg.className='mt-4 min-h-[24px] text-center text-sm text-tertiary-container';
+    render();
+    if(window.loadAssetBar)window.loadAssetBar();
+  }catch(err){
+    msg.textContent='网络错误，请稍后重试';
+    msg.className='mt-4 min-h-[24px] text-center text-sm text-error';
+    render();
+  }
+});
+
+loadData();
+</script>
+<script src="../assets/status-bar.js"></script>
+<script src="../assets/app-shell.js"></script>
+</body>
+</html>

@@ -31,11 +31,13 @@ func NewGachaService(db *gorm.DB, assetRepo *repository.AssetRepository, gachaRe
 }
 
 type DrawResult struct {
-	ItemType  string `json:"item_type"`
-	ItemID    uint64 `json:"item_id"`
-	ItemCount uint32 `json:"item_count"`
-	Quality   uint8  `json:"quality"`
-	IsPity    bool   `json:"is_pity"`
+	ItemType        string `json:"item_type"`
+	ItemID          uint64 `json:"item_id"`
+	ItemCount       uint32 `json:"item_count"`
+	Quality         uint8  `json:"quality"`
+	IsPity          bool   `json:"is_pity"`
+	IsDuplicate     bool   `json:"is_duplicate"`
+	ConvertedShards uint32 `json:"converted_shards"`
 }
 
 type DrawOutput struct {
@@ -147,16 +149,23 @@ func (s *GachaService) Draw(playerID uint64, poolID uint64, times int) (*DrawOut
 				ID:    item.ItemID,
 				Count: uint64(item.ItemCount),
 			}
-			if err := s.rewardService.Grant(tx, playerID, []model.Reward{reward}); err != nil {
+			grantResults, err := s.rewardService.GrantWithResults(tx, playerID, []model.Reward{reward})
+			if err != nil {
 				return err
+			}
+			var grantResult GrantResult
+			if len(grantResults) > 0 {
+				grantResult = grantResults[0]
 			}
 
 			results = append(results, DrawResult{
-				ItemType:  item.ItemType,
-				ItemID:    item.ItemID,
-				ItemCount: item.ItemCount,
-				Quality:   item.Quality,
-				IsPity:    isPity,
+				ItemType:        item.ItemType,
+				ItemID:          item.ItemID,
+				ItemCount:       item.ItemCount,
+				Quality:         item.Quality,
+				IsPity:          isPity,
+				IsDuplicate:     grantResult.IsDuplicate,
+				ConvertedShards: grantResult.ConvertedShards,
 			})
 
 			record := model.GachaRecord{

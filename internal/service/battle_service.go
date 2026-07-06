@@ -526,7 +526,7 @@ func (s *BattleService) loadTeamSnapshot(playerID uint64) ([]model.PlayerTeam, m
 		if !ok {
 			return nil, nil, nil, 0, errors.New("hero config missing")
 		}
-		totalPower += CalcHeroPower(cfg.BaseATK, cfg.BaseHP, cfg.BaseDEF, hero.Level, hero.Star, cfg.PowerFactor)
+		totalPower += CalcHeroPower(cfg, hero.Level, hero.Star)
 	}
 	return teamRows, heroMap, configMap, totalPower, nil
 }
@@ -853,6 +853,7 @@ func buildInitialBattleState(
 		cfg := heroConfigs[hero.HeroConfigID]
 		skill := playerSkills[skillIDForHero(cfg)]
 		skin := skinWithDefaults(heroSkins[cfg.ID], "hero", cfg.ID)
+		stats := CalcHeroBattleStats(cfg, hero.Level, hero.Star)
 		unit := BattleUnit{
 			ID:              fmt.Sprintf("p%d", team.Slot),
 			Side:            "player",
@@ -866,9 +867,9 @@ func buildInitialBattleState(
 			ConfigID:        cfg.ID,
 			Level:           hero.Level,
 			Star:            hero.Star,
-			MaxHP:           cfg.BaseHP + hero.Level*80 + hero.Star*120,
-			ATK:             cfg.BaseATK + hero.Level*8 + hero.Star*20,
-			DEF:             cfg.BaseDEF + hero.Level*4 + hero.Star*10,
+			MaxHP:           stats.MaxHP,
+			ATK:             stats.ATK,
+			DEF:             stats.DEF,
 			Rage:            50,
 			SkillID:         skill.ID,
 			SkillName:       skill.Name,
