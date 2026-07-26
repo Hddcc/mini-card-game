@@ -4,7 +4,7 @@
  * - 保底进度（GET /gacha/state）
  * - 单抽 160 / 十连 1600（POST /gacha/draw，times 1|10）
  * - 结果弹窗逐张揭示；重复神将碎片化；保底标记
- * - "钻石不足"错误特判标题（无正文），其余"召唤失败：<原因>"
+ * - "灵玉不足"错误特判标题（无正文），其余"召唤失败：<原因>"
  */
 import { onMounted, reactive, ref } from 'vue'
 
@@ -63,10 +63,10 @@ async function draw(times: 1 | 10): Promise<void> {
     void assetStore.refresh().catch(() => undefined)
   } catch (error) {
     modal.phase = 'error'
-    // 旧版特判：钻石不足只显示标题
+    // 旧版特判：灵玉不足只显示标题（后端 message 仍是 diamond not enough）
     const raw = error instanceof ApiError ? error.raw.toLowerCase() : ''
     if (raw.includes('diamond not enough') || raw.includes('not enough diamond')) {
-      modal.title = '钻石不足'
+      modal.title = '灵玉不足'
       modal.errorBody = ''
     } else {
       modal.title = '召唤失败'

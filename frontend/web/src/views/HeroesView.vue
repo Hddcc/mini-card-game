@@ -5,13 +5,18 @@
  * - 已上阵神将置灰不可点；槽位可清除
  * - 保存：过滤空槽、至少 1 人；成功/失败 toast
  * - 品质筛选与搜索在旧版是无事件的装饰，这里实现为真实功能（增强项）
+ *
+ * 布局：放弃「380px 左栏 + 右背包」双栏，改为全宽纵向流 ——
+ * 金边阵容横带（5 槽一行 + 战力 + 保存）置顶，神将背包全宽网格铺满下方。
  */
 import { computed, onMounted, ref } from 'vue'
 
 import { fetchTeam, saveTeam } from '@/api/team'
 import HeroCard from '@/components/hero/HeroCard.vue'
 import TeamSlot from '@/components/hero/TeamSlot.vue'
+import AppInput from '@/components/ui/AppInput.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
+import JadePanel from '@/components/ui/JadePanel.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import StoneButton from '@/components/ui/StoneButton.vue'
 import { useToast } from '@/composables/useToast'
@@ -138,76 +143,100 @@ async function handleSave(): Promise<void> {
 </script>
 
 <template>
-  <div class="mx-auto grid max-w-7xl grid-cols-1 gap-stack-lg lg:grid-cols-[380px_1fr]">
-    <!-- 阵容面板 -->
-    <section class="space-y-stack-md">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary-fixed" aria-hidden="true">groups</span>
-          <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">出战阵容</h3>
+  <div class="mx-auto flex max-w-7xl flex-col gap-stack-lg">
+    <!-- ① 出战阵容横带 -->
+    <JadePanel tone="gold" class="overflow-hidden">
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/50 via-transparent to-black/60"></div>
+      <div class="ink-overlay absolute inset-0"></div>
+
+      <section class="relative z-10 flex flex-col gap-stack-md p-6 md:p-8">
+        <div class="flex flex-wrap items-center justify-between gap-stack-md">
+          <div class="flex flex-wrap items-center gap-stack-md">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary-fixed" aria-hidden="true">groups</span>
+              <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">出战阵容</h3>
+            </div>
+            <span
+              class="rounded-full bg-surface-container px-3 py-1 font-stats-num text-label-sm text-on-surface-variant"
+              >{{ teamCount }}/{{ TEAM_SLOT_COUNT }}</span
+            >
+            <span class="flex items-center gap-1.5 rounded-full border border-outline-variant bg-surface-container-lowest/70 px-3 py-1">
+              <span class="material-symbols-outlined text-sm text-secondary" aria-hidden="true">swords</span>
+              <span class="font-label-sm text-label-sm text-on-surface-variant">战力</span>
+              <span class="font-stats-num text-stats-num text-primary-fixed">{{ playerStore.power.toLocaleString() }}</span>
+            </span>
+          </div>
+
+          <StoneButton
+            variant="primary"
+            size="lg"
+            :disabled="saving"
+            class="hidden md:flex"
+            @click="handleSave"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">{{ saving ? 'progress_activity' : 'save' }}</span>
+            {{ saving ? '保存中…' : '保存阵容' }}
+          </StoneButton>
         </div>
-        <span class="rounded-full bg-surface-container px-3 py-1 font-stats-num text-label-sm text-on-surface-variant"
-          >{{ teamCount }}/{{ TEAM_SLOT_COUNT }}</span
-        >
-      </div>
 
-      <div class="grid grid-cols-2 gap-stack-md sm:grid-cols-3 lg:grid-cols-2">
-        <TeamSlot
-          v-for="(_, index) in activeTeam"
-          :key="index"
-          :slot-index="index"
-          :hero="heroInSlot(index)"
-          :selected="selectedSlot === index"
-          @select="selectSlot(index)"
-          @clear="clearSlot(index)"
-        />
-      </div>
+        <div class="grid grid-cols-2 gap-gutter sm:grid-cols-3 md:grid-cols-5">
+          <TeamSlot
+            v-for="(_, index) in activeTeam"
+            :key="index"
+            :slot-index="index"
+            :hero="heroInSlot(index)"
+            :selected="selectedSlot === index"
+            @select="selectSlot(index)"
+            @clear="clearSlot(index)"
+          />
+        </div>
 
-      <StoneButton variant="primary" size="lg" block :disabled="saving" @click="handleSave">
-        <span class="material-symbols-outlined" aria-hidden="true">{{ saving ? 'progress_activity' : 'save' }}</span>
-        {{ saving ? '保存中…' : '保存阵容' }}
-      </StoneButton>
-      <p class="font-label-sm text-label-sm text-on-surface-variant">
-        提示：保存后将按阵容重新计算战力，关卡挑战需先配置阵容。
-      </p>
-    </section>
+        <StoneButton variant="primary" size="lg" block :disabled="saving" class="md:hidden" @click="handleSave">
+          <span class="material-symbols-outlined" aria-hidden="true">{{ saving ? 'progress_activity' : 'save' }}</span>
+          {{ saving ? '保存中…' : '保存阵容' }}
+        </StoneButton>
 
-    <!-- 神将背包 -->
+        <p class="font-label-sm text-label-sm text-on-surface-variant">
+          提示：保存后将按阵容重新计算战力，关卡挑战需先配置阵容。
+        </p>
+      </section>
+    </JadePanel>
+
+    <!-- ② 神将背包（全宽） -->
     <section class="space-y-stack-md">
       <div class="flex flex-wrap items-center justify-between gap-stack-md">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary-fixed" aria-hidden="true">style</span>
           <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">神将背包</h3>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <button
-            v-for="filter in QUALITY_FILTERS"
-            :key="filter.value"
-            class="rounded-full border px-3 py-1 font-label-sm text-label-sm transition-colors"
-            :class="
-              qualityFilter === filter.value
-                ? 'border-primary-fixed bg-primary-fixed text-on-primary-fixed'
-                : 'border-outline-variant text-on-surface-variant hover:text-on-surface'
-            "
-            @click="qualityFilter = filter.value"
+          <span
+            class="rounded-full bg-surface-container px-3 py-1 font-stats-num text-label-sm text-on-surface-variant"
+            >{{ heroStore.heroes.length }} 位</span
           >
-            {{ filter.label }}
-          </button>
         </div>
-      </div>
 
-      <div class="group relative max-w-sm">
-        <span
-          class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
-          aria-hidden="true"
-          >search</span
-        >
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="搜索英雄名称、定位…"
-          class="w-full border-b-2 border-outline-variant bg-surface-container-low py-2.5 pl-10 pr-4 text-on-surface outline-none transition-all placeholder:text-surface-variant focus:border-primary-container"
-        />
+        <div class="flex flex-1 flex-wrap items-center justify-end gap-stack-md">
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              v-for="filter in QUALITY_FILTERS"
+              :key="filter.value"
+              class="rounded-full border px-3 py-1 font-label-sm text-label-sm transition-colors"
+              :class="
+                qualityFilter === filter.value
+                  ? 'border-primary-fixed bg-primary-fixed text-on-primary-fixed'
+                  : 'border-outline-variant text-on-surface-variant hover:text-on-surface'
+              "
+              @click="qualityFilter = filter.value"
+            >
+              {{ filter.label }}
+            </button>
+          </div>
+          <AppInput
+            v-model="searchQuery"
+            icon="search"
+            placeholder="搜索英雄名称、定位…"
+            class="w-full sm:w-72"
+          />
+        </div>
       </div>
 
       <LoadingState v-if="loading && heroStore.heroes.length === 0" text="神将加载中…" />
@@ -230,7 +259,7 @@ async function handleSave(): Promise<void> {
         title="没有符合条件的神将"
         description="调整筛选或搜索条件试试。"
       />
-      <div v-else class="grid grid-cols-2 gap-stack-md sm:grid-cols-3 xl:grid-cols-4">
+      <div v-else class="grid grid-cols-2 gap-gutter sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         <HeroCard
           v-for="hero in filteredHeroes"
           :key="hero.player_hero_id"

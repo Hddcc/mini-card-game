@@ -382,7 +382,7 @@
             const text = String(message || '');
             const normalized = text.toLowerCase();
             if (normalized.includes('diamond not enough') || normalized.includes('not enough diamond')) {
-                return { title: '钻石不足', body: '' };
+                return { title: '灵玉不足', body: '' };
             }
             return { title: '召唤失败', body: `召唤失败：${text || '未知错误'}` };
         }
