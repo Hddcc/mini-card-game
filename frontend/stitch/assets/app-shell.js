@@ -107,7 +107,7 @@
     }
 
     function embeddedCleanup() {
-        document.querySelectorAll('body > aside, body > nav.fixed.left-0').forEach((node) => node.remove());
+        document.querySelectorAll('body > aside, body > nav.fixed.left-0.h-full').forEach((node) => node.remove());
         const main = document.querySelector('body > main');
         if (main) {
             ['md:pl-64', 'md:pl-72', 'md:ml-64', 'md:ml-72', 'ml-20', 'ml-24'].forEach((name) => main.classList.remove(name));

@@ -38,6 +38,8 @@ type StarUpOutput struct {
 	Assets model.PlayerAsset `json:"assets"`
 }
 
+const starterHeroConfigID uint64 = 1
+
 var (
 	ErrHeroNotOwned        = errors.New("hero not owned")
 	ErrHeroMaxStar         = errors.New("hero already max star")
@@ -50,6 +52,22 @@ func (s *HeroService) List(playerID uint64) ([]HeroView, error) {
 	heroes, err := s.heroRepo.ListPlayerHeroes(playerID)
 	if err != nil {
 		return nil, err
+	}
+	if len(heroes) == 0 {
+		if err := s.heroRepo.CreatePlayerHeroIfMissing(s.db, &model.PlayerHero{
+			PlayerID:     playerID,
+			HeroConfigID: starterHeroConfigID,
+			Level:        1,
+			Star:         1,
+			Shard:        0,
+			Locked:       0,
+		}); err != nil {
+			return nil, err
+		}
+		heroes, err = s.heroRepo.ListPlayerHeroes(playerID)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	ids := make([]uint64, 0, len(heroes))

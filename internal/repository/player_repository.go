@@ -4,6 +4,7 @@ import (
 	"mini-card-game/internal/model"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type PlayerRepository struct {
@@ -38,6 +39,16 @@ func (r *PlayerRepository) FindProfile(playerID uint64) (*model.PlayerProfile, e
 	return &profile, nil
 }
 
+func (r *PlayerRepository) LockProfile(tx *gorm.DB, playerID uint64) (*model.PlayerProfile, error) {
+	var profile model.PlayerProfile
+	if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
+		Where("id = ?", playerID).
+		First(&profile).Error; err != nil {
+		return nil, err
+	}
+	return &profile, nil
+}
+
 func (r *PlayerRepository) FindAsset(playerID uint64) (*model.PlayerAsset, error) {
 	var asset model.PlayerAsset
 	if err := r.db.Where("player_id = ?", playerID).First(&asset).Error; err != nil {
@@ -48,6 +59,17 @@ func (r *PlayerRepository) FindAsset(playerID uint64) (*model.PlayerAsset, error
 
 func (r *PlayerRepository) SaveAsset(asset *model.PlayerAsset) error {
 	return r.db.Save(asset).Error
+}
+
+func (r *PlayerRepository) UpdateProfileName(tx *gorm.DB, profile *model.PlayerProfile) error {
+	return tx.Model(&model.PlayerProfile{}).
+		Where("id = ?", profile.ID).
+		Updates(map[string]interface{}{
+			"nickname":                profile.Nickname,
+			"name_updated_at":         profile.NameUpdatedAt,
+			"name_change_date":        profile.NameChangeDate,
+			"name_daily_change_count": profile.NameDailyChangeCount,
+		}).Error
 }
 
 func (r *PlayerRepository) UpdateProfilePower(tx *gorm.DB, playerID uint64, power uint64) error {

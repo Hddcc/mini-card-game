@@ -214,7 +214,30 @@
 </div>
 <!-- Player Details -->
 <div class="space-y-stack-xs">
-<h2 class="font-display-hero text-headline-lg text-primary drop-shadow-lg">取经人</h2>
+<h2 class="font-display-hero text-headline-lg text-primary drop-shadow-lg" id="profileName">取经人</h2>
+<div class="flex flex-wrap items-center gap-2">
+<div class="inline-flex items-center gap-1.5 rounded border border-outline-variant bg-surface-container-low/80 px-2.5 py-1 text-label-sm font-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary-fixed">badge</span>
+<span>ID</span>
+<span class="font-stats-num text-primary-fixed" id="profileUniqueId">--</span>
+</div>
+<button class="inline-flex h-8 items-center gap-1.5 rounded border border-primary-container/60 bg-surface-container-high px-2.5 text-label-sm font-label-sm text-primary-fixed transition hover:bg-primary-container hover:text-on-primary-container" id="nameEditButton" title="修改用户名" type="button">
+<span class="material-symbols-outlined text-sm">edit</span>
+<span>修改用户名</span>
+</button>
+</div>
+<div class="hidden w-full max-w-xs space-y-2" id="nameEditPanel">
+<div class="flex items-center gap-2">
+<input class="h-10 min-w-0 flex-1 rounded border border-outline-variant bg-surface-container-low px-3 font-body-md text-sm text-on-surface outline-none transition focus:border-primary-container" id="profileNameInput" maxlength="16" type="text"/>
+<button class="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-primary-container bg-primary-container text-on-primary-container transition hover:brightness-110 disabled:opacity-60" id="profileNameSaveButton" title="保存" type="button">
+<span class="material-symbols-outlined text-base">check</span>
+</button>
+<button class="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-outline-variant bg-surface-container-high text-on-surface-variant transition hover:text-on-surface disabled:opacity-60" id="profileNameCancelButton" title="取消" type="button">
+<span class="material-symbols-outlined text-base">close</span>
+</button>
+</div>
+<p class="hidden text-label-sm font-label-sm text-error" id="profileNameError"></p>
+</div>
 <div class="w-full max-w-xs space-y-1">
 <div class="flex justify-between items-center text-label-sm font-label-sm text-on-surface-variant">
 <span>经验进度</span>
@@ -386,6 +409,8 @@
             return obj[pascal] ?? obj[camel] ?? fallback;
         }
 
+        let currentProfileName = '取经人';
+        let profileNameSaving = false;
         const avatarStorageKey = 'mini-xiyou-local-avatar';
         const defaultPlayerAvatar = '/static/assets/images/hero-xiao-bailong.png';
 
@@ -441,19 +466,101 @@
         }
 
         function renderProfile(profile) {
-            const nickname = read(profile, 'Nickname', 'nickname', '取经人');
+            const nickname = read(profile, 'Name', 'name', read(profile, 'Nickname', 'nickname', '取经人'));
+            const uniqueId = read(profile, 'ID', 'unique_id', read(profile, 'PlayerID', 'player_id', '--'));
             const level = read(profile, 'Level', 'level', 1);
             const exp = read(profile, 'Exp', 'exp', 0);
             const power = read(profile, 'Power', 'power', 0);
-            const nameEl = document.querySelector('section h2');
+            const nameEl = document.getElementById('profileName') || document.querySelector('section h2');
+            const idEl = document.getElementById('profileUniqueId');
             const levelEl = document.getElementById('profileLevelBadge');
             const expText = document.querySelector('.flex.justify-between.items-center.text-label-sm span:last-child');
+            currentProfileName = nickname;
             if (nameEl) nameEl.textContent = nickname;
+            if (idEl) idEl.textContent = uniqueId;
             if (levelEl) levelEl.textContent = `等级 ${level}`;
             if (expText) expText.textContent = `${exp} / ${Math.max(1000, level * 1000)}`;
             const bars = document.querySelectorAll('.jade-shimmer.bg-gradient-to-r');
             if (bars[0]) bars[0].style.width = `${Math.min(100, Math.round(exp / Math.max(1, level * 1000) * 100))}%`;
             window.currentPower = power;
+        }
+
+        function initNameEditor() {
+            const editButton = document.getElementById('nameEditButton');
+            const saveButton = document.getElementById('profileNameSaveButton');
+            const cancelButton = document.getElementById('profileNameCancelButton');
+            const input = document.getElementById('profileNameInput');
+            if (editButton) editButton.addEventListener('click', enterNameEdit);
+            if (saveButton) saveButton.addEventListener('click', saveProfileName);
+            if (cancelButton) cancelButton.addEventListener('click', exitNameEdit);
+            if (input) {
+                input.addEventListener('keydown', event => {
+                    if (event.key === 'Enter') saveProfileName();
+                    if (event.key === 'Escape') exitNameEdit();
+                });
+            }
+        }
+
+        function setProfileNameError(message) {
+            const errorEl = document.getElementById('profileNameError');
+            if (!errorEl) return;
+            errorEl.textContent = message || '';
+            errorEl.classList.toggle('hidden', !message);
+        }
+
+        function setProfileNameSaving(saving) {
+            profileNameSaving = saving;
+            const saveButton = document.getElementById('profileNameSaveButton');
+            const cancelButton = document.getElementById('profileNameCancelButton');
+            const input = document.getElementById('profileNameInput');
+            if (saveButton) saveButton.disabled = saving;
+            if (cancelButton) cancelButton.disabled = saving;
+            if (input) input.disabled = saving;
+        }
+
+        function enterNameEdit() {
+            const panel = document.getElementById('nameEditPanel');
+            const input = document.getElementById('profileNameInput');
+            if (panel) panel.classList.remove('hidden');
+            if (input) {
+                input.value = currentProfileName;
+                input.focus();
+                input.select();
+            }
+            setProfileNameError('');
+        }
+
+        function exitNameEdit() {
+            const panel = document.getElementById('nameEditPanel');
+            const input = document.getElementById('profileNameInput');
+            if (panel) panel.classList.add('hidden');
+            if (input) input.value = currentProfileName;
+            setProfileNameError('');
+            setProfileNameSaving(false);
+        }
+
+        async function saveProfileName() {
+            if (profileNameSaving) return;
+            const input = document.getElementById('profileNameInput');
+            if (!input) return;
+            setProfileNameSaving(true);
+            setProfileNameError('');
+            try {
+                const data = await apiFetch('/api/v1/player/name', {
+                    method: 'POST',
+                    body: JSON.stringify({ name: input.value })
+                });
+                if (!data || data.code !== 0) {
+                    setProfileNameError(data && data.message ? data.message : '修改失败，请稍后重试');
+                    setProfileNameSaving(false);
+                    return;
+                }
+                renderProfile(data.data);
+                exitNameEdit();
+            } catch (err) {
+                setProfileNameError('修改失败，请稍后重试');
+                setProfileNameSaving(false);
+            }
         }
 
         function renderAssets(assets) {
@@ -523,6 +630,7 @@
 
         restoreLocalAvatar();
         initAvatarUpload();
+        initNameEditor();
         initHome();
     </script>
 <script src="../assets/status-bar.js"></script>

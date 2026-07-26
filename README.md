@@ -98,7 +98,8 @@ cp .env.example .env
 APP_NAME=mini-card-game
 APP_ENV=local
 HTTP_ADDR=:5290
-FRONTEND_DIST=frontend/stitch
+# 新版 Vue 前端构建产物；回退旧版静态页可改回 frontend/stitch
+FRONTEND_DIST=frontend/web/dist
 MYSQL_DSN=root:mini_card_root_password@tcp(127.0.0.1:3306)/mini_card_game?charset=utf8mb4&parseTime=True&loc=Local
 REDIS_ADDR=127.0.0.1:6379
 REDIS_PASSWORD=
@@ -115,6 +116,24 @@ go run ./cmd/server
 
 服务启动时会执行 GORM AutoMigrate，并写入基础配置数据。`migrations/` 目录保留了建表 SQL，适合用于审阅数据库结构或生产环境变更管理。
 
+## 前端（Vue 3 SPA）
+
+前端已重构为 `frontend/web/` 下的单页应用（Vue 3 + Vite + TypeScript + Pinia，统一黑金西游设计系统），页面间不再整页跳转；旧版 `frontend/stitch/` 七个静态页保留作参考，不再维护。详细说明见 [frontend/web/README.md](frontend/web/README.md)。
+
+```bash
+# 开发（需后端跑在 :5290）
+cd frontend/web
+npm install
+npm run dev            # http://localhost:5173，/api 与 /static 自动代理到后端
+
+# 生产构建 + 切换（后端 Go 代码零改动）
+npm run build          # 产物在 frontend/web/dist
+# 在仓库根 .env 设置 FRONTEND_DIST=frontend/web/dist 后重启后端即可；
+# 删除该行则回退旧版 stitch 页面。
+```
+
+注意：Docker 镜像目前仍打包旧版前端（`Dockerfile` 中 `COPY frontend/stitch`，compose 显式设置 `FRONTEND_DIST=/app/frontend/stitch`）。容器内切换新前端需先 `npm run build`，再在 Dockerfile 增加 `COPY frontend/web/dist /app/frontend/web/dist` 并把 compose 的 `FRONTEND_DIST` 改为 `/app/frontend/web/dist`。
+
 ## 配置项
 
 | 变量 | 默认值 | 说明 |
@@ -122,7 +141,7 @@ go run ./cmd/server
 | `APP_NAME` | `mini-card-game` | 应用名称 |
 | `APP_ENV` | `local` | 运行环境，影响日志格式 |
 | `HTTP_ADDR` | `:5290` | HTTP 监听地址 |
-| `FRONTEND_DIST` | `frontend/stitch` | 静态前端目录 |
+| `FRONTEND_DIST` | `frontend/stitch` | 静态前端目录；新版 Vue 前端设为 `frontend/web/dist` |
 | `MYSQL_DSN` | 空 | MySQL 连接串，应用启动必填 |
 | `REDIS_ADDR` | `localhost:6379` | Redis 地址 |
 | `REDIS_PASSWORD` | 空 | Redis 密码 |
@@ -238,7 +257,8 @@ mini-card-game/
     repository/            # 数据访问封装
     router/                # 路由注册和依赖组装
     service/               # 业务规则、事务和流程编排
-  frontend/stitch/         # 静态前端页面、截图和素材
+  frontend/web/            # 新版 Vue 3 SPA 前端（开发在 src/，构建产物在 dist/）
+  frontend/stitch/         # 旧版静态前端页面（保留作参考与设计母本，不再维护）
   migrations/              # SQL 迁移文件
   deploy/                  # 服务器部署脚本和说明
   docker-compose.yml       # 应用 + MySQL + Redis 编排
