@@ -82,6 +82,9 @@ async function onTopAction(): Promise<void> {
 </script>
 
 <template>
+  <!-- Teleport 到 body：跳出 MainLayout <main> 的 z-10 层叠上下文，
+       否则侧栏(z-40)/顶栏(z-30)会压在战斗面板上（与 AppModal 同一模式） -->
+  <Teleport to="body">
   <section
     v-if="battleStore.battle && state"
     class="fixed inset-0 z-[55] flex items-center justify-center overflow-hidden bg-black/90 p-2 backdrop-blur-sm"
@@ -203,4 +206,5 @@ async function onTopAction(): Promise<void> {
       </div>
     </div>
   </section>
+  </Teleport>
 </template>
