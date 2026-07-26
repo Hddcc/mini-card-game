@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/** 抽卡结果全屏弹窗（迁移自旧 mini_4 result-modal）：召唤中 / 错误（钻石不足特判）/ 结果三态。 */
+/** 抽卡结果全屏弹窗（迁移自旧 mini_4 result-modal）：召唤中 / 错误（灵玉不足特判）/ 结果三态。 */
 import GachaResultCard from './GachaResultCard.vue'
 import type { DrawResult } from '@/types/gacha'
 

@@ -4,10 +4,15 @@
  * - 资料卡：本地头像上传、行内改名（Enter/Escape、服务端中文错误行内展示）、ID/等级/经验条
  * - 每日修行：任务三态（进行中/可领取/已领取），领取后刷新任务与资产
  * - 活动 banner 入口
+ *
+ * 布局：纵向流撑满视口（活动横幅 flex-1 弹性吃掉剩余高度）；
+ * 任务由全宽行改为响应式卡片网格；活动入口由窄高侧卡改为全宽电影横条。
+ * 资产数值统一看顶栏 AssetBar，页内不重复展示。
  */
 import { computed, onMounted, ref } from 'vue'
 
 import { claimTask as apiClaimTask, fetchDailyTasks } from '@/api/task'
+import AppInput from '@/components/ui/AppInput.vue'
 import JadeProgressBar from '@/components/ui/JadeProgressBar.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import ErrorState from '@/components/ui/ErrorState.vue'
@@ -36,6 +41,9 @@ const nameError = ref('')
 const nameSaving = ref(false)
 
 const profile = computed(() => playerStore.profile)
+
+/** 每日修行头部的可领取任务数 chip */
+const claimableCount = computed(() => tasks.value.filter((task) => task.status === TASK_STATUS.claimable).length)
 
 async function loadTasks(): Promise<void> {
   tasksLoading.value = true
@@ -113,7 +121,7 @@ async function claimTask(task: TaskView): Promise<void> {
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative flex min-h-[calc(100vh-184px)] flex-col md:min-h-[calc(100vh-112px)]">
     <!-- 沉浸式背景 -->
     <div class="pointer-events-none absolute -inset-x-margin-mobile -top-stack-lg bottom-0 -z-10 overflow-hidden md:-inset-x-margin-desktop">
       <img :src="IMAGE_HOME_BACKGROUND" alt="" class="h-full w-full object-cover object-center opacity-95" />
@@ -123,10 +131,10 @@ async function claimTask(task: TaskView): Promise<void> {
       <div class="ink-overlay absolute inset-0"></div>
     </div>
 
-    <div class="mx-auto max-w-7xl space-y-stack-lg">
+    <div class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-stack-lg">
       <!-- 玩家资料区 -->
-      <section class="grid grid-cols-1 items-end gap-stack-lg pt-4 md:grid-cols-12">
-        <div class="flex items-center gap-stack-lg md:col-span-7">
+      <section class="pt-4">
+        <div class="flex items-center gap-stack-lg">
           <!-- 头像框 + 上传 -->
           <div class="group relative shrink-0">
             <div
@@ -181,19 +189,19 @@ async function claimTask(task: TaskView): Promise<void> {
             </div>
 
             <!-- 行内改名面板 -->
-            <div v-if="editingName" class="w-full max-w-xs space-y-2">
+            <div v-if="editingName" class="w-full max-w-sm space-y-2">
               <div class="flex items-center gap-2">
-                <input
+                <AppInput
                   v-model="nameInput"
                   :disabled="nameSaving"
-                  maxlength="16"
-                  type="text"
-                  class="h-10 min-w-0 flex-1 rounded border border-outline-variant bg-surface-container-low px-3 font-body-md text-sm text-on-surface outline-none transition focus:border-primary-container disabled:opacity-60"
+                  :maxlength="16"
+                  icon="edit"
+                  class="min-w-0 flex-1"
                   @keydown.enter.prevent="saveProfileName"
                   @keydown.escape.prevent="exitNameEdit"
                 />
                 <button
-                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-primary-container bg-primary-container text-on-primary-container transition hover:brightness-110 disabled:opacity-60"
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded border border-primary-container bg-primary-container text-on-primary-container transition hover:brightness-110 disabled:opacity-60"
                   :disabled="nameSaving"
                   title="保存"
                   type="button"
@@ -204,7 +212,7 @@ async function claimTask(task: TaskView): Promise<void> {
                   }}</span>
                 </button>
                 <button
-                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded border border-outline-variant bg-surface-container-high text-on-surface-variant transition hover:text-on-surface disabled:opacity-60"
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded border border-outline-variant bg-surface-container-high text-on-surface-variant transition hover:text-on-surface disabled:opacity-60"
                   :disabled="nameSaving"
                   title="取消"
                   type="button"
@@ -217,7 +225,7 @@ async function claimTask(task: TaskView): Promise<void> {
             </div>
 
             <!-- 经验条 -->
-            <div class="w-full max-w-xs space-y-1 pt-1">
+            <div class="w-full max-w-sm space-y-1 pt-1">
               <div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
                 <span>经验进度</span>
                 <span class="font-stats-num">{{ profile?.exp ?? 0 }} / {{ playerStore.expMax }}</span>
@@ -228,136 +236,140 @@ async function claimTask(task: TaskView): Promise<void> {
         </div>
       </section>
 
-      <!-- 每日修行 + 活动入口 -->
-      <div class="grid grid-cols-1 gap-stack-lg lg:grid-cols-3">
-        <section class="space-y-stack-md lg:col-span-2">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-primary-fixed" aria-hidden="true">history_edu</span>
-              <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">每日修行</h3>
-            </div>
-            <span class="rounded-full bg-surface-container px-3 py-1 font-label-sm text-label-sm text-on-surface-variant"
-              >每日 0 点刷新</span
+      <!-- 每日修行（全宽卡片网格） -->
+      <section class="space-y-stack-md">
+        <div class="flex flex-wrap items-center justify-between gap-stack-md">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary-fixed" aria-hidden="true">history_edu</span>
+            <h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">每日修行</h3>
+            <span
+              v-if="claimableCount > 0"
+              class="rounded-full border border-primary-fixed/60 bg-primary-fixed/15 px-3 py-1 font-label-sm text-label-sm text-primary-fixed"
+              >可领取 {{ claimableCount }}</span
             >
           </div>
-
-          <LoadingState v-if="tasksLoading && tasks.length === 0" text="任务加载中…" />
-          <ErrorState v-else-if="tasksError" :message="tasksError" @retry="loadTasks" />
-
-          <div v-else class="space-y-stack-md">
-            <div
-              v-for="task in tasks"
-              :key="task.task_id"
-              class="flex min-h-[112px] items-center justify-between rounded-xl p-stack-lg backdrop-blur-md transition-colors"
-              :class="
-                task.status === TASK_STATUS.claimed
-                  ? 'border border-outline-variant/30 bg-surface-container-lowest/50 opacity-60'
-                  : task.status === TASK_STATUS.claimable
-                    ? 'border-2 border-primary-container bg-ink-wash/90'
-                    : 'border border-outline-variant bg-ink-wash/80 hover:border-primary-fixed/50'
-              "
-            >
-              <div class="flex items-center gap-4">
-                <div
-                  class="flex h-12 w-12 items-center justify-center rounded border border-outline-variant bg-surface-container-high"
-                >
-                  <span class="material-symbols-outlined text-primary-container" aria-hidden="true">{{
-                    taskIcon(task)
-                  }}</span>
-                </div>
-                <div>
-                  <p
-                    class="font-title-md text-title-md"
-                    :class="task.status !== TASK_STATUS.inProgress ? 'text-primary-container' : 'text-on-surface'"
-                  >
-                    {{ task.name }}
-                  </p>
-                  <p class="font-label-sm text-label-sm text-on-surface-variant">
-                    进度 {{ task.progress || 0 }} / {{ task.target_count || 0 }}
-                  </p>
-                  <div class="mt-2 flex items-center gap-2">
-                    <div class="w-32">
-                      <JadeProgressBar
-                        :value="task.progress || 0"
-                        :max="Math.max(1, task.target_count || 1)"
-                        variant="gold"
-                        height-class="h-1.5"
-                      />
-                    </div>
-                    <span class="font-stats-num text-[10px]">
-                      {{
-                        task.status === TASK_STATUS.claimed
-                          ? '已领取'
-                          : task.status === TASK_STATUS.claimable
-                            ? '可领取'
-                            : `${taskProgressPercent(task)}%`
-                      }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex flex-col items-end gap-2">
-                <div class="flex items-center gap-3 font-stats-num text-label-sm">
-                  <span v-if="task.reward_gold" class="text-primary-fixed">金币 x{{ task.reward_gold }}</span>
-                  <span v-if="task.reward_diamond" class="text-quality-ssr">灵玉 x{{ task.reward_diamond }}</span>
-                </div>
-
-                <button
-                  v-if="task.status === TASK_STATUS.claimed"
-                  disabled
-                  class="cursor-not-allowed rounded border border-outline-variant/30 bg-surface-variant px-6 py-2 font-title-md text-label-sm text-on-surface-variant/50"
-                >
-                  已领取
-                </button>
-                <button
-                  v-else-if="task.status === TASK_STATUS.claimable"
-                  class="jade-shimmer rounded border border-white/20 bg-gradient-to-b from-[#00A86B] to-[#007a4e] px-6 py-2 font-title-md text-label-sm text-white shadow-[0_4px_10px_rgba(0,168,107,0.3)] transition-all hover:brightness-110 active:scale-95 disabled:opacity-70"
-                  :disabled="claimingTaskId !== null"
-                  @click="claimTask(task)"
-                >
-                  <span
-                    v-if="claimingTaskId === task.task_id"
-                    class="material-symbols-outlined animate-spin text-sm"
-                    aria-hidden="true"
-                    >progress_activity</span
-                  >
-                  <span v-else>领取</span>
-                </button>
-                <router-link
-                  v-else
-                  :to="taskTargetRoute(task)"
-                  class="border-2 border-primary-fixed bg-ink-wash px-6 py-2 font-title-md text-label-sm text-primary-fixed transition-all hover:bg-primary-fixed hover:text-on-primary-fixed active:scale-95"
-                >
-                  前往
-                </router-link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 活动入口 -->
-        <aside class="space-y-stack-lg">
-          <router-link
-            :to="{ name: 'activity' }"
-            class="relative block min-h-[360px] cursor-pointer overflow-hidden rounded-xl border-2 border-outline-variant bg-surface-container transition-colors hover:border-primary-fixed/60 lg:min-h-[460px]"
+          <span class="rounded-full bg-surface-container px-3 py-1 font-label-sm text-label-sm text-on-surface-variant"
+            >每日 0 点刷新</span
           >
-            <img
-              :src="IMAGE_ACTIVITY_BANNER"
-              alt="火焰山活动"
-              class="absolute inset-0 h-full w-full object-cover object-center"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-ink-wash via-ink-wash/35 to-transparent"></div>
-            <div class="absolute bottom-3 left-3">
-              <span class="mb-1 inline-block rounded-full bg-quality-ur px-2 py-0.5 text-[10px] font-bold text-white"
-                >热门活动</span
+        </div>
+
+        <LoadingState v-if="tasksLoading && tasks.length === 0" text="任务加载中…" />
+        <ErrorState v-else-if="tasksError" :message="tasksError" @retry="loadTasks" />
+
+        <div v-else class="grid grid-cols-1 gap-gutter md:grid-cols-2 xl:grid-cols-3">
+          <div
+            v-for="task in tasks"
+            :key="task.task_id"
+            class="flex min-h-[180px] flex-col gap-stack-md rounded-xl p-stack-lg backdrop-blur-md transition-colors"
+            :class="
+              task.status === TASK_STATUS.claimed
+                ? 'border border-outline-variant/30 bg-surface-container-lowest/50 opacity-60'
+                : task.status === TASK_STATUS.claimable
+                  ? 'border-2 border-primary-container bg-ink-wash/90'
+                  : 'border border-outline-variant bg-ink-wash/80 hover:border-primary-fixed/50'
+            "
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded border border-outline-variant bg-surface-container-high"
               >
-              <p class="font-title-md text-title-md leading-tight text-primary">火焰山突袭</p>
-              <p class="font-label-sm text-label-sm text-secondary">奖励翻倍开启！</p>
+                <span class="material-symbols-outlined text-primary-container" aria-hidden="true">{{
+                  taskIcon(task)
+                }}</span>
+              </div>
+              <p
+                class="min-w-0 flex-1 truncate font-title-md text-title-md"
+                :class="task.status !== TASK_STATUS.inProgress ? 'text-primary-container' : 'text-on-surface'"
+              >
+                {{ task.name }}
+              </p>
+              <span class="shrink-0 font-stats-num text-[10px] text-on-surface-variant">
+                {{
+                  task.status === TASK_STATUS.claimed
+                    ? '已领取'
+                    : task.status === TASK_STATUS.claimable
+                      ? '可领取'
+                      : `${taskProgressPercent(task)}%`
+                }}
+              </span>
             </div>
-          </router-link>
-        </aside>
-      </div>
+
+            <div class="space-y-1">
+              <p class="font-label-sm text-label-sm text-on-surface-variant">
+                进度 {{ task.progress || 0 }} / {{ task.target_count || 0 }}
+              </p>
+              <JadeProgressBar
+                :value="task.progress || 0"
+                :max="Math.max(1, task.target_count || 1)"
+                variant="gold"
+                height-class="h-1.5"
+              />
+            </div>
+
+            <div class="mt-auto flex items-center gap-3 font-stats-num text-label-sm">
+              <span v-if="task.reward_gold" class="text-primary-fixed">金币 x{{ task.reward_gold }}</span>
+              <span v-if="task.reward_diamond" class="text-quality-ssr">灵玉 x{{ task.reward_diamond }}</span>
+            </div>
+
+            <button
+              v-if="task.status === TASK_STATUS.claimed"
+              disabled
+              class="w-full cursor-not-allowed rounded border border-outline-variant/30 bg-surface-variant px-6 py-2 text-center font-title-md text-label-sm text-on-surface-variant/50"
+            >
+              已领取
+            </button>
+            <button
+              v-else-if="task.status === TASK_STATUS.claimable"
+              class="jade-shimmer w-full rounded border border-white/20 bg-gradient-to-b from-[#00A86B] to-[#007a4e] px-6 py-2 text-center font-title-md text-label-sm text-white shadow-[0_4px_10px_rgba(0,168,107,0.3)] transition-all hover:brightness-110 active:scale-95 disabled:opacity-70"
+              :disabled="claimingTaskId !== null"
+              @click="claimTask(task)"
+            >
+              <span
+                v-if="claimingTaskId === task.task_id"
+                class="material-symbols-outlined animate-spin text-sm"
+                aria-hidden="true"
+                >progress_activity</span
+              >
+              <span v-else>领取</span>
+            </button>
+            <router-link
+              v-else
+              :to="taskTargetRoute(task)"
+              class="w-full border-2 border-primary-fixed bg-ink-wash px-6 py-2 text-center font-title-md text-label-sm text-primary-fixed transition-all hover:bg-primary-fixed hover:text-on-primary-fixed active:scale-95"
+            >
+              前往
+            </router-link>
+          </div>
+        </div>
+      </section>
+
+      <!-- 活动入口（全宽电影横条，flex-1 拉伸填满剩余视口高度） -->
+      <router-link
+        :to="{ name: 'activity' }"
+        class="relative block min-h-[176px] flex-1 cursor-pointer overflow-hidden rounded-xl border-2 border-outline-variant transition-colors hover:border-primary-fixed/60 md:min-h-[224px]"
+      >
+        <img
+          :src="IMAGE_ACTIVITY_BANNER"
+          alt="火焰山活动"
+          class="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-ink-wash via-ink-wash/40 to-transparent"></div>
+        <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6">
+          <span class="mb-1.5 inline-block rounded-full bg-quality-ur px-2.5 py-0.5 text-[10px] font-bold text-white"
+            >热门活动</span
+          >
+          <p class="glow-gold font-display-hero text-headline-lg-mobile leading-tight text-primary md:text-headline-lg">
+            火焰山突袭
+          </p>
+          <p class="font-label-sm text-label-sm text-secondary">奖励翻倍开启！</p>
+        </div>
+        <span
+          class="absolute bottom-4 right-4 hidden items-center gap-1 font-label-sm text-label-sm text-primary-fixed md:bottom-6 md:right-6 md:flex"
+        >
+          前往参加
+          <span class="material-symbols-outlined text-base" aria-hidden="true">arrow_forward</span>
+        </span>
+      </router-link>
     </div>
   </div>
 </template>
