@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: theme('colors.background');
+  }
+
+  body {
+    @apply bg-background text-on-background font-body-md text-body-md min-h-screen antialiased;
+  }
+
+  ::selection {
+    background-color: rgba(255, 215, 0, 0.35);
+  }
+}

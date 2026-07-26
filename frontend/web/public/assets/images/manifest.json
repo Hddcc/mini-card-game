@@ -1,0 +1,149 @@
+{
+  "version": 2,
+  "sourceType": "user-provided-generated",
+  "runtimeBasePath": "/static/assets/images/",
+  "sourceDirectory": "D:\\APP\\Path_for_ide\\Go\\item\\传统后端\\mini西游\\image",
+  "styleGuide": {
+    "name": "Mini Xiyou dark mythic black-gold art direction",
+    "promptAnchor": "dark mythic Journey to the West fantasy, cinematic Chinese game concept art, ink-wash atmosphere with rich depth, imperial gold highlights, restrained vermilion accents, jade spiritual glow, ornate but readable silhouettes, dramatic lighting, premium mobile RPG key art, coherent black-gold UI compatibility",
+    "avoid": "modern objects, western medieval armor, neon sci-fi palette, washed-out beige parchment dominance, cluttered unreadable backgrounds, excessive red saturation, text, logos, watermarks, UI mockups, duplicate limbs, distorted hands, blurry faces"
+  },
+  "replacement": {
+    "simple": "Overwrite the existing file with a new image using the same filename and compatible dimensions. The frontend and backend will continue to load the same /static/assets/images/... path.",
+    "versioned": "Add a new local image file and update this manifest plus the corresponding frontend/backend path reference during a controlled asset update.",
+    "notes": "Background, activity, and reward slots are intentionally reserved for later. Current enemies temporarily share leopard/rhino spirit art until dedicated enemy art is supplied."
+  },
+  "assets": [
+    {
+      "key": "home-palace-bg",
+      "role": "homepage immersive palace background",
+      "path": "/static/assets/images/home-background.png",
+      "filename": "home-background.png",
+      "sourceStatus": "available",
+      "sourceFile": "\u80cc\u666f.png",
+      "replacement": "Overwrite home-background.png to replace the homepage immersive background."
+    },
+    {
+      "key": "stage-mountain-bg",
+      "role": "stage selection mountain and trial background",
+      "path": "/static/assets/images/home-background.png",
+      "filename": "home-background.png",
+      "sourceStatus": "available",
+      "sourceFile": "\u80cc\u666f.png",
+      "replacement": "Overwrite home-background.png or add a dedicated stage image to replace the stage selection background."
+    },
+    {
+      "key": "summon-celestial-bg",
+      "role": "summon page celestial ritual backdrop",
+      "path": "",
+      "filename": "",
+      "sourceStatus": "reserved",
+      "replacement": "Background image intentionally left empty until supplied."
+    },
+    {
+      "key": "activity-peach-festival",
+      "role": "limited activity lottery banner and backdrop",
+      "path": "/static/assets/images/activity-flame-mountain.png",
+      "filename": "activity-flame-mountain.png",
+      "sourceStatus": "available",
+      "sourceFile": "\u52c7\u88ad\u706b\u7130\u5c71.png",
+      "replacement": "Overwrite activity-flame-mountain.png to replace the limited activity banner and backdrop."
+    },
+    {
+      "key": "hero-sun-wukong",
+      "role": "Sun Wukong hero portrait and battle card art",
+      "path": "/static/assets/images/hero-sun-wukong.png",
+      "filename": "hero-sun-wukong.png",
+      "sourceStatus": "available",
+      "sourceFile": "孙悟空.png",
+      "replacement": "Overwrite hero-sun-wukong.png to replace Sun Wukong art."
+    },
+    {
+      "key": "hero-zhu-bajie",
+      "role": "Zhu Bajie hero portrait and battle card art",
+      "path": "/static/assets/images/hero-zhu-bajie.png",
+      "filename": "hero-zhu-bajie.png",
+      "sourceStatus": "available",
+      "sourceFile": "猪八戒.png",
+      "replacement": "Overwrite hero-zhu-bajie.png to replace Zhu Bajie art."
+    },
+    {
+      "key": "hero-sha-wujing",
+      "role": "Sha Wujing hero portrait and battle card art",
+      "path": "/static/assets/images/hero-sha-wujing.png",
+      "filename": "hero-sha-wujing.png",
+      "sourceStatus": "available",
+      "sourceFile": "沙悟净.png",
+      "replacement": "Overwrite hero-sha-wujing.png to replace Sha Wujing art."
+    },
+    {
+      "key": "hero-xiao-bailong",
+      "role": "Xiao Bailong / White Dragon Horse hero portrait and battle card art",
+      "path": "/static/assets/images/hero-xiao-bailong.png",
+      "filename": "hero-xiao-bailong.png",
+      "sourceStatus": "available",
+      "sourceFile": "白龙马.png",
+      "replacement": "Overwrite hero-xiao-bailong.png to replace Xiao Bailong / White Dragon Horse art."
+    },
+    {
+      "key": "hero-tang-sanzang",
+      "role": "Tang Sanzang hero portrait and battle card art",
+      "path": "/static/assets/images/hero-tang-sanzang.png",
+      "filename": "hero-tang-sanzang.png",
+      "sourceStatus": "available",
+      "sourceFile": "唐三藏.png",
+      "replacement": "Overwrite hero-tang-sanzang.png to replace Tang Sanzang art."
+    },
+    {
+      "key": "enemy-leopard-spirit",
+      "role": "Temporary enemy portrait and battle card art for agile/current enemies",
+      "path": "/static/assets/images/enemy-leopard-spirit.png",
+      "filename": "enemy-leopard-spirit.png",
+      "sourceStatus": "available",
+      "sourceFile": "豹子精.png",
+      "replacement": "Overwrite enemy-leopard-spirit.png or add a dedicated enemy asset later."
+    },
+    {
+      "key": "enemy-rhino-spirit",
+      "role": "Temporary enemy portrait and battle card art for heavy/current enemies",
+      "path": "/static/assets/images/enemy-rhino-spirit.png",
+      "filename": "enemy-rhino-spirit.png",
+      "sourceStatus": "available",
+      "sourceFile": "犀牛精.png",
+      "replacement": "Overwrite enemy-rhino-spirit.png or add a dedicated enemy asset later."
+    },
+    {
+      "key": "reward-spirit-jade",
+      "role": "spirit jade reward thumbnail",
+      "path": "",
+      "filename": "",
+      "sourceStatus": "reserved",
+      "replacement": "Reward image intentionally left empty until supplied."
+    },
+    {
+      "key": "reward-gold-chest",
+      "role": "gold chest reward thumbnail",
+      "path": "/static/assets/images/reward-gold.png",
+      "filename": "reward-gold.png",
+      "sourceStatus": "available",
+      "sourceFile": "\u91d1\u5e01.png",
+      "replacement": "Overwrite reward-gold.png to replace gold reward thumbnail art."
+    },
+    {
+      "key": "reward-stamina-pill",
+      "role": "stamina item reward thumbnail",
+      "path": "",
+      "filename": "",
+      "sourceStatus": "reserved",
+      "replacement": "Reward image intentionally left empty until supplied."
+    },
+    {
+      "key": "reward-hero-fragment",
+      "role": "hero fragment reward thumbnail",
+      "path": "",
+      "filename": "",
+      "sourceStatus": "reserved",
+      "replacement": "Reward image intentionally left empty until supplied."
+    }
+  ]
+}

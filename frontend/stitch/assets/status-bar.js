@@ -95,8 +95,9 @@
         updateCountdown();
         clearInterval(countdownTimer);
         countdownTimer = setInterval(() => {
+            const shouldReload = nextStaminaSeconds === 1;
             updateCountdown();
-            if (nextStaminaSeconds === 0) loadAssetBar();
+            if (shouldReload) loadAssetBar();
         }, 1000);
     }
 

@@ -144,6 +144,30 @@ func TestFirstHeroRewardCreatesOwnedHero(t *testing.T) {
 	}
 }
 
+func TestHeroListCreatesStarterHeroWhenInventoryEmpty(t *testing.T) {
+	env := newHeroStarTestEnv(t)
+	seedHeroConfig(t, env.db, 1, 5, "warrior")
+
+	heroes, err := env.heroService.List(1001)
+	if err != nil {
+		t.Fatalf("list heroes: %v", err)
+	}
+	if len(heroes) != 1 {
+		t.Fatalf("expected starter hero, got %d heroes", len(heroes))
+	}
+	if heroes[0].HeroConfigID != 1 || heroes[0].Level != 1 || heroes[0].Star != 1 || heroes[0].Shard != 0 {
+		t.Fatalf("starter hero mismatch: %#v", heroes[0])
+	}
+
+	heroes, err = env.heroService.List(1001)
+	if err != nil {
+		t.Fatalf("list heroes again: %v", err)
+	}
+	if len(heroes) != 1 {
+		t.Fatalf("starter hero should not duplicate, got %d heroes", len(heroes))
+	}
+}
+
 func TestHeroStarUpSuccessAndRejections(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		env := newHeroStarTestEnv(t)

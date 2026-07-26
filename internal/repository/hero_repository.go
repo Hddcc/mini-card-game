@@ -64,6 +64,10 @@ func (r *HeroRepository) CreatePlayerHero(tx *gorm.DB, hero *model.PlayerHero) e
 	return tx.Create(hero).Error
 }
 
+func (r *HeroRepository) CreatePlayerHeroIfMissing(tx *gorm.DB, hero *model.PlayerHero) error {
+	return tx.Clauses(clause.OnConflict{DoNothing: true}).Create(hero).Error
+}
+
 func (r *HeroRepository) SavePlayerHero(tx *gorm.DB, hero *model.PlayerHero) error {
 	return tx.Save(hero).Error
 }
